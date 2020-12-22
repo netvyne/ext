@@ -37,7 +37,7 @@ const LeaveReply = props => {
           headers: {'Content-Type': 'application/json'},
           redirect: 'follow',
           referrerPolicy: 'no-referrer',
-          body: JSON.stringify({friendIds: null, host:document.location.host, pathname:document.location.pathname, parent_id: parent_id, comment:comment, is_anon:is_anon})
+          body: JSON.stringify({friendIds: null, host:document.location.host, pathname:document.location.pathname, search:document.location.search,parent_id: parent_id, comment:comment, is_anon:is_anon})
         }
         const res = await fetchResource(url, init);
         // invalidate query cache

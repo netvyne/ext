@@ -18,6 +18,7 @@ const Sharing = props => {
     var url = new URL(`${process.env.PUBLIC_API}/post_share`)
     var args = {host:document.location.host, 
                 pathname:document.location.pathname, 
+                search: document.location.search,
                 dataURL:dataURL, 
                 rect:rect, 
                 shared_with:friendIds,
@@ -35,13 +36,13 @@ const Sharing = props => {
     const res = await fetchResource(url, init);
     return res.json();
   }
-  const [mutate, { isIdle, isLoading, isError, isSuccess, data, error },] = useMutation(postShare)
+  const mutation = useMutation(postShare)
   const onPostShare = async e => {
     // Prevent the form from refreshing the page
     e.preventDefault()
 
     try {
-      await mutate()
+      await mutation.mutate()
       // reset form state
       setFriendIds([]);
       setComment('');
@@ -50,11 +51,11 @@ const Sharing = props => {
     }
   }
   let bottom;
-  if (isLoading) {
+  if (mutation.isLoading) {
     bottom = <Box><Button type="submit"> <CircularProgress color="inherit" size={20}/></Button></Box>
-  } else if (isError) {
+  } else if (mutation.isError) {
     bottom = <Box>Error!<Button type="submit"> Share Site</Button></Box>
-  } else if (isSuccess) {
+  } else if (mutation.isSuccess) {
     bottom = <Box>Success!<Button type="submit"> Share Site</Button></Box>
   } else {
     bottom = <Box><Button type="submit"> Share Site</Button></Box>
@@ -64,7 +65,7 @@ const Sharing = props => {
   return (
     <Box m={1}>
     <form onSubmit={onPostShare} >
-      <Dropdown setFriendIds={setFriendIds} key={isLoading}/>
+      <Dropdown setFriendIds={setFriendIds} key={mutation.isLoading}/>
       {bbox}
       <Screenshot modalContainer={bbox} dataURL={dataURL} setDataURL={setDataURL} rect={rect} setRect={setRect}/>
       <Box m={1}><TextField value={comment} onInput={ e=>setComment(e.target.value)} id="nv-message" label="Message" placeholder="Lookit!" fullWidth multiline rows={3}/></Box>

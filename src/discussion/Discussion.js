@@ -12,6 +12,7 @@ function getComments(parent_id) {
       var url = new URL(`${process.env.PUBLIC_API}/get_comments`)
       url.searchParams.append('host', document.location.host)
       url.searchParams.append('pathname', document.location.pathname)
+      url.searchParams.append('search', document.location.search)
       if (parent_id) {
         url.searchParams.append('parent_id', parent_id)
       }
