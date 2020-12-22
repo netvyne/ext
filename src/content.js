@@ -5,6 +5,9 @@ import ReactDOM from 'react-dom';
 import Frame, { FrameContextConsumer }from 'react-frame-component';
 import App from "./App";
 import WrappedJssComponent from "./wrap"
+import { QueryClient, QueryClientProvider } from 'react-query'
+ 
+const queryClient = new QueryClient()
 
 class Main extends React.Component {
     render() {
@@ -14,7 +17,11 @@ class Main extends React.Component {
                {
                   ({document, window}) => {
                     document.body.style.margin = '0 0 0 0';
-                    return <WrappedJssComponent><App document={document} window={window} isExt={true}/></WrappedJssComponent>
+                    return <WrappedJssComponent>
+                            <QueryClientProvider client={queryClient}>
+                              <App document={document} window={window} isExt={true}/>
+                            </QueryClientProvider>
+                          </WrappedJssComponent>
                   }
                 }
                 </FrameContextConsumer>

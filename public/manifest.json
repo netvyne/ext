@@ -3,6 +3,7 @@
   "name": "Netvyne",
   "version": "0.0",
   "manifest_version": 2,
+  "key": "mlhdicffmjdikmmbnpfagiiohadjhgif",
   "background": {
     "scripts": ["app/background.js"]
   },

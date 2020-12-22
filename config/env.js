@@ -62,6 +62,14 @@ const REACT_APP = /^REACT_APP_/i;
 
 function getClientEnvironment(publicUrl) {
   process.env.PUBLIC_URL = publicUrl
+  if (process.env.DEV) {
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
+    process.env.PUBLIC_API='https://localhost:8000'
+    process.env.PUBLIC_WEB='http://localhost:3000'
+  } else {
+    process.env.PUBLIC_API='https://api.netvyne.com'
+    process.env.PUBLIC_WEB='https://www.netvyne.com'
+  }
   const raw = Object.keys(process.env)
     .filter(key => REACT_APP.test(key))
     .reduce(
@@ -76,7 +84,6 @@ function getClientEnvironment(publicUrl) {
       return env;
     }, {}),
   };
-
   return { raw, stringified };
 }
 

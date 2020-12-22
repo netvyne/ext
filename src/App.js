@@ -14,6 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import { useQuery } from 'react-query';
 import {fetchResource} from './utils';
+    
 
 const getUser = async () => {
   const res = await fetchResource(`${process.env.PUBLIC_API}/get_user`);
@@ -88,37 +89,37 @@ export default function App() {
     handleChangeIndex(1)
   });
   return (
-    <div id="netvyne-app" className={classes.root}>
-      <AppBar position="static" color="default">
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          indicatorColor="primary"
-          textColor="primary"
-          variant="fullWidth"
-          aria-label="full width tabs example"
+      <div id="netvyne-app" className={classes.root}>
+        <AppBar position="static" color="default">
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            indicatorColor="primary"
+            textColor="primary"
+            variant="fullWidth"
+            aria-label="full width tabs example"
+          >
+            <Tab label="Discussion" {...a11yProps(0)} />
+            <Tab label="Sharing" {...a11yProps(1)} />
+            <Tab label="Profile" {...a11yProps(2)} />
+          </Tabs>
+        </AppBar>
+        <SwipeableViews
+          axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+          index={value}
+          onChangeIndex={handleChangeIndex}
         >
-          <Tab label="Discussion" {...a11yProps(0)} />
-          <Tab label="Sharing" {...a11yProps(1)} />
-          <Tab label="Profile" {...a11yProps(2)} />
-        </Tabs>
-      </AppBar>
-      <SwipeableViews
-        axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-        index={value}
-        onChangeIndex={handleChangeIndex}
-      >
-        <TabPanel value={value} index={0} dir={theme.direction}>
-          <Discussion/>
-        </TabPanel>
-        <TabPanel value={value} index={1} dir={theme.direction}>
-          <Sharing element={shareElement}/>
-        </TabPanel>
-        <TabPanel value={value} index={2} dir={theme.direction}>
-          <Profile user={user}/>
-        </TabPanel>
-      </SwipeableViews>
-    </div>
+          <TabPanel value={value} index={0} dir={theme.direction}>
+            <Discussion/>
+          </TabPanel>
+          <TabPanel value={value} index={1} dir={theme.direction}>
+            <Sharing element={shareElement}/>
+          </TabPanel>
+          <TabPanel value={value} index={2} dir={theme.direction}>
+            <Profile user={user}/>
+          </TabPanel>
+        </SwipeableViews>
+      </div>
   );
 }
 
