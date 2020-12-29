@@ -9,7 +9,6 @@
   },
   "browser_action": {},
   "permissions": [
-    "contextMenus",
     "storage",
     "tabs",
     "activeTab",

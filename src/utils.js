@@ -29,3 +29,17 @@ export function screenShot(action, callback) {
     });
   });
 }
+
+export function clearNotificationBadge() {
+  // send notification count to background script
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage({clear_notifications: true}, messageResponse => {
+      const [response, error] = messageResponse;
+      if (response === null) {
+        reject(error);
+      } else {
+        // callback();
+      }
+    });
+  });
+}

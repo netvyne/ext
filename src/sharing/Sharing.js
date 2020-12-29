@@ -15,7 +15,7 @@ const Sharing = props => {
   const [rect, setRect] = React.useState({startX:0, startY:0})
 
   const postShare = async () => {
-    var url = new URL(`${process.env.PUBLIC_API}/post_share`)
+    var url = new URL(`${process.env.PUBLIC_API}/post_comment`)
     var args = {host:document.location.host, 
                 pathname:document.location.pathname, 
                 search: document.location.search,

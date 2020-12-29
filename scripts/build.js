@@ -147,4 +147,9 @@ function copyPublicFolder() {
     dereference: true,
     filter: file => file !== paths.appHtml,
   });
+
+  // sub env vars for files not in src folder
+  var text = fs.readFileSync(`${paths.appBuild}/app/background.js`).toString('utf-8');
+  var subtext = text.replace('${process.env.PUBLIC_API}', process.env.PUBLIC_API);
+  fs.writeFileSync(`${paths.appBuild}/app/background.js`, subtext);
 }

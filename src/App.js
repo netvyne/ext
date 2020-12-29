@@ -1,7 +1,8 @@
 /*global chrome*/
 import { Discussion } from './discussion';
 import { Sharing } from './sharing';
-import {Profile} from './profile';
+import { Notifications } from './notifications';
+import { Profile } from './profile';
 import 'fontsource-roboto';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -65,7 +66,6 @@ export default function App() {
   const classes = useStyles();
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
-  const [shareElement, setShareElement] = React.useState();
   const {data, status} = useQuery('getUser', getUser)
   let user;
   if (status == 'error') {
@@ -83,11 +83,6 @@ export default function App() {
     setValue(index);
   };
 
-  document.addEventListener("sharenow", function(e) {
-    console.log(e.detail.outerHTML)
-    setShareElement(e.detail.outerHTML)
-    handleChangeIndex(1)
-  });
   return (
       <div id="netvyne-app" className={classes.root}>
         <AppBar position="static" color="default">
@@ -101,7 +96,8 @@ export default function App() {
           >
             <Tab label="Discussion" {...a11yProps(0)} />
             <Tab label="Sharing" {...a11yProps(1)} />
-            <Tab label="Profile" {...a11yProps(2)} />
+            <Tab label="Notifs" {...a11yProps(2)} />
+            <Tab label="Profile" {...a11yProps(3)} />
           </Tabs>
         </AppBar>
         <SwipeableViews
@@ -113,9 +109,12 @@ export default function App() {
             <Discussion/>
           </TabPanel>
           <TabPanel value={value} index={1} dir={theme.direction}>
-            <Sharing element={shareElement}/>
+            <Sharing/>
           </TabPanel>
           <TabPanel value={value} index={2} dir={theme.direction}>
+            <Notifications selected={2 == value}/>
+          </TabPanel>
+          <TabPanel value={value} index={3} dir={theme.direction}>
             <Profile user={user}/>
           </TabPanel>
         </SwipeableViews>

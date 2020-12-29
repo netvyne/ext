@@ -28,6 +28,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     chrome.storage.local.remove("screenshot", () => {
       sendResponse([])
     });
+  } else if (request.clear_notifications) {
+      chrome.browserAction.setBadgeBackgroundColor({ color: [0, 0, 0, 0] });
+      chrome.browserAction.setBadgeText({text: null});       
   } else {
     // this message is a request, use background script to make request
     fetch(request.url, request.init).then(function(response) {
@@ -46,13 +49,19 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
    return true;
  });
 
- // sharing context menu
- var id = chrome.contextMenus.create({
-  "title": "Share...",
-  "contexts": ["all"],
-  "onclick": mycallback
-});
+ // notification polling
+ async function getNotifications() {
+  var url = new URL(`${process.env.PUBLIC_API}/get_notifications`)
+  const fetched = await fetch(url);
+  const res = await fetched.json();
+  let notification_count = res.notifications.filter(x => !x.read).length;
+  if (notification_count > 0) {
+    chrome.browserAction.setBadgeBackgroundColor({ color: [255, 0, 0, 255] });
+    chrome.browserAction.setBadgeText({text: notification_count.toString()});
+  }
 
-function mycallback(info, tab) {
-  chrome.tabs.sendMessage(tab.id, "getClickedEl", function(response) {});
+  // poll every 5 seconds
+  setTimeout(getNotifications, 5000);
 }
+
+getNotifications();

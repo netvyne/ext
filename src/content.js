@@ -46,9 +46,6 @@ chrome.runtime.onMessage.addListener(
       if( request.message === "clicked_browser_action") {
         toggle();
       }
-      if (request == "getClickedEl") {
-        console.log('clicked share')
-      }
       sendResponse([]);
    }
 );
@@ -77,10 +74,3 @@ chrome.storage.local.get(['sidebarOpen'], function(result) {
     app.style.display = "none";
   }
 });
-
-// share context menu
-var clickedEl = null;
-
-document.addEventListener("contextmenu", function(event) {
-    clickedEl = event.target;
-}, true);

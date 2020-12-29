@@ -62,7 +62,7 @@ const REACT_APP = /^REACT_APP_/i;
 
 function getClientEnvironment(publicUrl) {
   process.env.PUBLIC_URL = publicUrl
-  if (process.env.DEV) {
+  if (parseInt(process.env.DEV)) {
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
     process.env.PUBLIC_API='https://localhost:8000'
     process.env.PUBLIC_WEB='http://localhost:3000'
