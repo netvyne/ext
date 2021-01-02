@@ -14,13 +14,7 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import { useQuery } from 'react-query';
-import {fetchResource} from './utils';
-    
 
-const getUser = async () => {
-  const res = await fetchResource(`${process.env.PUBLIC_API}/get_user`);
-  return res.json();
-};
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -66,14 +60,14 @@ export default function App() {
   const classes = useStyles();
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
-  const {data, status} = useQuery('getUser', getUser)
+  const { data, status } = useQuery('/get_user')
   let user;
   if (status == 'error') {
     user = <div>Error</div>
-  } else if (status == 'loading'){
+  } else if (status == 'loading') {
     user = <div>Loading</div>
   } else {
-    user =  data.username;        
+    user = data.username;
   }
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -84,41 +78,41 @@ export default function App() {
   };
 
   return (
-      <div id="netvyne-app" className={classes.root}>
-        <AppBar position="static" color="default">
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            indicatorColor="primary"
-            textColor="primary"
-            variant="fullWidth"
-            aria-label="full width tabs example"
-          >
-            <Tab label="Discussion" {...a11yProps(0)} />
-            <Tab label="Sharing" {...a11yProps(1)} />
-            <Tab label="Notifs" {...a11yProps(2)} />
-            <Tab label="Profile" {...a11yProps(3)} />
-          </Tabs>
-        </AppBar>
-        <SwipeableViews
-          axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-          index={value}
-          onChangeIndex={handleChangeIndex}
+    <div id="netvyne-app" className={classes.root}>
+      <AppBar position="static" color="default">
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          indicatorColor="primary"
+          textColor="primary"
+          variant="fullWidth"
+          aria-label="full width tabs example"
         >
-          <TabPanel value={value} index={0} dir={theme.direction}>
-            <Discussion/>
-          </TabPanel>
-          <TabPanel value={value} index={1} dir={theme.direction}>
-            <Sharing/>
-          </TabPanel>
-          <TabPanel value={value} index={2} dir={theme.direction}>
-            <Notifications selected={2 == value}/>
-          </TabPanel>
-          <TabPanel value={value} index={3} dir={theme.direction}>
-            <Profile user={user}/>
-          </TabPanel>
-        </SwipeableViews>
-      </div>
+          <Tab label="Discussion" {...a11yProps(0)} />
+          <Tab label="Sharing" {...a11yProps(1)} />
+          <Tab label="Notifs" {...a11yProps(2)} />
+          <Tab label="Profile" {...a11yProps(3)} />
+        </Tabs>
+      </AppBar>
+      <SwipeableViews
+        axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+        index={value}
+        onChangeIndex={handleChangeIndex}
+      >
+        <TabPanel value={value} index={0} dir={theme.direction}>
+          <Discussion />
+        </TabPanel>
+        <TabPanel value={value} index={1} dir={theme.direction}>
+          <Sharing />
+        </TabPanel>
+        <TabPanel value={value} index={2} dir={theme.direction}>
+          <Notifications selected={2 == value} />
+        </TabPanel>
+        <TabPanel value={value} index={3} dir={theme.direction}>
+          <Profile user={user} />
+        </TabPanel>
+      </SwipeableViews>
+    </div>
   );
 }
 

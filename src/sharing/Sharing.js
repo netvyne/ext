@@ -1,5 +1,5 @@
 import React from 'react';
-import {fetchResource} from '../utils';
+import { fetchResource } from '../utils';
 import Button from '@material-ui/core/Button';
 import Dropdown from './Dropdown'
 import Screenshot from './Screenshot'
@@ -12,24 +12,26 @@ const Sharing = props => {
   const [friendIds, setFriendIds] = React.useState([]);
   const [comment, setComment] = React.useState('');
   const [dataURL, setDataURL] = React.useState("")
-  const [rect, setRect] = React.useState({startX:0, startY:0})
+  const [rect, setRect] = React.useState({ startX: 0, startY: 0 })
 
   const postShare = async () => {
-    var url = new URL(`${process.env.PUBLIC_API}/post_comment`)
-    var args = {host:document.location.host, 
-                pathname:document.location.pathname, 
-                search: document.location.search,
-                dataURL:dataURL, 
-                rect:rect, 
-                shared_with:friendIds,
-                comment:comment}
+    var url = new URL(`${process.env.PUBLIC_API}/send_share`)
+    var args = {
+      host: document.location.host,
+      pathname: document.location.pathname,
+      search: document.location.search,
+      dataURL: dataURL,
+      rect: rect,
+      receiver_ids: friendIds,
+      comment: comment
+    }
     var init = {
-      method: 'POST', 
-      mode: 'cors', 
-      cache: 'no-cache', 
-      credentials: 'include', 
-      headers: {'Content-Type': 'application/json'},
-      redirect: 'follow', 
+      method: 'POST',
+      mode: 'cors',
+      cache: 'no-cache',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      redirect: 'follow',
       referrerPolicy: 'no-referrer',
       body: JSON.stringify(args)
     }
@@ -52,7 +54,7 @@ const Sharing = props => {
   }
   let bottom;
   if (mutation.isLoading) {
-    bottom = <Box><Button type="submit"> <CircularProgress color="inherit" size={20}/></Button></Box>
+    bottom = <Box><Button type="submit"> <CircularProgress color="inherit" size={20} /></Button></Box>
   } else if (mutation.isError) {
     bottom = <Box>Error!<Button type="submit"> Share Site</Button></Box>
   } else if (mutation.isSuccess) {
@@ -64,13 +66,13 @@ const Sharing = props => {
 
   return (
     <Box m={1}>
-    <form onSubmit={onPostShare} >
-      <Dropdown setFriendIds={setFriendIds} key={mutation.isLoading}/>
-      {bbox}
-      <Screenshot modalContainer={bbox} dataURL={dataURL} setDataURL={setDataURL} rect={rect} setRect={setRect}/>
-      <Box m={1}><TextField value={comment} onInput={ e=>setComment(e.target.value)} id="nv-message" label="Message" placeholder="Lookit!" fullWidth multiline rows={3}/></Box>
-      {bottom}
-    </form>
+      <form onSubmit={onPostShare} >
+        <Dropdown setFriendIds={setFriendIds} key={mutation.isLoading} />
+        {bbox}
+        <Screenshot modalContainer={bbox} dataURL={dataURL} setDataURL={setDataURL} rect={rect} setRect={setRect} />
+        <Box m={1}><TextField value={comment} onInput={e => setComment(e.target.value)} id="nv-message" label="Message" placeholder="Lookit!" fullWidth multiline rows={3} /></Box>
+        {bottom}
+      </form>
     </Box>
   );
 };
