@@ -1,20 +1,19 @@
 /*global chrome*/
-import { Discussion } from './discussion';
-import { Sharing } from './sharing';
-import { Notifications } from './notifications';
-import { Profile } from './profile';
-import 'fontsource-roboto';
-import React from 'react';
-import PropTypes from 'prop-types';
-import SwipeableViews from 'react-swipeable-views';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import { useQuery } from 'react-query';
-
+import { Discussion } from "./discussion";
+import { Sharing } from "./sharing";
+import { Notifications } from "./notifications";
+import { Profile } from "./profile";
+import "fontsource-roboto";
+import React from "react";
+import PropTypes from "prop-types";
+import SwipeableViews from "react-swipeable-views";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import AppBar from "@material-ui/core/AppBar";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import Typography from "@material-ui/core/Typography";
+import Box from "@material-ui/core/Box";
+import { useQuery } from "react-query";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -45,14 +44,14 @@ TabPanel.propTypes = {
 function a11yProps(index) {
   return {
     id: `full-width-tab-${index}`,
-    'aria-controls': `full-width-tabpanel-${index}`,
+    "aria-controls": `full-width-tabpanel-${index}`,
   };
 }
 
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.paper,
-    width: 'auto',
+    width: "auto",
   },
 }));
 
@@ -60,12 +59,12 @@ export default function App() {
   const classes = useStyles();
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
-  const { data, status } = useQuery('/get_user')
+  const { data, status } = useQuery("/get_user");
   let user;
-  if (status == 'error') {
-    user = <div>Error</div>
-  } else if (status == 'loading') {
-    user = <div>Loading</div>
+  if (status == "error") {
+    user = <div>Error</div>;
+  } else if (status == "loading") {
+    user = <div>Loading</div>;
   } else {
     user = data.username;
   }
@@ -95,7 +94,7 @@ export default function App() {
         </Tabs>
       </AppBar>
       <SwipeableViews
-        axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+        axis={theme.direction === "rtl" ? "x-reverse" : "x"}
         index={value}
         onChangeIndex={handleChangeIndex}
       >
@@ -115,4 +114,3 @@ export default function App() {
     </div>
   );
 }
-
