@@ -1,5 +1,3 @@
-<img src="https://github.com/livesports-ai/netvyne/blob/master/web/public/favicon.ico" width="64" height="64">
-
 # Developer Instructions
 
 ## Getting Started: Getting Set Up
