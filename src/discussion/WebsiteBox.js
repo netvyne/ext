@@ -1,38 +1,71 @@
 import React from "react";
 import Box from "@material-ui/core/Box";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
-import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import Grid from "@material-ui/core/Grid";
+import { Typography } from "@material-ui/core";
+import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
+import SentimentSatisfiedSharpIcon from "@material-ui/icons/SentimentSatisfiedSharp";
+import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
+import ShareIcon from "@material-ui/icons/Share";
 
 const WebsiteBox = (props) => {
   let website;
   website = (
-    <Box border={1} m={2} borderRadius="borderRadius">
+    <Box mx={2} mt={1} borderRadius="borderRadius">
       <Grid container wrap="nowrap">
-        <Grid
-          container
-          alignItems="center"
-          direction="column"
-          xs={2}
-          borderRight={1}
-        >
-          <KeyboardArrowUpIcon />
-          <Box>{props.website ? props.website.karma : 0} </Box>
-          <KeyboardArrowDownIcon />
-        </Grid>
-        <Grid
-          container
-          xs={10}
-          direction="column"
-          alignItems="center"
-          justify="center"
-        >
+        <Grid container direction="column" alignItems="center" justify="center">
           <Box>
-            {document.title.length < 100
-              ? document.title
-              : document.title.substring(0, 100).concat("...")}
+            <Typography variant="h5">
+              {document.title.length < 100
+                ? document.title
+                : document.title.substring(0, 100).concat("...")}
+            </Typography>
           </Box>
+          <Grid container direction="row" justify="right" spacing={1}>
+            <Grid
+              item
+              component={Box}
+              display="flex"
+              alignItems="center"
+              justify="center"
+            >
+              <KeyboardArrowUpIcon />
+              {props.website?.upvotes}
+            </Grid>
+            <Grid
+              item
+              component={Box}
+              display="flex"
+              alignItems="center"
+              justify="center"
+            >
+              <SentimentSatisfiedSharpIcon />
+              {(
+                props.website?.upvotes / props.website?.upvotes +
+                props.website?.downvotes
+              ).toLocaleString("en", { style: "percent" })}
+            </Grid>
+            <Grid
+              item
+              component={Box}
+              display="flex"
+              alignItems="center"
+              justify="center"
+            >
+              <ChatBubbleOutlineIcon />
+              {props.website?.webcomments}
+            </Grid>
+            <Grid
+              item
+              component={Box}
+              display="flex"
+              alignItems="center"
+              justify="center"
+            >
+              <ShareIcon />
+              {props.website?.shares}
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
     </Box>

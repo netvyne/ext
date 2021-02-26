@@ -14,6 +14,7 @@ import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import { useQuery } from "react-query";
+import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -78,7 +79,7 @@ export default function App() {
 
   return (
     <div id="netvyne-app" className={classes.root}>
-      <AppBar position="static" color="default">
+      <AppBar position="static" color="default" elevation={1}>
         <Tabs
           value={value}
           onChange={handleChange}
@@ -87,7 +88,7 @@ export default function App() {
           variant="fullWidth"
           aria-label="full width tabs example"
         >
-          <Tab label="Discussion" {...a11yProps(0)} />
+          <Tab icon={<ChatBubbleOutlineIcon />} {...a11yProps(0)} />
           <Tab label="Sharing" {...a11yProps(1)} />
           <Tab label="Notifs" {...a11yProps(2)} />
           <Tab label="Profile" {...a11yProps(3)} />
