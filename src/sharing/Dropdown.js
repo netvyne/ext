@@ -5,7 +5,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import { useQuery } from "react-query";
 
 export default function Dropdown(props) {
-  const { isLoading, error, data } = useQuery("/get_friends");
+  const { isLoading, data } = useQuery("/get_friends");
   const changed = function (event, value, reason) {
     props.setFriendIds(value.map((user) => user.id));
   };

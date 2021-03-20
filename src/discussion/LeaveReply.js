@@ -21,7 +21,6 @@ const LeaveReply = (props) => {
   } else {
     parent_id = null;
   }
-  var is_anon = false;
   const queryCache = useQueryClient();
   const [comment, setComment] = React.useState("");
   const postComment = async (event) => {

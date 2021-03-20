@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useQuery } from "react-query";
 import Box from "@material-ui/core/Box";
 import { fetchResource } from "../utils";
@@ -41,9 +41,9 @@ const Notifications = (props) => {
     refetchIntervalInBackground: true,
   });
   let notifications;
-  if (status == "error") {
+  if (status === "error") {
     notifications = <div>Error</div>;
-  } else if (status == "loading") {
+  } else if (status === "loading") {
     notifications = <div>Loading</div>;
   } else {
     notifications = data.notifications.map((notification) => (
