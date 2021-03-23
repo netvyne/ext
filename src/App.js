@@ -1,4 +1,3 @@
-/*global chrome*/
 import { Discussion } from "./discussion";
 import { Sharing } from "./sharing";
 import { Notifications } from "./notifications";
@@ -62,9 +61,9 @@ export default function App() {
   const [value, setValue] = React.useState(0);
   const { data, status } = useQuery("/get_user");
   let user;
-  if (status == "error") {
+  if (status === "error") {
     user = <div>Error</div>;
-  } else if (status == "loading") {
+  } else if (status === "loading") {
     user = <div>Loading</div>;
   } else {
     user = data.username;
@@ -106,7 +105,7 @@ export default function App() {
           <Sharing />
         </TabPanel>
         <TabPanel value={value} index={2} dir={theme.direction}>
-          <Notifications selected={2 == value} />
+          <Notifications selected={2 === value} />
         </TabPanel>
         <TabPanel value={value} index={3} dir={theme.direction}>
           <Profile user={user} />

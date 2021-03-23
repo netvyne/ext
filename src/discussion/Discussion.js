@@ -2,7 +2,6 @@ import { Box } from "@material-ui/core";
 import React, { useState } from "react";
 import { useQuery } from "react-query";
 import ChildBox from "./ChildBox";
-import ParentBox from "./ParentBox";
 import WebsiteBox from "./WebsiteBox";
 import ActionBox from "./ActionBox";
 

@@ -2,7 +2,6 @@
 import React, { useRef, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import { screenShot } from "../utils";
-import { withStyles } from "@material-ui/styles";
 import { Box } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 
@@ -31,7 +30,7 @@ export default function Screenshot(props) {
   }
   cropcallback();
 
-  useEffect(() => {
+  useEffect((rect, setRect) => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
     var img = new Image();
@@ -62,7 +61,7 @@ export default function Screenshot(props) {
     img.src = dataURL;
   }, [dataURL]);
 
-  useEffect(() => {
+  useEffect((dataURL) => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
     var img = new Image();
@@ -135,6 +134,9 @@ export default function Screenshot(props) {
           maxWidth: rect.maxWidth,
         };
         break;
+
+        default:
+          break;
     }
 
     setRect(newRect);
