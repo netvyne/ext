@@ -1,7 +1,7 @@
 /*global chrome*/
 /* src/content.js */
-import React from "react";
-import ReactDOM from "react-dom";
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import Frame, { FrameContextConsumer } from "react-frame-component";
 import App from "./App";
 import WrappedJssComponent from "./wrap";
