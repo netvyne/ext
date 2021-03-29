@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { useQuery } from "react-query";
 import Box from "@material-ui/core/Box";
 import { fetchResource } from "../utils";

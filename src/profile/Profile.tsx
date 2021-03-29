@@ -1,5 +1,5 @@
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import React from "react";
+import * as React from "react";
 import Box from "@material-ui/core/Box";
 const Profile = props => {
   return (

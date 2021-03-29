@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { fetchResource } from "../utils";
 import Button from "@material-ui/core/Button";
 import Dropdown from "./Dropdown";
