@@ -3,8 +3,7 @@ import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import moment from "moment/min/moment-with-locales";
-
-const ChildBox = (props) => {
+const ChildBox = props => {
   let childComment;
   childComment = (
     <Box color="text.primary" border={1} m={1} padding={1}>
@@ -26,8 +25,6 @@ const ChildBox = (props) => {
       </Button>
     </Box>
   );
-
   return <CssBaseline>{childComment}</CssBaseline>;
 };
-
 export default ChildBox;

@@ -8,8 +8,7 @@ import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import ShareIcon from "@material-ui/icons/Share";
 import AddCommentSharpIcon from "@material-ui/icons/AddCommentSharp";
-
-const ActionBox = (props) => {
+const ActionBox = props => {
   let actionbox;
   actionbox = (
     <Box mx={2} borderTop={1}>
@@ -32,8 +31,6 @@ const ActionBox = (props) => {
       </Grid>
     </Box>
   );
-
   return <CssBaseline>{actionbox}</CssBaseline>;
 };
-
 export default ActionBox;

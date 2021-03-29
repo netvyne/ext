@@ -7,13 +7,11 @@ import TextField from "@material-ui/core/TextField";
 import { Box } from "@material-ui/core";
 import { useMutation } from "react-query";
 import CircularProgress from "@material-ui/core/CircularProgress";
-
-const Sharing = (props) => {
+const Sharing = props => {
   const [friendIds, setFriendIds] = React.useState([]);
   const [comment, setComment] = React.useState("");
   const [dataURL, setDataURL] = React.useState("");
   const [rect, setRect] = React.useState({ startX: 0, startY: 0 });
-
   const postShare = async () => {
     var url = new URL(`${process.env.PUBLIC_API}/send_share`);
     var args = {
@@ -23,7 +21,7 @@ const Sharing = (props) => {
       dataURL: dataURL,
       rect: rect,
       receiver_ids: friendIds,
-      comment: comment,
+      comment: comment
     };
     var init = {
       method: "POST",
@@ -33,16 +31,15 @@ const Sharing = (props) => {
       headers: { "Content-Type": "application/json" },
       redirect: "follow",
       referrerPolicy: "no-referrer",
-      body: JSON.stringify(args),
+      body: JSON.stringify(args)
     };
     const res = await fetchResource(url, init);
     return res.json();
   };
   const mutation = useMutation(postShare);
-  const onPostShare = async (e) => {
+  const onPostShare = async e => {
     // Prevent the form from refreshing the page
     e.preventDefault();
-
     try {
       await mutation.mutate();
       // reset form state
@@ -81,8 +78,7 @@ const Sharing = (props) => {
       </Box>
     );
   }
-  let bbox = <Box></Box>;
-
+  let bbox = <Box />;
   return (
     <Box m={1}>
       <form onSubmit={onPostShare}>
@@ -98,7 +94,7 @@ const Sharing = (props) => {
         <Box m={1}>
           <TextField
             value={comment}
-            onInput={(e) => setComment(e.target.value)}
+            onInput={e => setComment(e.target.value)}
             id="nv-message"
             label="Message"
             placeholder="Lookit!"
@@ -112,5 +108,4 @@ const Sharing = (props) => {
     </Box>
   );
 };
-
 export default Sharing;

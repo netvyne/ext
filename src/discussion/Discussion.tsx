@@ -4,8 +4,7 @@ import { useQuery } from "react-query";
 import ChildBox from "./ChildBox";
 import WebsiteBox from "./WebsiteBox";
 import ActionBox from "./ActionBox";
-
-const Discussion = (props) => {
+const Discussion = props => {
   const [parentId, setParentId] = useState(0);
   let location = document.location;
   var route = `/get_webcomment_trees?host=${location.host}&pathname=${location.pathname}&search=${location.search}`;
@@ -20,14 +19,11 @@ const Discussion = (props) => {
     children = null;
   } else if (status === "loading") {
     website = <div>Loading</div>;
-
     children = null;
   } else {
     website = <WebsiteBox website={data.website} />;
     if (data.children) {
-      children = data.children.map((comment) => (
-        <ChildBox comment={comment} setParentId={setParentId} />
-      ));
+      children = data.children.map(comment => <ChildBox comment={comment} setParentId={setParentId} />);
     }
   }
   return (
@@ -38,5 +34,4 @@ const Discussion = (props) => {
     </Box>
   );
 };
-
 export default Discussion;

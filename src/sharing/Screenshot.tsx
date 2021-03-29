@@ -4,83 +4,82 @@ import Button from "@material-ui/core/Button";
 import { screenShot } from "../utils";
 import { Box } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
-
 export default function Screenshot(props) {
   var dataURL = props.dataURL;
   var setDataURL = props.setDataURL;
   var rect = props.rect;
   var setRect = props.setRect;
-
   const canvasRef = useRef(null);
   function takeScreenShot() {
     screenShot("take", cropcallback); // saves to local storage
   }
-
   function clearScreenShot() {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
     context.clearRect(0, 0, canvas.width, canvas.height);
     screenShot("clear", cropcallback); // saves to local storage
   }
-
   function cropcallback() {
-    chrome.storage.local.get({ screenshot: null }, (data) => {
+    chrome.storage.local.get({ screenshot: null }, data => {
       setDataURL(data.screenshot);
     });
   }
   cropcallback();
-
-  useEffect((rect, setRect) => {
-    const canvas = canvasRef.current;
-    const context = canvas.getContext("2d");
-    var img = new Image();
-    img.onload = function () {
-      context.drawImage(
-        img,
-        0,
-        0,
-        img.width,
-        img.height, // source rectangle
-        0,
-        0,
-        canvas.width,
-        canvas.height
-      ); // destination rectangle
-      setRect(
-        Object.assign(
-          {
-            width: img.width,
-            height: img.height,
-            maxWidth: img.width,
-            maxHeight: img.height,
-          },
-          rect
-        )
-      );
-    };
-    img.src = dataURL;
-  }, [dataURL]);
-
-  useEffect((dataURL) => {
-    const canvas = canvasRef.current;
-    const context = canvas.getContext("2d");
-    var img = new Image();
-    img.onload = function () {
-      context.drawImage(
-        img,
-        rect.startX,
-        rect.startY,
-        rect.width,
-        rect.height, // source rectangle
-        0,
-        0,
-        canvas.width,
-        canvas.height
-      ); // destination rectangle
-    };
-    img.src = dataURL;
-  }, [rect]);
-
+  useEffect(
+    (rect, setRect) => {
+      const canvas = canvasRef.current;
+      const context = canvas.getContext("2d");
+      var img = new Image();
+      img.onload = function() {
+        context.drawImage(
+          img,
+          0,
+          0,
+          img.width,
+          img.height, // source rectangle
+          0,
+          0,
+          canvas.width,
+          canvas.height
+        ); // destination rectangle
+        setRect(
+          Object.assign(
+            {
+              width: img.width,
+              height: img.height,
+              maxWidth: img.width,
+              maxHeight: img.height
+            },
+            rect
+          )
+        );
+      };
+      img.src = dataURL;
+    },
+    [dataURL]
+  );
+  useEffect(
+    dataURL => {
+      const canvas = canvasRef.current;
+      const context = canvas.getContext("2d");
+      var img = new Image();
+      img.onload = function() {
+        context.drawImage(
+          img,
+          rect.startX,
+          rect.startY,
+          rect.width,
+          rect.height, // source rectangle
+          0,
+          0,
+          canvas.width,
+          canvas.height
+        ); // destination rectangle
+      };
+      img.src = dataURL;
+    },
+    [rect]
+  );
   function changeSize(event) {
     const value = parseInt(event.target.value);
     const item = event.target.id;
@@ -96,10 +95,9 @@ export default function Screenshot(props) {
           ),
           height: rect.height,
           maxHeight: rect.maxHeight,
-          maxWidth: rect.maxWidth,
+          maxWidth: rect.maxWidth
         };
         break;
-
       case "startY":
         newRect = {
           startX: rect.startX,
@@ -110,7 +108,7 @@ export default function Screenshot(props) {
             rect.height - (value + rect.height - rect.maxHeight)
           ),
           maxHeight: rect.maxHeight,
-          maxWidth: rect.maxWidth,
+          maxWidth: rect.maxWidth
         };
         break;
       case "rect-width":
@@ -120,10 +118,9 @@ export default function Screenshot(props) {
           width: value,
           height: rect.height,
           maxHeight: rect.maxHeight,
-          maxWidth: rect.maxWidth,
+          maxWidth: rect.maxWidth
         };
         break;
-
       case "rect-height":
         newRect = {
           startX: rect.startX,
@@ -131,17 +128,14 @@ export default function Screenshot(props) {
           width: rect.width,
           height: value,
           maxHeight: rect.maxHeight,
-          maxWidth: rect.maxWidth,
+          maxWidth: rect.maxWidth
         };
         break;
-
-        default:
-          break;
+      default:
+        break;
     }
-
     setRect(newRect);
   }
-
   return (
     <div>
       <Button onClick={takeScreenShot}> Include Screenshot </Button>
@@ -166,8 +160,8 @@ export default function Screenshot(props) {
           InputProps={{
             inputProps: {
               max: rect.maxWidth,
-              min: 0,
-            },
+              min: 0
+            }
           }}
           value={rect.startX}
           onChange={changeSize}
@@ -180,8 +174,8 @@ export default function Screenshot(props) {
           InputProps={{
             inputProps: {
               max: rect.maxHeight,
-              min: 0,
-            },
+              min: 0
+            }
           }}
           value={rect.startY}
           onChange={changeSize}
@@ -194,8 +188,8 @@ export default function Screenshot(props) {
           InputProps={{
             inputProps: {
               max: rect.maxWidth - rect.startX,
-              min: 0,
-            },
+              min: 0
+            }
           }}
           value={rect.width}
           onChange={changeSize}
@@ -208,8 +202,8 @@ export default function Screenshot(props) {
           InputProps={{
             inputProps: {
               max: rect.maxHeight - rect.startY,
-              min: 0,
-            },
+              min: 0
+            }
           }}
           value={rect.height}
           onChange={changeSize}

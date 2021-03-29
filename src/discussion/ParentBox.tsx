@@ -4,8 +4,7 @@ import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import moment from "moment/min/moment-with-locales";
 import LeaveReply from "./LeaveReply";
-
-const ParentBox = (props) => {
+const ParentBox = props => {
   let parentComment;
   if (props.comment) {
     parentComment = (
@@ -37,8 +36,6 @@ const ParentBox = (props) => {
       </Box>
     );
   }
-
   return <CssBaseline>{parentComment}</CssBaseline>;
 };
-
 export default ParentBox;

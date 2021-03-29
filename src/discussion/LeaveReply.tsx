@@ -13,8 +13,7 @@ import TextField from "@material-ui/core/TextField";
 import { fetchResource } from "../utils";
 import SendIcon from "@material-ui/icons/Send";
 import { useQueryClient } from "react-query";
-
-const LeaveReply = (props) => {
+const LeaveReply = props => {
   let parent_id;
   if (props.parent) {
     parent_id = props.parent.id;
@@ -23,7 +22,7 @@ const LeaveReply = (props) => {
   }
   const queryCache = useQueryClient();
   const [comment, setComment] = React.useState("");
-  const postComment = async (event) => {
+  const postComment = async event => {
     event.preventDefault();
     var url = new URL(`${process.env.PUBLIC_API}/post_webcomment`);
     var init = {
@@ -39,8 +38,8 @@ const LeaveReply = (props) => {
         pathname: document.location.pathname,
         search: document.location.search,
         parent_id: parent_id,
-        comment: comment,
-      }),
+        comment: comment
+      })
     };
     const res = await fetchResource(url, init);
     // invalidate query cache
@@ -59,21 +58,13 @@ const LeaveReply = (props) => {
         </AccordionSummary>
         <AccordionDetails>
           <div>
-            <TextField
-              value={comment}
-              onInput={(e) => setComment(e.target.value)}
-            />
+            <TextField value={comment} onInput={e => setComment(e.target.value)} />
           </div>
         </AccordionDetails>
         <Divider />
         <AccordionActions>
           <Button size="small">Cancel</Button>
-          <Button
-            type="submit"
-            size="small"
-            color="primary"
-            endIcon={<SendIcon />}
-          >
+          <Button type="submit" size="small" color="primary" endIcon={<SendIcon />}>
             {" "}
             Submit{" "}
           </Button>
@@ -81,12 +72,10 @@ const LeaveReply = (props) => {
       </Accordion>
     </form>
   );
-
   return (
     <CssBaseline>
       <Box>{commentForm}</Box>
     </CssBaseline>
   );
 };
-
 export default LeaveReply;

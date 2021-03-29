@@ -3,13 +3,11 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { useQuery } from "react-query";
-
 export default function Dropdown(props) {
   const { isLoading, data } = useQuery("/get_friends");
-  const changed = function (event, value, reason) {
-    props.setFriendIds(value.map((user) => user.id));
+  const changed = function(event, value, reason) {
+    props.setFriendIds(value.map(user => user.id));
   };
-
   return (
     <Autocomplete
       multiple
@@ -20,8 +18,8 @@ export default function Dropdown(props) {
       disablePortal={true}
       anchorEl={this}
       loading={isLoading}
-      getOptionLabel={(option) => option.given_name + " " + option.family_name}
-      renderInput={(params) => (
+      getOptionLabel={option => option.given_name + " " + option.family_name}
+      renderInput={params => (
         <TextField
           {...params}
           label="Select friend(s)..."
@@ -35,7 +33,7 @@ export default function Dropdown(props) {
                 ) : null}
                 {params.InputProps.endAdornment}
               </React.Fragment>
-            ),
+            )
           }}
         />
       )}
