@@ -29,7 +29,7 @@ class Main extends React.Component<{}, {}> {
             return (
               <WrappedJssComponent>
                 <QueryClientProvider client={queryClient}>
-                  <App document={document} window={window} isExt={true} />
+                  <App document={document} window={window}/>
                 </QueryClientProvider>
               </WrappedJssComponent>
             );
