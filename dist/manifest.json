@@ -19,6 +19,12 @@
     "scripts": ["js/background.js"]
   },
 
+  "icons": { "512": "logo.png"},
+
+  "web_accessible_resources":[
+    "/static/css/content.css", "/static/media/*"
+  ],
+
   "permissions": [
     "storage",
     "tabs",
