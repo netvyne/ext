@@ -1,8 +1,9 @@
 {
   "manifest_version": 2,
-
+  "short_name": "Netvyne",
   "name": "Netvyne",
   "version": "0.0",
+  "key": "mlhdicffmjdikmmbnpfagiiohadjhgif",
 
   "browser_action": {},
 
@@ -14,7 +15,7 @@
   ],
 
   "background": {
-    "scripts": ["js/vendor.js", "js/background.js"]
+    "scripts": ["js/background.js"]
   },
 
   "permissions": [
