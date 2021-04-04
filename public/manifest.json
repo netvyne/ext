@@ -11,7 +11,7 @@
       {
           "matches": ["<all_urls>"],
           "css": ["css/root.css"],
-          "js": ["js/vendor.js", "js/content_script.js"]
+          "js": ["js/content_script.js"]
       }
   ],
 
