@@ -13,6 +13,7 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import { useQuery } from "react-query";
 import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
+import { GetUserQuery } from "../types/common/response-types";
 type TabPanelProps = {
   index: any,
   value: any
@@ -41,7 +42,7 @@ function a11yProps(index: number) {
     "aria-controls": `full-width-tabpanel-${index}`
   };
 }
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: { palette: { background: { paper: any; }; }; }) => ({
   root: {
     backgroundColor: theme.palette.background.paper,
     width: "auto"
@@ -51,14 +52,14 @@ export default function App() {
   const classes = useStyles();
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
-  const { data, status } = useQuery("/get_user");
+  const { data, status } = useQuery<GetUserQuery, string>("/get_user");
   let user;
   if (status === "error") {
     user = <div>Error</div>;
   } else if (status === "loading") {
     user = <div>Loading</div>;
   } else {
-    user = data.username;
+    user = data!.user.username;
   }
   const handleChange = (event: any, newValue: any) => {
     setValue(newValue);
@@ -88,15 +89,19 @@ export default function App() {
         index={value}
         onChangeIndex={handleChangeIndex}
       >
+        {/*@ts-ignore*/}
         <TabPanel value={value} index={0} dir={theme.direction}>
           <Discussion />
         </TabPanel>
+        {/*@ts-ignore*/}
         <TabPanel value={value} index={1} dir={theme.direction}>
           <Sharing />
         </TabPanel>
+        {/*@ts-ignore*/}
         <TabPanel value={value} index={2} dir={theme.direction}>
           <Notifications selected={2 === value} />
         </TabPanel>
+        {/*@ts-ignore*/}
         <TabPanel value={value} index={3} dir={theme.direction}>
           <Profile user={user} />
         </TabPanel>

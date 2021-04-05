@@ -4,11 +4,13 @@
         "module": "commonjs",
         "target": "es6",
         "esModuleInterop": true,
+        "moduleResolution": "node",
+        "allowSyntheticDefaultImports": true,
         "sourceMap": false,
         "rootDir": "src",
         "outDir": "dist/js",
         "noEmitOnError": true,
         "jsx": "react",
-        "typeRoots": [ "node_modules/@types" ]
+        "typeRoots": [ "node_modules/@types", "./types" ]
     }
 }

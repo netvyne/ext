@@ -9,7 +9,8 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { fetchResource } from "./utils";
 const defaultQueryFn = async ({ queryKey }) => {
   var url = new URL(`${process.env.PUBLIC_API}${queryKey[0]}`);
-  const res = await fetchResource(url);
+  //@ts-ignore
+  const res : any = await fetchResource(url);
   return res.json();
 };
 const queryClient = new QueryClient({

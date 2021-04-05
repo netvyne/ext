@@ -2,7 +2,7 @@ import * as React from "react";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
-const NotificationBox = props => {
+const NotificationBox = (props : any) => {
   let notif = (
     <Box color="text.primary" border={1} m={1} padding={1}>
       <Box>Type: {props.notification.is_reply ? "Reply" : "Share"}</Box>
