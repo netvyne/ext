@@ -8,3 +8,10 @@
 5. Select build folder 'build'
 
 On extension menu press 'refresh' button to see changes/update extension
+
+
+
+## Relevant Frameworks
+- [Typescript](https://www.typescriptlang.org/docs/handbook/intro.html)
+- React
+- [React Query](https://react-query.tanstack.com/)
