@@ -4,14 +4,18 @@ import PropTypes from "prop-types";
 // import SwipeableViews from "react-swipeable-views";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { browser } from "webextension-polyfill-ts";
-// import { Scroller } from "@src/components/scroller";
+import { Scroller } from "@src/components/scroller";
+import { Sharing } from "@src/components/sharing";
+import { Profile } from "@src/components/profile";
+import { Discussion } from "@src/components/discussion";
+import { Notifications } from "@src/components/notifications";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import { useQuery } from "react-query";
-// import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
+import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 import {Row, Col, Button, Nav} from 'react-bootstrap';
 
 import "./styles.scss";
@@ -100,7 +104,7 @@ export const Popup: FunctionComponent = () => {
                     variant="fullWidth"
                     aria-label="full width tabs example"
                     >
-                    <Tab label="Messaging" {...a11yProps(0)} />
+                    <Tab icon={<ChatBubbleOutlineIcon />} {...a11yProps(0)} />
                     <Tab label="Sharing" {...a11yProps(1)} />
                     <Tab label="Notifs" {...a11yProps(2)} />
                     <Tab label="Profile" {...a11yProps(3)} />
@@ -108,16 +112,16 @@ export const Popup: FunctionComponent = () => {
                 </AppBar>
 
                 <TabPanel value={value} index={0} dir={theme.direction}>
-                    Discussion
+                    <Discussion />
                 </TabPanel>
                 <TabPanel value={value} index={1} dir={theme.direction}>
-                    Sharing
+                  <Sharing />
                 </TabPanel>
                 <TabPanel value={value} index={2} dir={theme.direction}>
-                    Notifications
+                  <Notifications />
                 </TabPanel>
                 <TabPanel value={value} index={3} dir={theme.direction}>
-                    Profile
+                    <Profile />
                 </TabPanel>
                 {/* <hr />
                 <Scroller /> */}

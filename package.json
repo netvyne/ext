@@ -81,7 +81,10 @@
     },
     "dependencies": {
         "@material-ui/core": "^4.11.3",
+        "@material-ui/icons": "^4.11.2",
+        "@material-ui/lab": "^4.0.0-alpha.57",
         "bootstrap": "^4.6.0",
+        "moment": "^2.29.1",
         "react": "^16.13.1",
         "react-dom": "^16.13.1",
         "react-query": "^3.13.6",
