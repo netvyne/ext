@@ -1,31 +1,22 @@
 import React from "react";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Accordion from "@material-ui/core/Accordion";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import AccordionActions from "@material-ui/core/AccordionActions";
-import Typography from "@material-ui/core/Typography";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import Divider from "@material-ui/core/Divider";
 import TextField from "@material-ui/core/TextField";
-import { fetchResource } from "../../utils";
+import ReplyIcon from "@material-ui/icons/Reply";
 import SendIcon from "@material-ui/icons/Send";
-import { useQueryClient } from "react-query";
+import { Shout, Website } from "../../../types/common/types";
 
-const LeaveReply = (props : any) => {
-  let parent_id : any;
-  if (props.parent) {
-    parent_id = props.parent.id;
-  } else {
-    parent_id = null;
-  }
-  const queryCache = useQueryClient();
+interface Props {
+  parent?: Shout;
+  website: Website;
+}
+
+const LeaveReply = (props : Props) => {
   const [comment, setComment] = React.useState("");
+  const [showForm, setShowForm] = React.useState(false);
   const postComment = async (event : any) => {
     event.preventDefault();
-    var url = new URL(`${process.env.PUBLIC_API}/post_webcomment`);
+    var url = new URL(`${process.env.REACT_APP_PUBLIC_API}/post_shout`);
     var init = {
       method: "POST",
       mode: "cors",
@@ -35,59 +26,43 @@ const LeaveReply = (props : any) => {
       redirect: "follow",
       referrerPolicy: "no-referrer",
       body: JSON.stringify({
-        host: document.location.host,
-        pathname: document.location.pathname,
-        search: document.location.search,
-        parent_id: parent_id,
-        comment: comment,
+        WebsiteID: props.website.ID,
+		    ParentShoutID: props.parent?.ID,
+		    Comment: comment,
       }),
     };
-    const res : any = await fetchResource(url, init);
-    // invalidate query cache
-    queryCache.invalidateQueries(
-      `/get_webcomments?host=${document.location.host}&pathname=${document.location.pathname}&search=${document.location.search}&parent_id=${parent_id}`
-    );
+    //@ts-ignore
+    const res = await fetch(url, init);
+    setComment("");
     return res.json();
   };
   var commentForm = (
-    <form>
-    {/* <form onSubmit={postComment}> */}
-      <Accordion defaultExpanded>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <div>
-            <Typography>Leave a public reply... </Typography>
-          </div>
-        </AccordionSummary>
-        <AccordionDetails>
-          <div>
-            <TextField
-              value={comment}
-              onInput={(e : any) => setComment(e.target.value)}
-            />
-          </div>
-        </AccordionDetails>
-        <Divider />
-        <AccordionActions>
-          <Button size="small">Cancel</Button>
-          <Button
-            type="submit"
-            size="small"
-            color="primary"
-            endIcon={<SendIcon />}
-          >
-            {" "}
-            Submit{" "}
-          </Button>
-        </AccordionActions>
-      </Accordion>
+    <form onSubmit={postComment}>
+      <TextField value={comment} onInput={(e : any) => setComment(e.target.value)} />
+      <Button
+        size="small"
+        onClick={(e) => {
+          setShowForm(false);
+        }}
+      >
+        Cancel
+      </Button>
+      <Button type="submit" size="small" color="primary" endIcon={<SendIcon />}>
+        {" "}
+        Submit{" "}
+      </Button>
     </form>
   );
 
-  return (
-    <CssBaseline>
-      <Box>{commentForm}</Box>
-    </CssBaseline>
+  let content = showForm ? (
+    commentForm
+  ) : (
+    <Button size="small" onClick={(e) => setShowForm(!showForm)}>
+      Reply
+      <ReplyIcon />
+    </Button>
   );
+  return <Box>{content}</Box>;
 };
 
 export default LeaveReply;

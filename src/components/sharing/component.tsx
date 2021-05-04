@@ -1,17 +1,36 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, Fragment } from "react";
 // import "./styles.scss";
 
 import { fetchResource } from "../../utils";
 import Button from "@material-ui/core/Button";
 import Dropdown from "./dropdown";
 import Screenshot from "./screenshot";
+// import ScreenCapture from './screenCapture'
 import TextField from "@material-ui/core/TextField";
 import { Box } from "@material-ui/core";
 import { QueryClient, QueryClientProvider, useQuery, useMutation } from "react-query";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
+import { render } from 'react-dom';
 
 export const Sharing: FunctionComponent = () => {
+
+
+    const state = {
+        name: 'GAMO',
+        screenCapture: ''
+    }
+    
+    const handleScreenCapture = (ScreenCapture : any) => {
+        // this.setState({
+        //     screenCapture
+        // })
+        state.screenCapture = ScreenCapture;
+    }
+
+    const handleScreenStartCapture = () => {
+        
+    }
 
     const queryClient = new QueryClient();
 
@@ -43,55 +62,6 @@ export const Sharing: FunctionComponent = () => {
             body: JSON.stringify(args),
         };
         const res : any = await fetchResource(url, init);
-        // const res : any = {
-        //     id: 12,
-        //     parent_id: 12,
-        //     author_id: 12,
-        //     ancestor_id: 12,
-        //     author: {
-        //         created_date: "2021-04-14 00:00:00",
-        //         is_registered: false,
-        //         id: 1,
-        //         username: "Ali Raza",
-        //         _passhash: "hfgfghfgfgfgh",
-        //         role: "user",
-        //         google_id: "",
-        //         apple_id: "",
-        //         given_name: "",
-        //         family_name: "",
-        //         email: "aliraza955@gmail.com",
-        //         picture_url: "",
-        //         birthday: "2021-04-14 00:00:00",
-        //         profile_nonce: 12
-        //     },
-        //     website_id: 12,
-        //     website: {
-        //         id: 12,
-        //         host: "host",
-        //         pathname: "path name",
-        //         search: "search",
-        //         title: "Title",
-        //         description: "Description",
-        //         image: "Image",
-        //         preview_processed: false,
-        //         isSaved: true,
-        //         url: "URL",
-        //         created_date: "2021-04-14 00:00:00",
-        //         webcomments: 12
-        //     },
-        //     comment: "comment",
-        //     level: 12,
-        //     voted: {
-        //         id: 12,
-        //         user_id: 12,
-        //         webcomment_id: 12,
-        //         website_id: 12,
-        //         sharecomment_id: 12,
-        //         vote_id: 12,
-        //         vote_type: "vote type"
-        //     },
-        //     karma: 12
-        // };
         console.log("res", res);
         return res;
     };
@@ -142,6 +112,8 @@ export const Sharing: FunctionComponent = () => {
     }
     let bbox = <Box></Box>;
 
+    const { screenCapture } = state;
+
     return (
         <Box m={1}>
         <form onSubmit={onPostShare}>
@@ -154,6 +126,23 @@ export const Sharing: FunctionComponent = () => {
             rect={rect}
             setRect={setRect}
             />
+
+
+            {/* <ScreenCapture onEndCapture={handleScreenCapture} onStartCapture={handleScreenStartCapture}>
+                {({ onStartCapture}) => (
+                <Fragment>
+                    <p>
+                    Start editing to see some magic happen :)
+                    </p>
+                    <button onClick={onStartCapture}>Capture</button>
+                    <br/>
+                    <br/>
+                    <img src={screenCapture} />
+                </Fragment>
+                )}
+            </ScreenCapture> */}
+
+
             <Box m={1}>
             <TextField
                 value={comment}

@@ -1,5 +1,4 @@
 import React, { FunctionComponent } from "react";
-// import { Hello } from "@src/components/hello";
 import PropTypes from "prop-types";
 // import SwipeableViews from "react-swipeable-views";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
@@ -17,6 +16,11 @@ import Box from "@material-ui/core/Box";
 import { useQuery } from "react-query";
 import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 import {Row, Col, Button, Nav} from 'react-bootstrap';
+import { QueryClientProvider } from "react-query";
+import { queryClient } from "../query";
+
+// var Hello = require('../components/hello');
+// import  {Hello} from "../components/hello";
 
 import "./styles.scss";
 
@@ -93,6 +97,7 @@ export const Popup: FunctionComponent = () => {
 
     // Renders the component tree
     return (
+      <QueryClientProvider client={queryClient}>
         <div className="popup-container">
             <div className="container mx-4 my-4">
                 <AppBar position="static" color="default" elevation={1}>
@@ -115,6 +120,7 @@ export const Popup: FunctionComponent = () => {
                     <Discussion />
                 </TabPanel>
                 <TabPanel value={value} index={1} dir={theme.direction}>
+                  {/* <Hello /> */}
                   <Sharing />
                 </TabPanel>
                 <TabPanel value={value} index={2} dir={theme.direction}>
@@ -127,5 +133,6 @@ export const Popup: FunctionComponent = () => {
                 <Scroller /> */}
             </div>
         </div>
+      </QueryClientProvider>  
     );
 };

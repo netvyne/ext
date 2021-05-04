@@ -10,21 +10,21 @@ const ChildBox = (props : any) => {
   childComment = (
     <Box color="text.primary" border={1} m={1} padding={1}>
       <Box>
-        <Box component="span">{props.comment.author.username}</Box>
+        <Box component="span">{props.comment.Author.Username}</Box>
         <Box component="span" m={1}>
-          {moment.utc(props.comment.created_date).fromNow()}
+          {moment.utc(props.comment.CreatedAt).fromNow()}
         </Box>
       </Box>
-      <Box>{props.comment.comment}</Box>
-      <Button
+      <Box>{props.comment.Comment}</Box>
+      {/* <Button
         size="small"
         onClick={() => {
-          props.setParentId(props.comment.id);
+          props.setParentId(props.comment.ID);
         }}
       >
         {" "}
         View Replies{" "}
-      </Button>
+      </Button> */}
     </Box>
   );
 
