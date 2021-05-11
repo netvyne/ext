@@ -1,9 +1,11 @@
-import React from "react";
+// import React from "react";
+import React, { FunctionComponent, useEffect, useState } from "react";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import ReplyIcon from "@material-ui/icons/Reply";
 import SendIcon from "@material-ui/icons/Send";
+import { useMutation } from "react-query";
 import { Shout, Website } from "../../../types/common/types";
 
 interface Props {
@@ -14,28 +16,70 @@ interface Props {
 const LeaveReply = (props : Props) => {
   const [comment, setComment] = React.useState("");
   const [showForm, setShowForm] = React.useState(false);
+
+  const [url, setUrl] = useState<any>('');
+  /**
+   * Get current URL
+   */
+  useEffect(() => {
+      const queryInfo = {active: true, lastFocusedWindow: true};
+
+      chrome.tabs && chrome.tabs.query(queryInfo, tabs => {
+          let url : any = tabs[0].url;
+          let urlInfo : any = {};
+          urlInfo.url = url.split("//")[1];
+          urlInfo.host = urlInfo.url.split("/")[0];
+          urlInfo.pathname = urlInfo.url.split("/")[1];
+          urlInfo.title = tabs[0].title;
+          setUrl(urlInfo);
+      });
+  }, []);
+
+
+
+  const mutation = useMutation({});
+  // const postComment = async (event : any) => {
+  //   event.preventDefault();
+  //   var url = new URL(`${process.env.REACT_APP_PUBLIC_API}/post_shout`);
+  //   var init = {
+  //     method: "POST",
+  //     mode: "cors",
+  //     cache: "no-cache",
+  //     credentials: "include",
+  //     headers: { "Content-Type": "application/json" },
+  //     redirect: "follow",
+  //     referrerPolicy: "no-referrer",
+  //     body: JSON.stringify({
+  //       WebsiteID: props.website.ID,
+	// 	    ParentShoutID: props.parent?.ID,
+	// 	    Comment: comment,
+  //     }),
+  //   };
+  //   //@ts-ignore
+  //   const res = await fetch(url, init);
+  //   setComment("");
+  //   return res.json();
+  // };
+
   const postComment = async (event : any) => {
     event.preventDefault();
-    var url = new URL(`${process.env.REACT_APP_PUBLIC_API}/post_shout`);
-    var init = {
-      method: "POST",
-      mode: "cors",
-      cache: "no-cache",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      redirect: "follow",
-      referrerPolicy: "no-referrer",
-      body: JSON.stringify({
-        WebsiteID: props.website.ID,
-		    ParentShoutID: props.parent?.ID,
-		    Comment: comment,
-      }),
+    let data = {
+      WebsiteID: props.website.ID,
+		  ParentShoutID: props.parent?.ID,
+		  Comment: comment,
+      URL: {
+        Host: url.host,
+        Pathname: url.pathname,
+        Search: ''
+      },
+      WebsiteTitle: url.title,
     };
     //@ts-ignore
-    const res = await fetch(url, init);
+    let res = mutation.mutate({ route: "/post_shout", data: data });
     setComment("");
-    return res.json();
+    return res;
   };
+
   var commentForm = (
     <form onSubmit={postComment}>
       <TextField value={comment} onInput={(e : any) => setComment(e.target.value)} />

@@ -2,36 +2,27 @@ import React, { Component, Fragment } from 'react';
 import html2canvas from 'html2canvas';
 
 interface Props {
-    onEndCapture: (url: string) => void;
-    onStartCapture: () => void;
+  onStartCapture: () => null;
+  onEndCapture: (url: string) => null;
 }
-  
-//   interface State {
-//     error: boolean;
-//     field: string;
-//     maxLength: number;
-//     classes: any;
-//     label: string;
-//     edit_form: any;
-//   }
 
 interface State {
-    on: boolean;
-    startX: number;
-    startY: number;
-    endX: number;
-    endY: number;
-    crossHairsTop: number;
-    crossHairsLeft: number;
-    isMouseDown: boolean;
-    windowWidth: number;
-    windowHeight: number;
-    borderWidth: number;
-    cropPositionTop: number;
-    cropPositionLeft: number;
-    cropWidth: number;
-    cropHeigth: number;
-    imageURL: string;
+  on: boolean;
+  startX: number;
+  startY: number;
+  endX: number;
+  endY: number;
+  crossHairsTop: number;
+  crossHairsLeft: number;
+  isMouseDown: boolean;
+  windowWidth: number;
+  windowHeight: number;
+  borderWidth: number;
+  cropPositionTop: number;
+  cropPositionLeft: number;
+  cropWidth: number;
+  cropHeigth: number;
+  imageURL: string;
 };
 
 class ScreenCapture extends React.Component<Props, State> {

@@ -1,9 +1,7 @@
 import React, { FunctionComponent } from "react";
 import PropTypes from "prop-types";
-// import SwipeableViews from "react-swipeable-views";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { browser } from "webextension-polyfill-ts";
-import { Scroller } from "@src/components/scroller";
 import { Sharing } from "@src/components/sharing";
 import { Profile } from "@src/components/profile";
 import { Discussion } from "@src/components/discussion";
@@ -18,9 +16,6 @@ import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 import {Row, Col, Button, Nav} from 'react-bootstrap';
 import { QueryClientProvider } from "react-query";
 import { queryClient } from "../query";
-
-// var Hello = require('../components/hello');
-// import  {Hello} from "../components/hello";
 
 import "./styles.scss";
 
