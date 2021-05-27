@@ -9,6 +9,9 @@ import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 import ShareIcon from "@material-ui/icons/Share";
 
 const WebsiteBox = (props : any) => {
+
+  let websiteTitle : string = "";
+  websiteTitle = (props.website.Title) ? props.website.Title : props.url.title;
   let website;
   website = (
     <Box mx={2} mt={1} borderRadius="borderRadius">
@@ -16,9 +19,9 @@ const WebsiteBox = (props : any) => {
         <Grid container direction="column" alignItems="center" justify="center">
           <Box>
             <Typography variant="h5">
-              {document.title.length < 100
-                ? document.title
-                : document.title.substring(0, 100).concat("...")}
+              {websiteTitle.length < 100
+                ? websiteTitle
+                : websiteTitle.substring(0, 100).concat("...")}
             </Typography>
           </Box>
           <Grid container direction="row" justify="center" spacing={1}>

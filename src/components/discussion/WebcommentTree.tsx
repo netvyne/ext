@@ -17,8 +17,6 @@ interface Props {
 }
 
 const WebcommentTree = (props : Props) => {
-
-  console.log("PROPS ::::", props);
   var children = null;
   if (props.treeRoot.Children) {
   children = props.treeRoot.Children.map((treeRoot : Shout) => (

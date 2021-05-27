@@ -26,53 +26,24 @@ const LeaveReply = (props : Props) => {
 
       chrome.tabs && chrome.tabs.query(queryInfo, tabs => {
           let url : any = tabs[0].url;
-          let urlInfo : any = {};
-          urlInfo.url = url.split("//")[1];
-          urlInfo.host = urlInfo.url.split("/")[0];
-          urlInfo.pathname = urlInfo.url.split("/")[1];
-          urlInfo.title = tabs[0].title;
-          setUrl(urlInfo);
+          url = new URL(url);
+          setUrl(url);
       });
   }, []);
 
 
 
   const mutation = useMutation({});
-  // const postComment = async (event : any) => {
-  //   event.preventDefault();
-  //   var url = new URL(`${process.env.REACT_APP_PUBLIC_API}/post_shout`);
-  //   var init = {
-  //     method: "POST",
-  //     mode: "cors",
-  //     cache: "no-cache",
-  //     credentials: "include",
-  //     headers: { "Content-Type": "application/json" },
-  //     redirect: "follow",
-  //     referrerPolicy: "no-referrer",
-  //     body: JSON.stringify({
-  //       WebsiteID: props.website.ID,
-	// 	    ParentShoutID: props.parent?.ID,
-	// 	    Comment: comment,
-  //     }),
-  //   };
-  //   //@ts-ignore
-  //   const res = await fetch(url, init);
-  //   setComment("");
-  //   return res.json();
-  // };
-
   const postComment = async (event : any) => {
     event.preventDefault();
     let data = {
-      WebsiteID: props.website.ID,
 		  ParentShoutID: props.parent?.ID,
 		  Comment: comment,
       URL: {
         Host: url.host,
         Pathname: url.pathname,
-        Search: ''
-      },
-      WebsiteTitle: url.title,
+        Search: url.search
+      }
     };
     //@ts-ignore
     let res = mutation.mutate({ route: "/post_shout", data: data });
