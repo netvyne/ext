@@ -5,14 +5,13 @@ import { DateTime } from "luxon";
 interface User {
     CreatedAt: DateTime;
     ID: number;
-    Provider: string;
+    Registered: boolean;
 	UserName: string; 
-	_passHash: string;
 	Role: string;
-	IDToken: string;
 	FirstName: string;
 	LastName: string;
 	Email: string;
+	VerifiedEmail: boolean;
 	AvatarURL: string;
 	Birthday: DateTime;
 	ProfileNonce: number;
@@ -28,6 +27,7 @@ interface UserRelation {
     ReceiverID: number;
     Receiver: User;
     Status: string;
+	// MutualFriends: number;
 }
 
 interface Website {
@@ -101,7 +101,7 @@ interface Shout {
 	Website: Website;
 	Comment: string;
 	Level: number;
-    Karma: number;
+	Karma: number;
 	Upvotes: number;
 	Downvotes: number;
 	VoteStatus: string;

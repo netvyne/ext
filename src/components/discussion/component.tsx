@@ -17,6 +17,7 @@ interface GetWebcommentTreesQuery {
 
 const Discussion = (props : any) => {
   const [parentId, setParentId] = useState(0);
+  // const [createdWebsite, setCreatedWebsite] = useState<Website>();
 
   const [user, setUser] = React.useState<User|any>()
   getCurrentUser().then( (currentUser:User|any) => setUser(currentUser))
@@ -39,6 +40,7 @@ const Discussion = (props : any) => {
   let children;
   let website;
   let trees;
+  let actionBox;
   if (status === "error") {
     website = <div>Error</div>;
     children = null;
@@ -46,9 +48,14 @@ const Discussion = (props : any) => {
     website = <div>Loading</div>;
     children = null;
   } else {
+    // setCreatedWebsite(data.Website);
+    // console.log("Created Website", createdWebsite);
     website = <>
       <WebsiteBox website={data.Website} url={url} />
       <LeaveReply website={data.Website} />
+    </>;
+    actionBox = <>
+      <ActionBox  website={data.Website} url={url} reg={user.Registered}/>
     </>;
     if(data.Roots){
       trees = data.Roots.map((treeRoot : any) => (
@@ -64,7 +71,7 @@ const Discussion = (props : any) => {
   return (
     <Box>
       {website}
-      <ActionBox  website={website} url={url} />
+      {actionBox}
       {/* {children} */}
       {trees}
     </Box>
