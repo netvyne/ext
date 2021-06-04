@@ -1,3 +1,4 @@
 FROM node:12-slim
 COPY package.json /ext/
-RUN cd ext && npm install
+COPY yarn.lock /ext/
+RUN cd ext && yarn install
