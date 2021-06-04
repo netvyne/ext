@@ -73,7 +73,7 @@ export const Notifications : FunctionComponent = (props : any) => {
       <NotificationBox notification={notification} />
     ));
   }
-  return <Box m={1}>{notifications}</Box>;
+  return <Box m={2}>{notifications}</Box>;
 };
 
 // export default Notifications;
