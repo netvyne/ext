@@ -64,8 +64,9 @@ function getClientEnvironment(publicUrl) {
   process.env.PUBLIC_URL = publicUrl;
   if (parseInt(process.env.DEV)) {
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
-    process.env.PUBLIC_API = "https://localhost:8000";
+    // process.env.PUBLIC_API = "http://localhost:5000/api";
     process.env.PUBLIC_WEB = "http://localhost:3000";
+    process.env.REACT_APP_PUBLIC_API = "http://localhost:5000/api";
   } else {
     process.env.PUBLIC_API = "https://api.netvyne.com";
     process.env.PUBLIC_WEB = "https://www.netvyne.com";
