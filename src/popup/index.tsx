@@ -1,0 +1,25 @@
+import * as React from "react";
+import * as ReactDOM from "react-dom";
+import { browser } from "webextension-polyfill-ts";
+import { Popup } from "./component";
+import * as Sentry from "@sentry/react";
+import { Integrations } from "@sentry/tracing";
+
+import "../scss/app.scss";
+
+// // // //
+
+Sentry.init({
+    dsn: "https://53854b70b3ef4bcfbbca31001b73fcc1@o746986.ingest.sentry.io/5796177",
+    integrations: [new Integrations.BrowserTracing()],
+  
+    // Set tracesSampleRate to 1.0 to capture 100%
+    // of transactions for performance monitoring.
+    // We recommend adjusting this value in production
+    tracesSampleRate: 1.0,
+  });
+  
+
+browser.tabs.query({ active: true, currentWindow: true }).then(() => {
+    ReactDOM.render(<Popup />, document.getElementById("popup"));
+});
