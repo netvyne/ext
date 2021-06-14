@@ -61,8 +61,6 @@ In [Mozilla Firefox](https://www.mozilla.org/en-US/firefox/new/), open up the [a
 
 - Includes a custom mock for the [webextension-polyfill-ts](https://github.com/Lusito/webextension-polyfill-ts) package in `src/__mocks__`. This allows you to mock any browser APIs used by your extension so you can develop your components inside Storybook.
 
-![Example Storybook Setup](https://i.imgur.com/ER0WHtY.png "Example Storybook Setup")
-
 **Built with**
 
 - [React](https://reactjs.org)
