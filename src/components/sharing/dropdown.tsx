@@ -4,42 +4,33 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { useQuery } from "react-query";
+import { User } from "../../../types/common/types";
+
+interface GetFriendQuery {
+  Friends: User[];
+}
 
 export default function Dropdown(props : any) {
 // export const Dropdown: FunctionComponent = (props : any) => {  
   // const { isLoading, data } = useQuery<any, any>("/get_friends");
-  const data : any = {
-    friends : [{
-      created_date: "2021-04-14 00:00:00",
-      is_registered: true,
-      id: 12,
-      username: "USERNAME",
-      _passhash: "PASSHASH",
-      role: "ROLE",
-      google_id: "GOOGLE",
-      apple_id: "APPLE",
-      given_name: "GIVEN NAME",
-      family_name: "FAMILY NAME",
-      email: "EMAIL",
-      picture_url: "PICTURE URL",
-      birthday: "2021-04-14 00:00:00",
-      profile_nonce: 12
-    }]}
-  const isLoading = false;
-  const changed = function (event : any, value : any, reason : any) {
-    props.setFriendIds(value.map((user : any) => user.id));
+  
+
+  const { isLoading, data } = useQuery<GetFriendQuery>("/get_user_friends");
+  const changed = function (event : any, value : any, reason :any) {
+    props.setFriendIds(value.map((user : User) => user.ID));
   };
 
+  let friendsPlaceholder: User[] = [];
   return (
     <Autocomplete
       multiple
       onChange={changed}
       id="tags-standard"
       style={{ width: "auto" }}
-      options={isLoading ? {} : data.friends}
+      options={isLoading ? friendsPlaceholder : data!.Friends}
       disablePortal={true}
       loading={isLoading}
-      getOptionLabel={(option) => option.given_name + " " + option.family_name}
+      getOptionLabel={(option : User) => option.FirstName + " " + option.LastName}
       renderInput={(params) => (
         <TextField
           {...params}

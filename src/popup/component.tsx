@@ -5,6 +5,7 @@ import { browser } from "webextension-polyfill-ts";
 import { Sharing } from "@src/components/sharing";
 import { Profile } from "@src/components/profile";
 import { Discussion } from "@src/components/discussion";
+// import { Capture } from "@src/components/capture";
 import { Notifications } from "@src/components/notifications";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
