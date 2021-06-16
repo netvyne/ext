@@ -7,6 +7,7 @@ import { Profile } from "@src/components/profile";
 import { Discussion } from "@src/components/discussion";
 // import { Capture } from "@src/components/capture";
 import { Notifications } from "@src/components/notifications";
+import { Chat } from "@src/components/chat";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -14,6 +15,10 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import { useQuery } from "react-query";
 import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
+import ShareIcon from '@material-ui/icons/Share';
+import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
+import PersonIcon from '@material-ui/icons/Person';
+import ChatIcon from '@material-ui/icons/Chat';
 import {Row, Col, Button, Nav} from 'react-bootstrap';
 import { QueryClientProvider } from "react-query";
 import { queryClient } from "../query";
@@ -106,9 +111,13 @@ export const Popup: FunctionComponent = () => {
                     aria-label="full width tabs example"
                     >
                     <Tab icon={<ChatBubbleOutlineIcon />} {...a11yProps(0)} />
-                    <Tab label="Sharing" {...a11yProps(1)} />
-                    <Tab label="Notifs" {...a11yProps(2)} />
-                    <Tab label="Profile" {...a11yProps(3)} />
+                    <Tab icon={<ShareIcon />} {...a11yProps(1)}></Tab>
+                    {/* <Tab label="Sharing" {...a11yProps(1)} /> */}
+                    <Tab icon={<NotificationsActiveIcon />} {...a11yProps(2)}></Tab>
+                    {/* <Tab label="Notifs" {...a11yProps(2)} /> */}
+                    <Tab icon={<PersonIcon />} {...a11yProps(3)}></Tab>
+                    {/* <Tab label="Profile" {...a11yProps(3)} /> */}
+                    <Tab icon={<ChatIcon />} {...a11yProps(4)}></Tab>
                     </Tabs>
                 </AppBar>
 
@@ -124,6 +133,9 @@ export const Popup: FunctionComponent = () => {
                 </TabPanel>
                 <TabPanel value={value} index={3} dir={theme.direction}>
                     <Profile />
+                </TabPanel>
+                <TabPanel value={value} index={4} dir={theme.direction}>
+                    <Chat />
                 </TabPanel>
                 {/* <hr />
                 <Scroller /> */}
