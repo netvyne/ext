@@ -78,9 +78,6 @@ docs/_build/
 # DS_store stuff
 *.DS_Store
 
-# VScode
-**.vscode
-
 # node modules
 **/node_modules
 
