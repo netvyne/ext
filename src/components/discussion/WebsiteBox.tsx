@@ -10,6 +10,8 @@ import ShareIcon from "@material-ui/icons/Share";
 
 const WebsiteBox = (props : any) => {
 
+  console.log("PROPS ::: ", props)
+
   let websiteTitle : string = "";
   websiteTitle = (props.website.Title) ? props.website.Title : props.url.title;
   let website;
