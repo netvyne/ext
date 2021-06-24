@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useEffect, useRef } from "react";
 import { useQuery } from "react-query";
 import Box from "@material-ui/core/Box";
 import TextField from "@material-ui/core/TextField";
@@ -9,14 +9,18 @@ import Button from '@material-ui/core/Button';
 
 export const Chat : FunctionComponent = (props : any) => {
     const [comment, setComment] = React.useState('');
-    let socket = new WebSocket('ws://localhost:5000/api/get_chat_socket?website_id=201');
-    socket.onopen = function(e) {
-        console.log('[open] Connection established');
-        console.log('Sending to server');
-        // socket.send("My name is John");
-    };
-    // const socket = io('ws://localhost:5000/api/get_chat_socket');
-    console.log('socket ::: ', socket);
+    const webSocket = useRef<WebSocket | null>(null);
+
+    useEffect(() => {
+        const socket = new WebSocket('ws://localhost:5000/api/get_chat_socket?website_id=1');
+        console.log('socket created', socket)
+
+        webSocket.current =  socket
+        webSocket.current.onmessage = (message : any) => {
+            console.log("message:", message)
+        };
+        return () => {console.log("Closing");webSocket.current?.close()};
+    }, []);
 
     const mutation = useMutation({});
     const postChat = async (event : any) => {
@@ -24,7 +28,7 @@ export const Chat : FunctionComponent = (props : any) => {
         const data = {
             ParentShoutID: 0,
             Comment: comment,
-            WebsiteID: 209
+            WebsiteID: 1
         };
         // @ts-ignore
         const res = mutation.mutate({ route: '/post_chat', data });
