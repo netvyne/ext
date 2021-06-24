@@ -1,78 +1,80 @@
 // import React from "react";
-import React, { FunctionComponent, useEffect, useState } from "react";
-import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import ReplyIcon from "@material-ui/icons/Reply";
-import SendIcon from "@material-ui/icons/Send";
-import { useMutation } from "react-query";
-import { Shout, Website } from "../../../types/common/types";
+import React, { useEffect, useState } from 'react';
+import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import ReplyIcon from '@material-ui/icons/Reply';
+import SendIcon from '@material-ui/icons/Send';
+import { useMutation } from 'react-query';
+import { Shout, Website } from '../../../types/common/types';
 
 interface Props {
+  // eslint-disable-next-line react/require-default-props
   parent?: Shout;
   website: Website;
+  url: URL;
 }
 
-const LeaveReply = (props : Props) => {
-  const [comment, setComment] = React.useState("");
+const LeaveReply = ({ parent, website, url }: Props) => {
+  const [comment, setComment] = React.useState('');
   const [showForm, setShowForm] = React.useState(false);
 
-  const [url, setUrl] = useState<any>('');
+  // const [url, setUrl] = useState<any>('');
   /**
    * Get current URL
    */
-  useEffect(() => {
-      const queryInfo = {active: true, lastFocusedWindow: true};
-
-      chrome.tabs && chrome.tabs.query(queryInfo, tabs => {
-          let url : any = tabs[0].url;
-          url = new URL(url);
-          setUrl(url);
-      });
-  }, []);
-
-
+  // useEffect(() => {
+  //   const queryInfo = { active: true, lastFocusedWindow: true };
+  //   // eslint-disable-next-line no-unused-expressions
+  //   chrome.tabs && chrome.tabs.query(queryInfo, (tabs) => {
+  //     let { newurl } : any = tabs[0];
+  //     newurl = new URL(newurl);
+  //     setUrl(newurl);
+  //   });
+  // }, []);
 
   const mutation = useMutation({});
   const postComment = async (event : any) => {
     event.preventDefault();
-    let data = {
-		  ParentShoutID: props.parent?.ID,
-		  Comment: comment,
+    console.log('url :::: ', url);
+    const data = {
+      ParentShoutID: parent?.ID,
+      Comment: comment,
       URL: {
         Host: url.host,
         Pathname: url.pathname,
-        Search: url.search
-      }
+        Search: url.search,
+      },
     };
-    //@ts-ignore
-    let res = mutation.mutate({ route: "/post_shout", data: data });
-    setComment("");
+    // @ts-ignore
+    const res = mutation.mutate({ route: '/post_shout', data });
+    setComment('');
     return res;
   };
 
-  var commentForm = (
+  const commentForm = (
     <form onSubmit={postComment}>
       <TextField value={comment} onInput={(e : any) => setComment(e.target.value)} />
       <Button
         size="small"
-        onClick={(e) => {
+        onClick={() => {
           setShowForm(false);
         }}
       >
         Cancel
       </Button>
       <Button type="submit" size="small" color="primary" endIcon={<SendIcon />}>
-        {" "}
-        Submit{" "}
+        {' '}
+        Submit
+        {' '}
       </Button>
     </form>
   );
 
-  let content = showForm ? (
+  const content = showForm ? (
     commentForm
   ) : (
-    <Button size="small" onClick={(e) => setShowForm(!showForm)}>
+    <Button size="small" onClick={() => setShowForm(!showForm)}>
       Reply
       <ReplyIcon />
     </Button>

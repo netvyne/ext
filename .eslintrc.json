@@ -12,7 +12,7 @@
         "ecmaFeatures": {
             "jsx": true
         },
-        "ecmaVersion": 11,
+        "ecmaVersion": 12,
         "sourceType": "module"
     },
     "plugins": [
@@ -20,5 +20,17 @@
         "@typescript-eslint"
     ],
     "rules": {
+        "import/no-unresolved": 0, // Turn off "Unable to resolve path to module ..." error
+        "import/extensions": 0, // Turn off "Missing file extension for ..." error
+        "no-use-before-define": "off",
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-use-before-define": ["error"],
+        "react/jsx-filename-extension": [1, { "extensions": [".tsx", ".ts"] }],
+        "react/jsx-props-no-spreading": "off",
+        "import/prefer-default-export": "off",
+        "no-console": "off"
+    },
+    "globals": {
+        "chrome": true
     }
 }

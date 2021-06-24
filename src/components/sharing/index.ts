@@ -1,1 +1,1 @@
-export { Sharing } from "./component";
+export { Sharing } from './component';

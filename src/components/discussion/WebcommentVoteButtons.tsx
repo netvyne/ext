@@ -1,46 +1,46 @@
-import React from "react";
-import Box from "@material-ui/core/Box";
-import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
-import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import { Shout } from "../../../types/common/types";
+import React from 'react';
+import Box from '@material-ui/core/Box';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import { Shout } from '../../../types/common/types';
 
 interface Props {
-  shout: Shout;
+  initShout: Shout;
 }
 
-export default function WebcommentVoteButtons(props : Props) {
-  const [shout, setShout] = React.useState(props.shout);
+export default function WebcommentVoteButtons({ initShout } : Props) {
+  const [shout, setShout] = React.useState(initShout);
   const postVote = async (event : any) => {
     event.preventDefault();
-    var url = new URL(`${process.env.REACT_APP_PUBLIC_API}/post_vote_shout`);
-    var init = {
-      method: "POST",
-      mode: "cors",
-      cache: "no-cache",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      redirect: "follow",
-      referrerPolicy: "no-referrer",
+    const url = new URL(`${process.env.REACT_APP_PUBLIC_API}/post_vote_shout`);
+    const init = {
+      method: 'POST',
+      mode: 'cors',
+      cache: 'no-cache',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      redirect: 'follow',
+      referrerPolicy: 'no-referrer',
       body: JSON.stringify({
         Status: event.currentTarget.value,
-		    ShoutID: props.shout.ID,
+        ShoutID: shout.ID,
       }),
     };
-    //@ts-ignore
+    // @ts-ignore
     const res = await (await fetch(url, init)).json();
     setShout(res.Shout);
     return res;
   };
 
   return (
-    //@ts-ignore
+    // @ts-ignore
     <Grid component={Box} container alignItems="center" direction="column">
       <Button value="upvote" onClick={postVote}>
         <KeyboardArrowUpIcon
           color={
-            shout.VoteStatus === "upvote" ? "primary" : "secondary"
+            shout.VoteStatus === 'upvote' ? 'primary' : 'secondary'
           }
         />
       </Button>
@@ -48,7 +48,7 @@ export default function WebcommentVoteButtons(props : Props) {
       <Button value="downvote" onClick={postVote}>
         <KeyboardArrowDownIcon
           color={
-            shout.VoteStatus === "downvote" ? "primary" : "secondary"
+            shout.VoteStatus === 'downvote' ? 'primary' : 'secondary'
           }
         />
       </Button>
