@@ -20,5 +20,5 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: yarn install
       - run: CI=true npm run lint
-      - run: CI=true npm run build
+      - run: CI=true NODE_ENV=PROD DEV=0 yarn build
       # - run: CI=true npm run test -- --coverage
