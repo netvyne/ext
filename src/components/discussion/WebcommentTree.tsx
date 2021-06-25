@@ -1,77 +1,75 @@
-import React from "react";
-import Box from "@material-ui/core/Box";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import { DateTime } from "luxon";
-import Grid from "@material-ui/core/Grid";
-import { useMutation, useQueryClient } from "react-query";
-import Button from "@material-ui/core/Button";
-import BookmarkBorderIcon from "@material-ui/icons/BookmarkBorder";
-import WebcommentVoteButtons from "./WebcommentVoteButtons";
-import LeaveReply from "./LeaveReply";
-import { Shout, Website } from "../../../types/common/types";
+/* eslint-disable linebreak-style */
+import React from 'react';
+import Box from '@material-ui/core/Box';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { DateTime } from 'luxon';
+import Grid from '@material-ui/core/Grid';
+import { useMutation, useQueryClient } from 'react-query';
+import Button from '@material-ui/core/Button';
+import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
+import WebcommentVoteButtons from './WebcommentVoteButtons';
+import LeaveReply from './LeaveReply';
+import { Shout, Website } from '../../../types/common/types';
 
 interface Props {
   website: Website;
   treeRoot: Shout;
   reg: boolean;
+  url: URL;
 }
 
-const WebcommentTree = (props : Props) => {
-  var children = null;
-  if (props.treeRoot.Children) {
-  children = props.treeRoot.Children.map((treeRoot : Shout) => (
-    <WebcommentTree
-      website={props.website}
-      treeRoot={treeRoot}
-      reg={props.reg}
-    />
-  ));
+const WebcommentTree = ({
+  treeRoot, website, reg, url,
+} : Props) => {
+  let children = null;
+  if (treeRoot.Children) {
+    children = treeRoot.Children.map((shout : Shout) => (
+      <WebcommentTree
+        website={website}
+        treeRoot={shout}
+        reg={reg}
+        url={url}
+      />
+    ));
   }
   const queryClient = useQueryClient();
   let focus = -1;
-  if (window.location.search.includes("focus")) {
+  if (window.location.search.includes('focus')) {
     const urlParams = new URLSearchParams(window.location.search);
-    focus = parseInt(urlParams.get("focus") as string);
+    focus = parseInt(urlParams.get('focus') as string, 10);
   }
-  const [isSaved, setIsSaved] = React.useState(props.treeRoot.Saved);
+  const [isSaved, setIsSaved] = React.useState(treeRoot.Saved);
   const [clicked, setClicked] = React.useState(false);
   const saveItemMutation = useMutation({});
   const onSaveItem = async (event : any, save: boolean) => {
     event.preventDefault();
-    let data = {
-      ShoutID: props.treeRoot.ID,
+    const data = {
+      ShoutID: treeRoot.ID,
       Save: save,
     };
-    let res = saveItemMutation.mutate(
-      //@ts-ignore
-      {
-        route: "/save_shout",
-        data: data,
+    // @ts-ignore
+    const res = saveItemMutation.mutate({
+      route: '/save_shout',
+      data,
+    },
+    {
+      onSuccess: () => {
+        setIsSaved(treeRoot.Saved);
+        queryClient.invalidateQueries(`/get_shout_trees?website_id=${website.ID}`);
       },
-      {
-        onSuccess: () => {
-          setIsSaved(props.treeRoot.Saved);
-          queryClient.invalidateQueries(
-            // `/get_webcomment_trees?website_id=${props.website.ID}`
-            `/get_shout_trees?website_id=${props.website.ID}`
-          );
-        },
-      }
-    );
+    });
     return res;
   };
 
-  let content;
-  content = (
+  const color = treeRoot.Level % 2 === 0 ? '#eceff1' : '#fafafa';
+  const content = (
     <Grid
       container
       component={Box}
       bgcolor={
-        props.treeRoot.ID === focus
-          ? "#414ec4"
-          : props.treeRoot.Level % 2 === 0
-          ? "#eceff1"
-          : "#fafafa"
+        treeRoot.ID === focus
+          ? '#414ec4'
+          : color
       }
       padding={1}
       m={1}
@@ -79,7 +77,7 @@ const WebcommentTree = (props : Props) => {
       direction="column"
     >
       <Grid container direction="row" wrap="nowrap">
-        {/*@ts-ignore*/}
+        {/* @ts-ignore */}
         <Grid
           component={Box}
           container
@@ -90,29 +88,29 @@ const WebcommentTree = (props : Props) => {
           mr={4}
         >
           <WebcommentVoteButtons
-            shout={props.treeRoot}
+            initShout={treeRoot}
           />
         </Grid>
 
         <Grid container component={Box} m={1}>
           <Grid container component={Box} m={1} wrap="nowrap" spacing={1}>
             <Grid item component={Box}>
-              {props.treeRoot.Author.UserName}
+              {treeRoot.Author.UserName}
             </Grid>
             <Grid item component={Box}>
-              {DateTime.fromISO(props.treeRoot.CreatedAt.toString(), {
-                zone: "utc",
+              {DateTime.fromISO(treeRoot.CreatedAt.toString(), {
+                zone: 'utc',
               }).toRelative()}
             </Grid>
           </Grid>
 
           <Grid item component={Box}>
-            {props.treeRoot.Comment}
+            {treeRoot.Comment}
           </Grid>
 
           <Grid container component={Box} m={1} wrap="nowrap" spacing={1}>
-            <LeaveReply website={props.website} parent={props.treeRoot} />
-            {!isSaved && props.reg && (
+            <LeaveReply website={website} parent={treeRoot} url={url} />
+            {!isSaved && reg && (
               <Box>
                 <Button
                   disabled={clicked}
@@ -127,7 +125,7 @@ const WebcommentTree = (props : Props) => {
                 </Button>
               </Box>
             )}
-            {isSaved && props.reg && (
+            {isSaved && reg && (
               <Box>
                 <Button
                   disabled={clicked}

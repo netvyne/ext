@@ -68,7 +68,7 @@ function getClientEnvironment(publicUrl) {
     process.env.PUBLIC_WEB = "http://localhost:3000";
     process.env.REACT_APP_PUBLIC_API = "http://localhost:5000/api";
   } else {
-    process.env.PUBLIC_API = "https://api.netvyne.com";
+    process.env.REACT_APP_PUBLIC_API = "https://api.netvyne.com";
     process.env.PUBLIC_WEB = "https://www.netvyne.com";
   }
   const raw = Object.keys(process.env)
