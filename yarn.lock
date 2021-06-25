@@ -2958,6 +2958,11 @@
   resolved "https://registry.yarnpkg.com/@types/html-minifier-terser/-/html-minifier-terser-5.1.1.tgz#3c9ee980f1a10d6021ae6632ca3e79ca2ec4fb50"
   integrity sha512-giAlZwstKbmvMk1OO7WXSj4OZ0keXAcl2TQq4LWHiiPH2ByaH7WeUzng+Qej8UPxxv+8lRTuouo0iaNDBuzIBA==
 
+"@types/html2canvas@^0.0.36":
+  version "0.0.36"
+  resolved "https://registry.yarnpkg.com/@types/html2canvas/-/html2canvas-0.0.36.tgz#5c7ba01ba8771b39c6eebbbde8f05885858dafa8"
+  integrity sha512-6g/TVYK5U5AyRaOj1lHVnEmlxzH21K9CRDkC0s6s3CAWLDFbwZ8s+dy0kPrhPfo0cEjIOQh3eeFtTjRBPN4Q0g==
+
 "@types/invariant@^2.2.33":
   version "2.2.34"
   resolved "https://registry.yarnpkg.com/@types/invariant/-/invariant-2.2.34.tgz#05e4f79f465c2007884374d4795452f995720bbe"
