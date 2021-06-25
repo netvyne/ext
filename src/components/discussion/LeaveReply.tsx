@@ -36,7 +36,6 @@ const LeaveReply = ({ parent, website, url }: Props) => {
   const mutation = useMutation({});
   const postComment = async (event : any) => {
     event.preventDefault();
-    console.log('url :::: ', url);
     const data = {
       ParentShoutID: parent?.ID,
       Comment: comment,
