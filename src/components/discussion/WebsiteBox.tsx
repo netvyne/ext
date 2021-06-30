@@ -16,15 +16,14 @@ interface Props {
 
 const WebsiteBox = ({ initWebsite, url } : Props) => {
   let websiteTitle : string = '';
-  websiteTitle = (initWebsite.Title) ? initWebsite.Title : url.Title;
-  console.log('Website ::::', initWebsite);
+  websiteTitle = (initWebsite.Title && initWebsite.Title != '') ? initWebsite.Title : url.Title;
   const website = (
     <Box mx={2} mt={1} borderRadius="borderRadius">
       <Grid container wrap="nowrap">
         <Grid container direction="column" alignItems="center" justify="center">
           <Box>
             <Typography variant="h5">
-              {websiteTitle.length < 100
+              {(websiteTitle && websiteTitle.length < 100)
                 ? websiteTitle
                 : websiteTitle.substring(0, 100).concat('...')}
             </Typography>

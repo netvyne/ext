@@ -1,57 +1,191 @@
-import React, { FunctionComponent, useEffect, useRef } from "react";
+import React, { FunctionComponent, useEffect, useRef, useState } from "react";
 import { useQuery } from "react-query";
 import Box from "@material-ui/core/Box";
 import TextField from "@material-ui/core/TextField";
-import { io } from "socket.io-client";
 import { useMutation } from 'react-query';
 import SendIcon from '@material-ui/icons/Send';
 import Button from '@material-ui/core/Button';
+import ReplyIcon from '@material-ui/icons/Reply';
+import CancelIcon from '@material-ui/icons/Cancel';
+import { isValidURL } from '../../utils';
+import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import Avatar from '@material-ui/core/Avatar';
+import ButtonBase from '@material-ui/core/ButtonBase';
+import { Chat, User } from '../../../types/common/types';
+import { getCurrentUser } from '../../auth/auth';
 
-export const Chat : FunctionComponent = (props : any) => {
+interface GetUserQuery {
+  initCurrentUser: User[];
+}
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+      flexGrow: 1,
+    },
+    paper: {
+      padding: theme.spacing(2),
+      marginTop: '5px',
+      maxWidth: 500,
+    },
+    image: {
+      width: 128,
+      height: 128,
+    },
+    img: {
+      margin: 'auto',
+      display: 'block',
+      maxWidth: '100%',
+      maxHeight: '100%',
+    },
+    chatBubble: {
+        maxWidth: 400,
+        margin: `${theme.spacing(1)}px auto`,
+        padding: theme.spacing(2),
+    },
+}));
+
+// export const Chat : FunctionComponent = (props : any) => {
+const Chat = ({ initCurrentUser } : GetUserQuery) => {    
     const [comment, setComment] = React.useState('');
+    const [websiteId, setWebsiteId] = React.useState(209);
+    const [parentChat, setParentChat] = useState<Chat | null>();
     const webSocket = useRef<WebSocket | null>(null);
     const [messages, setMessages] = React.useState<any>([]);
-    useEffect(() => {
-        const socket = new WebSocket('ws://localhost:5000/api/get_chat_socket?website_id=1');
-        console.log('socket created', socket)
+    const [url, setUrl] = useState<any>({});
+    const [user, setUser] = React.useState<User|any>();
+    getCurrentUser().then((currentUser:User|any) => setUser(initCurrentUser));
 
+    const classes = useStyles();
+
+    function createSocket(url : any){
+        const socket = new WebSocket(`${process.env.REACT_SOCKET_API}/get_chat_socket?website_id=0&host=${url.host}&pathname=${url.pathname}&search=${encodeURIComponent(url.search)}`);
+        // const socket = new WebSocket(`ws://localhost:5000/api/get_chat_socket?website_id=${websiteId}`);
         webSocket.current =  socket
         webSocket.current.onmessage = (message : any) => {
             const response : any = JSON.parse(message.data);
-            messages.push({
-                message : response.Comment,
-                id : response.ID,
-            });
+            messages.push(response);
             setMessages(messages);
-            console.log("message:", response);
         };
         return () => {console.log("Closing");webSocket.current?.close()};
+    }
+
+    let parentChatTitle : any = '';
+    useEffect(() => {
+        const queryInfo = { active: true };
+        if (chrome.tabs) {
+          chrome.tabs.query(queryInfo, (t) => {
+            const newUrl : any = isValidURL(t[0].url);
+            const formatedUrl = {
+              pathname: newUrl.pathname,
+              host: newUrl.host,
+              search: newUrl.search,
+              Title: t[0].title,
+            };
+            setUrl(formatedUrl);
+            createSocket(formatedUrl);
+            
+          });
+        }
     }, []);
 
     const mutation = useMutation({});
     const postChat = async (event : any) => {
         event.preventDefault();
+        if(messages.length == 0){
+            webSocket.current?.close();
+            createSocket(url);
+        }
         const data = {
-            ParentChatID: (messages.length > 0) ? messages[0].id : 0,
+            ParentChatID: parentChat?.ID,
             Comment: comment,
-            WebsiteID: 1
+            URL: {
+                Host: url.host,
+                Pathname: url.pathname,
+                Search: url.search,
+            },
         };
         // @ts-ignore
-        const res = mutation.mutate({ route: '/post_chat', data });
-        setComment('');
+        const res = mutation.mutate(
+            // @ts-ignore
+            {
+              route: '/post_chat',
+              data,
+            },
+            {
+              onSuccess: (response : any) => {
+                setComment('');
+                setParentChat(null);
+              },
+            },
+        );
+        
         return res;
     };
   
 
     const msgs = messages.map((message : any) => (
-        <Box>
-            <b>ali raza :  </b> {message.message}
-        </Box>
+        <div className={classes.root}>
+            <Grid container spacing={2}>
+                <Grid item xs={12} sm container>
+                    <Grid item xs container direction="column" spacing={2}>
+                        <Grid item xs>
+                            <Typography>
+                                <b>{message.Author.UserName} :  </b> {message.Comment}
+                            </Typography>
+                            <Typography color="textSecondary">
+                                <b>{(message.ParentChat) ? "in reply to @"+message.ParentChat.Author.UserName+" : "+message.ParentChat.Comment : ''}</b>
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                    <Grid item>
+                    <Button 
+                        type="submit" 
+                        size="small" 
+                        color="primary" 
+                        endIcon={<ReplyIcon />}
+                        onClick={() => {
+                            setParentChat(message);
+                        }}
+                    ></Button>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </div>
     ));
+
+    if(parentChat?.ID){
+        parentChatTitle = (
+            <div className={classes.root}>
+                <Paper className={classes.paper}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} sm container>
+                            <Grid item xs container direction="column" spacing={2}>
+                                <Grid item xs>
+                                    <Typography gutterBottom variant="subtitle1">
+                                        Replying to @{parentChat.Author.UserName}
+                                    </Typography>
+                                    <Typography variant="body2" gutterBottom>
+                                        {parentChat.Author.UserName} : {parentChat.Comment}
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+                            <Grid item>
+                                <Button type="button" size="small" color="primary" endIcon={<CancelIcon />} onClick={() => { setParentChat(null)} }></Button>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Paper>
+            </div>
+        );
+    }
     return <Box height="75%">
         <Box height="75%">
             {msgs}
         </Box>
+        {parentChatTitle}
         <form onSubmit={postChat}>
             <TextField 
                 value={comment} 
@@ -68,5 +202,5 @@ export const Chat : FunctionComponent = (props : any) => {
         </form>
     </Box>;
 };
-
+export default Chat;
 // export default Notifications;

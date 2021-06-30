@@ -3,6 +3,7 @@ import Button from '@material-ui/core/Button';
 import { Box } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import { screenShot } from '../../utils';
+import { LocalConvenienceStoreOutlined } from '@material-ui/icons';
 
 export default function Screenshot(props : any) {
   const { dataURL } = props;
@@ -37,7 +38,7 @@ export default function Screenshot(props : any) {
 
   useEffect(() => {
     const canvas : any = canvasRef.current;
-    if (canvas != null) {
+    if (canvas != null && dataURL != '') {
       const context = canvas.getContext('2d');
       const img = new Image();
       // eslint-disable-next-line func-names
@@ -70,7 +71,7 @@ export default function Screenshot(props : any) {
   useEffect(() => {
     const canvas : any = canvasRef.current;
     // const canvas : any = canvasRef.current;
-    if (canvas != null) {
+    if (canvas != null && dataURL != '') {
       const context = canvas.getContext('2d');
       const img = new Image();
       // eslint-disable-next-line func-names

@@ -125,3 +125,30 @@ Pathname: string;
 Search: string;
 Title: string;
 }
+
+interface Chat {
+    ID: number;
+    CreatedAt: DateTime;
+    ParentChatID: number;
+    ParentChat: Chat;
+    AuthorID: number;
+    Author: User;
+    WebsiteID: number;
+    Website: Website;
+    Comment: string;
+    DeletedAt: DateTime;
+    UpdatedAt: DateTime;
+}
+
+interface PostShare {
+    ID: number;
+    CreatedAt: DateTime;
+    DeletedAt: DateTime;
+    UpdatedAt: DateTime;
+    Post: Post;
+    PostID: number;
+    Receiver: User;
+    ReceiverID: number;
+    Sender: User;
+    SenderID: number;    
+}

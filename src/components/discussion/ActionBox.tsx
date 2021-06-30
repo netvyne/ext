@@ -16,7 +16,7 @@ import { Website, Url } from '../../../types/common/types';
 interface Props {
   initWebsite: Website;
   reg : boolean;
-  url : Url;
+  url : any;
 }
 
 const ActionBox = ({ initWebsite, reg, url } : Props) => {
@@ -32,9 +32,9 @@ const ActionBox = ({ initWebsite, reg, url } : Props) => {
     const data = {
       Save: save,
       URL: {
-        Host: url.Host,
-        Pathname: url.Pathname,
-        Search: url.Search,
+        Host: url.host,
+        Pathname: url.pathname,
+        Search: url.search,
       },
     };
     const res = mutation.mutate(
@@ -45,8 +45,6 @@ const ActionBox = ({ initWebsite, reg, url } : Props) => {
       },
       {
         onSuccess: (response : any) => {
-          console.log('On Success', response);
-          console.log(response.Website);
           setIsSaved(response.Website.Saved);
           setDisabled(false);
         },
@@ -60,9 +58,9 @@ const ActionBox = ({ initWebsite, reg, url } : Props) => {
     const data = {
       Status: event.currentTarget.value,
       URL: {
-        Host: url.Host,
-        Pathname: url.Pathname,
-        Search: url.Search,
+        Host: url.host,
+        Pathname: url.pathname,
+        Search: url.search,
       },
     };
     // @ts-ignore

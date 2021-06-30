@@ -97,6 +97,7 @@
         "moment": "^2.29.1",
         "react": "^16.13.1",
         "react-dom": "^16.13.1",
+        "react-player": "^2.9.0",
         "react-query": "^3.13.6",
         "react-router-dom": "^5.2.0",
         "react-screen-capture": "^1.0.0",

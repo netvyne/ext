@@ -1,5 +1,5 @@
 import React, {
-  FunctionComponent, useEffect, useState,
+  FunctionComponent, useEffect, useState, useRef,
 } from 'react';
 // import "./styles.scss";
 
@@ -32,12 +32,10 @@ export const Sharing: FunctionComponent = () => {
   const [rect, setRect] = React.useState({ startX: 0, startY: 0 });
 
   useEffect(() => {
-    const queryInfo = { active: true, lastFocusedWindow: true };
+    const queryInfo = { active: true };
     if (chrome.tabs) {
       chrome.tabs.query(queryInfo, (tabs) => {
-        console.log('Tabs Info ', tabs);
         const newUrl : any = isValidURL(tabs[0].url);
-        console.log('Tabs Info 2 :: ', newUrl);
         const formatedUrl = {
           pathname: newUrl.pathname,
           host: newUrl.host,
@@ -47,17 +45,6 @@ export const Sharing: FunctionComponent = () => {
         setUrl(formatedUrl);
       });
     }
-    // const queryInfo = { active: true, lastFocusedWindow: true };
-    // if (chrome.tabs) {
-    //   chrome.tabs.query(queryInfo, (tabs) => {
-    //     console.log('Tabs Info ', tabs);
-    //     const { newurl } : any = tabs[0].url;
-    //     console.log('Tabs Info 2 :: ', newurl);
-    //     setUrl(newurl);
-    //     return true;
-    //   });
-    // }
-    // chrome.tabs &&
   }, []);
   // // // // // //
 
@@ -93,7 +80,6 @@ export const Sharing: FunctionComponent = () => {
 
   const postShare = async (event : any) => {
     event.preventDefault();
-    console.log('URL ::::::>>>> ', url);
     // const shareURL = new URL(url);
     const data = {
       Host: url.host,
@@ -195,13 +181,4 @@ export const Sharing: FunctionComponent = () => {
       </form>
     </Box>
   );
-  // return (
-  //     <QueryClientProvider client={queryClient}>
-  //         <div className="row">
-  //             <div className="col-lg-12 text-center">
-  //                 <p className="lead mb-0">Netvyne Extension{friendIds}</p>
-  //             </div>
-  //         </div>
-  //     </QueryClientProvider>
-  // );
 };
