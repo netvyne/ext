@@ -8,15 +8,15 @@ import FeedItem from './FeedItem';
 import { Post, Talk } from '../../../types/common/types';
 
 interface Props {
-  post: Post;
+  initPost: any;
 }
 
 interface GetTalkTreeQuery {
   Roots: Talk[];
 }
 
-export default function FreedPost(props: any) {
-  const post : any  = props.post;
+export default function FreedPost({ initPost } : Props) {
+  const post : any = initPost;
   const { data, status } = useQuery<GetTalkTreeQuery, string>(
     `/get_talk_trees?post_id=${post.ID}`,
   );

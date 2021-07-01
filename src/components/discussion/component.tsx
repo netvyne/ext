@@ -2,21 +2,22 @@ import { Box } from '@material-ui/core';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 // import ChildBox from "./ChildBox";
+import { makeStyles, Theme } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Typography from '@material-ui/core/Typography';
 import WebsiteBox from './WebsiteBox';
 import ActionBox from './ActionBox';
 import WebcommentTree from './WebcommentTree';
 import LeaveReply from './LeaveReply';
 import Shares from './Shares';
 
-import { User, Shout, Website, Url } from '../../../types/common/types';
+import {
+  User, Shout, Website, Url,
+} from '../../../types/common/types';
 import { getCurrentUser } from '../../auth/auth';
 import { isValidURL } from '../../utils';
-
-import { makeStyles, Theme } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
 
 interface GetUserQuery {
   initCurrentUser: User[];
@@ -29,14 +30,18 @@ interface GetWebcommentTreesQuery {
 }
 
 interface TabPanelProps {
+  // eslint-disable-next-line react/require-default-props
   children?: React.ReactNode;
   index: any;
   value: any;
+  // eslint-disable-next-line react/require-default-props
   className?: any;
 }
 
 function TabPanel(props: TabPanelProps) {
-  const { children, value, index, className, ...other } = props;
+  const {
+    children, value, index, className, ...other
+  } = props;
 
   return (
     <div
@@ -67,7 +72,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
   },
-  tab: { 
+  tab: {
     '& .MuiBox-root-45': {
       padding: '5px !important',
     },
@@ -83,7 +88,7 @@ const Discussion = ({ initCurrentUser, initUrl } : GetUserQuery) => {
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
   };
-  
+
   // const [user, setUser] = React.useState<User|any>();
   // getCurrentUser().then((currentUser:User|any) => setUser(initCurrentUser));
 
@@ -161,7 +166,7 @@ const Discussion = ({ initCurrentUser, initUrl } : GetUserQuery) => {
           {trees}
         </TabPanel>
         <TabPanel value={value} index={1} className={classes.tab}>
-          <Shares></Shares>
+          <Shares />
         </TabPanel>
       </div>
     </Box>

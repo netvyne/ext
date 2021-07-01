@@ -16,7 +16,7 @@ interface Props {
 
 const WebsiteBox = ({ initWebsite, url } : Props) => {
   let websiteTitle : string = '';
-  websiteTitle = (initWebsite.Title && initWebsite.Title != '') ? initWebsite.Title : url.Title;
+  websiteTitle = (initWebsite.Title && initWebsite.Title !== '') ? initWebsite.Title : url.Title;
   const website = (
     <Box mx={2} mt={1} borderRadius="borderRadius">
       <Grid container wrap="nowrap">

@@ -64,7 +64,7 @@ TabPanel.propTypes = {
   value: PropTypes.any.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   dir: PropTypes.any.isRequired,
-
+  // eslint-disable-next-line react/require-default-props
   className: PropTypes.node,
 };
 
@@ -80,7 +80,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     width: 'auto',
   },
-  tab: { 
+  tab: {
     '& .MuiBox-root-10': {
       padding: '0px',
     },
@@ -143,7 +143,7 @@ export const Popup: FunctionComponent = () => {
           </AppBar>
 
           <TabPanel value={value} index={0} dir={theme.direction} className={classes.tab}>
-            <Discussion initCurrentUser={user} initUrl={url}/>
+            <Discussion initCurrentUser={user} initUrl={url} />
           </TabPanel>
           <TabPanel value={value} index={1} dir={theme.direction}>
             {/* <Hello /> */}
@@ -156,7 +156,7 @@ export const Popup: FunctionComponent = () => {
             <Profile initCurrentUser={user} />
           </TabPanel>
           <TabPanel value={value} index={3} dir={theme.direction}>
-            <Chat initCurrentUser={user}/>
+            <Chat initCurrentUser={user} />
           </TabPanel>
           {/* <hr />
                 <Scroller /> */}

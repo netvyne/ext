@@ -23,20 +23,19 @@ export default function TalkVoteButtons({ initTalk }: Props) {
     // @ts-ignore
     // const res: any = mutation.mutate({ route: '/post_vote_talk', data });
     // setTalk(res.Talk);
-    
 
     const res: any = mutation.mutate(
-        // @ts-ignore
-        {
-          route: '/post_vote_talk',
-          data,
+      // @ts-ignore
+      {
+        route: '/post_vote_talk',
+        data,
+      },
+      {
+        onSuccess: (response : any) => {
+          setTalk(response.Talk);
+          // window.location.reload();
         },
-        {
-          onSuccess: (response : any) => {
-              setTalk(response.Talk);
-            // window.location.reload();
-          },
-        },
+      },
     );
     return res;
   };

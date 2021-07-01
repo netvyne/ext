@@ -64,10 +64,10 @@ export const Sharing: FunctionComponent = () => {
   const mutation = useMutation({});
   const uploadImage = async (event : any, postId : string) => {
     event.preventDefault();
-    const file = dataURLtoFile(dataURL, 'pfp');
+    const file = dataURLtoFile(dataURL, 'Image');
     const formData = new FormData();
-    formData.append('pfp', file, file.name);
-    formData.append('Type', 'post');
+    formData.append('Image', file, file.name);
+    formData.append('Type', 'screenshot');
     formData.append('ID', postId);
     mutation.mutate(
       // @ts-ignore

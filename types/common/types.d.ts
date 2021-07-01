@@ -126,11 +126,11 @@ Search: string;
 Title: string;
 }
 
-interface Chat {
+interface ChatMessage {
     ID: number;
     CreatedAt: DateTime;
     ParentChatID: number;
-    ParentChat: Chat;
+    ParentChat: ChatMessage;
     AuthorID: number;
     Author: User;
     WebsiteID: number;
@@ -150,5 +150,5 @@ interface PostShare {
     Receiver: User;
     ReceiverID: number;
     Sender: User;
-    SenderID: number;    
+    SenderID: number;
 }
