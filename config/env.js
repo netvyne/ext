@@ -71,11 +71,11 @@ function getClientEnvironment(publicUrl) {
   } else if (process.env.NODE_ENV === 'staging') {
     process.env.REACT_APP_PUBLIC_API = 'https://staging-api.netvyne.com/api';
     process.env.PUBLIC_WEB = 'https://staging.netvyne.com';
-    process.env.REACT_SOCKET_API = 'wss://staging-api.netvyne.com/api';
+    process.env.REACT_SOCKET_API = 'ws://staging-api.netvyne.com/api';
   } else {
     process.env.REACT_APP_PUBLIC_API = 'https://api.netvyne.com/api';
     process.env.PUBLIC_WEB = 'https://www.netvyne.com';
-    process.env.REACT_SOCKET_API = 'wss://api.netvyne.com/api';
+    process.env.REACT_SOCKET_API = 'ws://api.netvyne.com/api';
   }
   const raw = Object.keys(process.env)
     .filter((key) => REACT_APP.test(key))
