@@ -17,18 +17,13 @@ export function fetchResource(url : any, init : any) {
 }
 
 export function screenShot(action : any, callback : any) {
-  console.log('action :: ', action, 'callback :: ', callback);
   // action is either clear or take
   return new Promise((resolve, reject) => {
-    console.log('Here 1');
     chrome.runtime.sendMessage({ screenshot: action }, (messageResponse) => {
-      console.log('Here 2');
-      console.log('messageResponse', messageResponse);
       if (!messageResponse) {
         console.log('Last error :: ', chrome.runtime.lastError);
       }
       const [response, error] = messageResponse;
-      console.log('response :: ', response, 'error :: ', error);
       if (response === null) {
         reject(error);
       } else {

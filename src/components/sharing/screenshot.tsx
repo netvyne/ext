@@ -26,7 +26,7 @@ export default function Screenshot(props : any) {
 
   function clearScreenShot() {
     const canvas : any = canvasRef.current;
-    if (canvas != null) {
+    if (canvas !== null) {
       const context = canvas.getContext('2d');
       context.clearRect(0, 0, canvas.width, canvas.height);
       screenShot('clear', cropcallback); // saves to local storage
@@ -37,7 +37,7 @@ export default function Screenshot(props : any) {
 
   useEffect(() => {
     const canvas : any = canvasRef.current;
-    if (canvas != null) {
+    if (canvas != null && dataURL !== '') {
       const context = canvas.getContext('2d');
       const img = new Image();
       // eslint-disable-next-line func-names
@@ -70,7 +70,7 @@ export default function Screenshot(props : any) {
   useEffect(() => {
     const canvas : any = canvasRef.current;
     // const canvas : any = canvasRef.current;
-    if (canvas != null) {
+    if (canvas != null && dataURL !== '') {
       const context = canvas.getContext('2d');
       const img = new Image();
       // eslint-disable-next-line func-names

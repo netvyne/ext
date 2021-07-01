@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useState, useEffect } from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import PropTypes from 'prop-types';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
@@ -28,6 +28,7 @@ import { User } from '../../types/common/types';
 import { queryClient } from '../query';
 
 import { getCurrentUser } from '../auth/auth';
+import { isValidURL } from '../utils';
 import './styles.scss';
 
 // // // //
@@ -63,6 +64,8 @@ TabPanel.propTypes = {
   value: PropTypes.any.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   dir: PropTypes.any.isRequired,
+  // eslint-disable-next-line react/require-default-props
+  className: PropTypes.node,
 };
 
 function a11yProps(index : any) {
@@ -77,41 +80,51 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     width: 'auto',
   },
+  tab: {
+    '& .MuiBox-root-10': {
+      padding: '0px',
+    },
+  },
 }));
 
 export const Popup: FunctionComponent = () => {
   const [user, setUser] = React.useState<User|any>();
   getCurrentUser().then((currentUser:User|any) => setUser(currentUser));
+  const [url, setUrl] = useState<any>({});
   // Sends the `popupMounted` event
   React.useEffect(() => {
     browser.runtime.sendMessage({ popupMounted: true });
   }, []);
 
+  useEffect(() => {
+    const queryInfo = { active: true };
+    if (chrome.tabs) {
+      chrome.tabs.query(queryInfo, (tabs) => {
+        const newUrl : any = isValidURL(tabs[0].url);
+        const formatedUrl = {
+          pathname: newUrl.pathname,
+          host: newUrl.host,
+          search: newUrl.search,
+          Title: tabs[0].title,
+        };
+        setUrl(formatedUrl);
+      });
+    }
+  }, []);
+
+  const classes = useStyles();
   // const classes = useStyles();
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
-  // const { data, status } = useQuery<any, string>("/get_user");
-  // let user;
-  // if (status === "error") {
-  // user = <div>Error</div>;
-  // } else if (status === "loading") {
-  // user = <div>Loading</div>;
-  // } else {
-  // user = data.username;
-  // }
   const handleChange = (event : any, newValue : any) => {
     setValue(newValue);
   };
-
-  // const handleChangeIndex = (index : any) => {
-  //   setValue(index);
-  // };
 
   // Renders the component tree
   return (
     <QueryClientProvider client={queryClient}>
       <div className="popup-container">
-        <div className="container mx-4 my-4">
+        <div className="container mx-1 my-1">
           <AppBar position="static" color="default" elevation={1}>
             <Tabs
               value={value}
@@ -123,30 +136,27 @@ export const Popup: FunctionComponent = () => {
             >
               <Tab icon={<ChatBubbleOutlineIcon />} {...a11yProps(0)} />
               <Tab icon={<ShareIcon />} {...a11yProps(1)} />
-              {/* <Tab label="Sharing" {...a11yProps(1)} /> */}
-              <Tab icon={<NotificationsActiveIcon />} {...a11yProps(2)} />
-              {/* <Tab label="Notifs" {...a11yProps(2)} /> */}
-              <Tab icon={<PersonIcon />} {...a11yProps(3)} />
-              {/* <Tab label="Profile" {...a11yProps(3)} /> */}
-              <Tab icon={<ChatIcon />} {...a11yProps(4)} />
+              {/* <Tab icon={<NotificationsActiveIcon />} {...a11yProps(2)} /> */}
+              <Tab icon={<PersonIcon />} {...a11yProps(2)} />
+              <Tab icon={<ChatIcon />} {...a11yProps(3)} />
             </Tabs>
           </AppBar>
 
-          <TabPanel value={value} index={0} dir={theme.direction}>
-            <Discussion />
+          <TabPanel value={value} index={0} dir={theme.direction} className={classes.tab}>
+            <Discussion initCurrentUser={user} initUrl={url} />
           </TabPanel>
           <TabPanel value={value} index={1} dir={theme.direction}>
             {/* <Hello /> */}
             <Sharing />
           </TabPanel>
-          <TabPanel value={value} index={2} dir={theme.direction}>
+          {/* <TabPanel value={value} index={2} dir={theme.direction}>
             <Notifications />
-          </TabPanel>
-          <TabPanel value={value} index={3} dir={theme.direction}>
+          </TabPanel> */}
+          <TabPanel value={value} index={2} dir={theme.direction}>
             <Profile initCurrentUser={user} />
           </TabPanel>
-          <TabPanel value={value} index={4} dir={theme.direction}>
-            <Chat />
+          <TabPanel value={value} index={3} dir={theme.direction}>
+            <Chat initCurrentUser={user} />
           </TabPanel>
           {/* <hr />
                 <Scroller /> */}
