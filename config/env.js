@@ -1,27 +1,25 @@
-"use strict";
-
-const fs = require("fs");
-const path = require("path");
-const paths = require("./paths");
+const fs = require('fs');
+const path = require('path');
+const paths = require('./paths');
 
 // Make sure that including paths.js after env.js will read .env variables.
-delete require.cache[require.resolve("./paths")];
+delete require.cache[require.resolve('./paths')];
 
-const NODE_ENV = process.env.NODE_ENV;
+const { NODE_ENV } = process.env;
 if (!NODE_ENV) {
   throw new Error(
-    "The NODE_ENV environment variable is required but was not specified."
+    'The NODE_ENV environment variable is required but was not specified.',
   );
 }
 
 // https://github.com/bkeepers/dotenv#what-other-env-files-can-i-use
-var dotenvFiles = [
+const dotenvFiles = [
   `${paths.dotenv}.${NODE_ENV}.local`,
   `${paths.dotenv}.${NODE_ENV}`,
   // Don't include `.env.local` for `test` environment
   // since normally you expect tests to produce the same
   // results for everyone
-  NODE_ENV !== "test" && `${paths.dotenv}.local`,
+  NODE_ENV !== 'test' && `${paths.dotenv}.local`,
   paths.dotenv,
 ].filter(Boolean);
 
@@ -32,10 +30,12 @@ var dotenvFiles = [
 // https://github.com/motdotla/dotenv-expand
 dotenvFiles.forEach((dotenvFile) => {
   if (fs.existsSync(dotenvFile)) {
-    require("dotenv-expand")(
-      require("dotenv").config({
+    // eslint-disable-next-line global-require
+    require('dotenv-expand')(
+      // eslint-disable-next-line global-require
+      require('dotenv').config({
         path: dotenvFile,
-      })
+      }),
     );
   }
 });
@@ -50,7 +50,7 @@ dotenvFiles.forEach((dotenvFile) => {
 // https://github.com/facebookincubator/create-react-app/issues/1023#issuecomment-265344421
 // We also resolve them to make sure all tools using them work consistently.
 const appDirectory = fs.realpathSync(process.cwd());
-process.env.NODE_PATH = (process.env.NODE_PATH || "")
+process.env.NODE_PATH = (process.env.NODE_PATH || '')
   .split(path.delimiter)
   .filter((folder) => folder && !path.isAbsolute(folder))
   .map((folder) => path.resolve(appDirectory, folder))
@@ -62,30 +62,32 @@ const REACT_APP = /^REACT_APP_/i;
 
 function getClientEnvironment(publicUrl) {
   process.env.PUBLIC_URL = publicUrl;
-  if (process.env.NODE_ENV == "development") {
+  if (process.env.NODE_ENV === 'development') {
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
     // process.env.PUBLIC_API = "http://localhost:5000/api";
-    process.env.PUBLIC_WEB = "http://localhost:3000";
-    process.env.REACT_APP_PUBLIC_API = "http://localhost:5000/api";
-    process.env.REACT_SOCKET_API = "ws://localhost:5000/api";
-  } else if(process.env.NODE_ENV == "staging"){
-    process.env.REACT_APP_PUBLIC_API = "https://staging-api.netvyne.com/api";
-    process.env.PUBLIC_WEB = "https://staging.netvyne.com";
-    process.env.REACT_SOCKET_API = "wss://staging-api.netvyne.com/api";
+    process.env.PUBLIC_WEB = 'http://localhost:3000';
+    process.env.REACT_APP_PUBLIC_API = 'http://localhost:5000/api';
+    process.env.REACT_SOCKET_API = 'ws://localhost:5000/api';
+  } else if (process.env.NODE_ENV === 'staging') {
+    process.env.REACT_APP_PUBLIC_API = 'https://staging-api.netvyne.com/api';
+    process.env.PUBLIC_WEB = 'https://staging.netvyne.com';
+    process.env.REACT_SOCKET_API = 'ws://staging-api.netvyne.com/api';
   } else {
-    process.env.REACT_APP_PUBLIC_API = "https://api.netvyne.com/api";
-    process.env.PUBLIC_WEB = "https://www.netvyne.com";
-    process.env.REACT_SOCKET_API = "wss://api.netvyne.com/api";
+    process.env.REACT_APP_PUBLIC_API = 'https://api.netvyne.com/api';
+    process.env.PUBLIC_WEB = 'https://www.netvyne.com';
+    process.env.REACT_SOCKET_API = 'ws://api.netvyne.com/api';
   }
   const raw = Object.keys(process.env)
     .filter((key) => REACT_APP.test(key))
     .reduce((env, key) => {
+      // eslint-disable-next-line no-param-reassign
       env[key] = process.env[key];
       return env;
     }, process.env);
   // Stringify all values so we can feed into Webpack DefinePlugin
   const stringified = {
-    "process.env": Object.keys(raw).reduce((env, key) => {
+    'process.env': Object.keys(raw).reduce((env, key) => {
+      // eslint-disable-next-line no-param-reassign
       env[key] = JSON.stringify(raw[key]);
       return env;
     }, {}),
