@@ -60,10 +60,12 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
 
   function createSocket(currentUrl : any) {
     const socket = new WebSocket(`${process.env.REACT_SOCKET_API}/get_chat_socket?website_id=0&host=${currentUrl.host}&pathname=${currentUrl.pathname}&search=${encodeURIComponent(currentUrl.search)}`);
+    console.log('Socket created', socket);
     webSocket.current = socket;
     webSocket.current.onmessage = (message : any) => {
       const response : any = JSON.parse(message.data);
       messages.push(response);
+      console.log('messages ::: ', messages);
       setMessages(messages);
     };
     return () => { console.log('Closing'); webSocket.current?.close(); };
@@ -90,10 +92,10 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
   const mutation = useMutation({});
   const postChat = async (event : any) => {
     event.preventDefault();
-    if (messages.length === 0) {
-      webSocket.current?.close();
-      createSocket(url);
-    }
+    // if (messages.length === 0) {
+    //   webSocket.current?.close();
+    //   createSocket(url);
+    // }
     const data = {
       ParentChatID: parentChat?.ID,
       Comment: comment,
