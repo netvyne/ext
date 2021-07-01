@@ -95,7 +95,11 @@ export default function Shares() {
                   <ImageIcon />
                 </Avatar>
               </ListItemAvatar>
-              <ListItemText primary={share.Receiver.UserName} />
+              <ListItemText primary={
+                // eslint-disable-next-line max-len
+                (user && user.ID && user.ID === share.Sender.ID) ? share.Receiver.UserName : share.Sender.UserName
+                }
+              />
             </ListItem>
           </div>
         </List>
