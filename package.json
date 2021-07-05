@@ -60,7 +60,6 @@
         "react-bootstrap": "^1.5.2",
         "react-docgen-typescript-loader": "^3.7.2",
         "react-docgen-typescript-webpack-plugin": "^1.1.0",
-        "sass-loader": "^10.0.3",
         "storybook-addon-jsx": "^7.3.4",
         "ts-jest": "^26.4.1"
     },
@@ -103,6 +102,7 @@
         "@types/react-dom": "^17.0.4",
         "@types/react-router-dom": "^5.1.7",
         "style-loader": "^2.0.0",
-        "css-loader": "^4.3.0"
+        "css-loader": "^4.3.0",
+        "sass-loader": "^10.0.3"
     }
 }
