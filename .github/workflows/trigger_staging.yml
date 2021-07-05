@@ -7,9 +7,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Trigger E2E Build
+      - name: Trigger Staging
         uses: benc-uk/workflow-dispatch@v1
         with:
-          workflow: E2E Build
+          workflow: Staging
           repo: netvyne/netvyne
           token: ${{ secrets.NETVYNE_ADMIN_GITHUB_PAT }}
