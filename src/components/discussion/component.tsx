@@ -12,6 +12,7 @@ import ActionBox from './ActionBox';
 import ShoutTree from './ShoutTree';
 import LeaveReply from './LeaveReply';
 import Shares from './Shares';
+import Chat from './Chat';
 
 import {
   User, Shout, Website, Url,
@@ -81,38 +82,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 // export const Discussion: FunctionComponent = () => {
 const Discussion = ({ initCurrentUser, initUrl } : GetUserQuery) => {
-  // const [user, setUser] = React.useState<User|any>();
-  // getCurrentUser().then((currentUser:User|any) => setUser(initCurrentUser));
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
   };
 
-  // const [user, setUser] = React.useState<User|any>();
-  // getCurrentUser().then((currentUser:User|any) => setUser(initCurrentUser));
-
   const url : any = initUrl;
   const user : any = initCurrentUser;
-  // const [url, setUrl] = useState<any>(initUrl);
-  // console.log("Init url after :::", url);
-
-  // useEffect(() => {
-  //   const queryInfo = { active: true };
-  //   if (chrome.tabs) {
-  //     chrome.tabs.query(queryInfo, (tabs) => {
-  //       console.log("tabs :::: ", tabs);
-  //       const newUrl : any = isValidURL(tabs[0].url);
-  //       const formatedUrl = {
-  //         pathname: newUrl.pathname,
-  //         host: newUrl.host,
-  //         search: newUrl.search,
-  //         Title: tabs[0].title,
-  //       };
-  //       setUrl(formatedUrl);
-  //     });
-  //   }
-  // }, []);
 
   const route = `/get_shout_trees?host=${url.host}&pathname=${url.pathname}&search=${encodeURIComponent(url.search)}`;
 
@@ -158,6 +135,7 @@ const Discussion = ({ initCurrentUser, initUrl } : GetUserQuery) => {
           <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
             <Tab label="Discussion" {...a11yProps(0)} />
             <Tab label="Talks" {...a11yProps(1)} />
+            <Tab label="Chat" {...a11yProps(2)} />
           </Tabs>
         </AppBar>
         <TabPanel value={value} index={0} className={classes.tab}>
@@ -167,6 +145,9 @@ const Discussion = ({ initCurrentUser, initUrl } : GetUserQuery) => {
         </TabPanel>
         <TabPanel value={value} index={1} className={classes.tab}>
           <Shares />
+        </TabPanel>
+        <TabPanel value={value} index={2} className={classes.tab}>
+          <Chat initCurrentUser={user} />
         </TabPanel>
       </div>
     </Box>

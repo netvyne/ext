@@ -8,7 +8,7 @@ import { Profile } from '@src/components/profile';
 import { Discussion } from '@src/components/discussion';
 // import { Capture } from "@src/components/capture";
 import { Notifications } from '@src/components/notifications';
-import { Chat } from '@src/components/chat';
+// import { Chat } from '@src/components/chat';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -19,7 +19,7 @@ import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
 import ShareIcon from '@material-ui/icons/Share';
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import PersonIcon from '@material-ui/icons/Person';
-import ChatIcon from '@material-ui/icons/Chat';
+// import ChatIcon from '@material-ui/icons/Chat';
 import { User } from '../../types/common/types';
 // import {
 //   Row, Col, Button, Nav,
@@ -145,7 +145,7 @@ export const Popup: FunctionComponent = () => {
               <Tab icon={<ChatBubbleOutlineIcon />} {...a11yProps(0)} />
               <Tab icon={<ShareIcon />} {...a11yProps(1)} />
               {/* <Tab icon={<NotificationsActiveIcon />} {...a11yProps(2)} /> */}
-              <Tab icon={<ChatIcon />} {...a11yProps(2)} />
+              {/* <Tab icon={<ChatIcon />} {...a11yProps(2)} /> */}
               <Tab icon={<PersonIcon />} onClick={(event : any) => clickHandler(event)} />
             </Tabs>
           </AppBar>
@@ -154,20 +154,11 @@ export const Popup: FunctionComponent = () => {
             <Discussion initCurrentUser={user} initUrl={url} />
           </TabPanel>
           <TabPanel value={value} index={1} dir={theme.direction}>
-            {/* <Hello /> */}
             <Sharing />
           </TabPanel>
           {/* <TabPanel value={value} index={2} dir={theme.direction}>
-            <Notifications />
-          </TabPanel> */}
-          {/* <TabPanel value={value} index={2} dir={theme.direction}>
-            <Profile initCurrentUser={user} />
-          </TabPanel> */}
-          <TabPanel value={value} index={2} dir={theme.direction}>
             <Chat initCurrentUser={user} />
-          </TabPanel>
-          {/* <hr />
-                <Scroller /> */}
+          </TabPanel> */}
         </div>
       </div>
     </QueryClientProvider>
