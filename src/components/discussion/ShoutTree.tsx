@@ -7,7 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import { useMutation, useQueryClient } from 'react-query';
 import Button from '@material-ui/core/Button';
 import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
-import WebcommentVoteButtons from './WebcommentVoteButtons';
+import ShoutVoteButtons from './ShoutVoteButtons';
 import LeaveReply from './LeaveReply';
 import { Shout, Website } from '../../../types/common/types';
 
@@ -18,13 +18,13 @@ interface Props {
   url: URL;
 }
 
-const WebcommentTree = ({
+const ShoutTree = ({
   treeRoot, website, reg, url,
 } : Props) => {
   let children = null;
   if (treeRoot.Children) {
     children = treeRoot.Children.map((shout : Shout) => (
-      <WebcommentTree
+      <ShoutTree
         website={website}
         treeRoot={shout}
         reg={reg}
@@ -87,7 +87,7 @@ const WebcommentTree = ({
           p={1}
           mr={4}
         >
-          <WebcommentVoteButtons
+          <ShoutVoteButtons
             initShout={treeRoot}
           />
         </Grid>
@@ -153,4 +153,4 @@ const WebcommentTree = ({
   return <CssBaseline>{content}</CssBaseline>;
 };
 
-export default WebcommentTree;
+export default ShoutTree;

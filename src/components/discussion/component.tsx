@@ -9,7 +9,7 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import WebsiteBox from './WebsiteBox';
 import ActionBox from './ActionBox';
-import WebcommentTree from './WebcommentTree';
+import ShoutTree from './ShoutTree';
 import LeaveReply from './LeaveReply';
 import Shares from './Shares';
 
@@ -24,7 +24,7 @@ interface GetUserQuery {
   initUrl: Url
 }
 
-interface GetWebcommentTreesQuery {
+interface GetShoutTreesQuery {
   Roots: Shout[];
   initWebsite: Website;
 }
@@ -141,7 +141,7 @@ const Discussion = ({ initCurrentUser, initUrl } : GetUserQuery) => {
     );
     if (data.Roots) {
       trees = data.Roots.map((treeRoot : any) => (
-        <WebcommentTree
+        <ShoutTree
           website={data.Website}
           treeRoot={treeRoot}
           // reg={false}

@@ -96,6 +96,14 @@ export const Popup: FunctionComponent = () => {
     browser.runtime.sendMessage({ popupMounted: true });
   }, []);
 
+  function clickHandler(e : any) {
+    // console.log(event);
+    // window.location.href = 'http://www.w3schools.com';
+    e.preventDefault();
+    chrome.tabs.create({ url: `${process.env.PUBLIC_WEB}/profile`, active: false });
+    return false;
+  }
+
   useEffect(() => {
     const queryInfo = { active: true };
     if (chrome.tabs) {
@@ -137,8 +145,8 @@ export const Popup: FunctionComponent = () => {
               <Tab icon={<ChatBubbleOutlineIcon />} {...a11yProps(0)} />
               <Tab icon={<ShareIcon />} {...a11yProps(1)} />
               {/* <Tab icon={<NotificationsActiveIcon />} {...a11yProps(2)} /> */}
-              <Tab icon={<PersonIcon />} {...a11yProps(2)} />
-              <Tab icon={<ChatIcon />} {...a11yProps(3)} />
+              <Tab icon={<ChatIcon />} {...a11yProps(2)} />
+              <Tab icon={<PersonIcon />} onClick={(event : any) => clickHandler(event)} />
             </Tabs>
           </AppBar>
 
@@ -152,10 +160,10 @@ export const Popup: FunctionComponent = () => {
           {/* <TabPanel value={value} index={2} dir={theme.direction}>
             <Notifications />
           </TabPanel> */}
-          <TabPanel value={value} index={2} dir={theme.direction}>
+          {/* <TabPanel value={value} index={2} dir={theme.direction}>
             <Profile initCurrentUser={user} />
-          </TabPanel>
-          <TabPanel value={value} index={3} dir={theme.direction}>
+          </TabPanel> */}
+          <TabPanel value={value} index={2} dir={theme.direction}>
             <Chat initCurrentUser={user} />
           </TabPanel>
           {/* <hr />
