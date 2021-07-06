@@ -86,12 +86,6 @@ const ActionBox = ({ initWebsite, reg, url } : Props) => {
             }
           />
         </Grid>
-        <Grid item component={IconButton}>
-          <AddCommentSharpIcon />
-        </Grid>
-        <Grid item component={IconButton}>
-          <ShareIcon />
-        </Grid>
         {/* <Grid item component={IconButton}>
           <BookmarkBorderIcon />
         </Grid> */}

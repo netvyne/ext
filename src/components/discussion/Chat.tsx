@@ -16,9 +16,9 @@ import { isValidURL } from '../../utils';
 import { ChatMessage, User } from '../../../types/common/types';
 import { getCurrentUser } from '../../auth/auth';
 
-interface GetUserQuery {
-  initCurrentUser: User[];
-}
+  interface GetUserQuery {
+    initCurrentUser: User[];
+  }
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -107,7 +107,7 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
         Search: url.search,
       },
     };
-    // @ts-ignore
+      // @ts-ignore
     const res = mutation.mutate(
       // @ts-ignore
       {
