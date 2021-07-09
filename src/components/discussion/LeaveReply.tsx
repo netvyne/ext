@@ -1,11 +1,11 @@
 // import React from "react";
 import React, { useEffect, useState } from 'react';
+import { useMutation, useQueryClient, useQuery } from 'react-query';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import ReplyIcon from '@material-ui/icons/Reply';
 import SendIcon from '@material-ui/icons/Send';
-import { useMutation } from 'react-query';
 import { Shout, Website } from '../../../types/common/types';
 
 interface Props {
@@ -16,6 +16,7 @@ interface Props {
 }
 
 const LeaveReply = ({ parent, website, url }: Props) => {
+  const queryClient = useQueryClient();
   const [comment, setComment] = React.useState('');
   const [showForm, setShowForm] = React.useState(false);
 
@@ -33,7 +34,7 @@ const LeaveReply = ({ parent, website, url }: Props) => {
   //   });
   // }, []);
 
-  const mutation = useMutation({});
+  const replyMutation = useMutation({});
   const postComment = async (event : any) => {
     event.preventDefault();
     const data = {
@@ -45,11 +46,24 @@ const LeaveReply = ({ parent, website, url }: Props) => {
         Search: url.search,
       },
     };
-    // @ts-ignore
-    const res = mutation.mutate({ route: '/post_shout', data });
-    setComment('');
+
+    const res: any = replyMutation.mutate(
+      // @ts-ignore
+      {
+        route: '/post_shout',
+        data,
+      },
+      {
+        onSuccess: (response : any) => {
+          setComment('');
+          queryClient.invalidateQueries(`/get_shout_trees?host=${url.host}&pathname=${url.pathname}&search=${encodeURIComponent(url.search)}`);
+        },
+      },
+    );
     return res;
   };
+
+  // queryClient.invalidateQueries('/get_website_feed');
 
   const commentForm = (
     <form onSubmit={postComment}>
