@@ -62,93 +62,104 @@ const ShoutTree = ({
   };
 
   const color = treeRoot.Level % 2 === 0 ? '#eceff1' : '#fafafa';
-  const content = (
-    <Grid
-      container
-      component={Box}
-      bgcolor={
-        treeRoot.ID === focus
-          ? '#414ec4'
-          : color
-      }
-      padding={1}
-      m={1}
-      borderRadius="borderRadius"
-      direction="column"
-    >
-      <Grid container direction="row" wrap="nowrap">
-        {/* @ts-ignore */}
-        <Grid
-          component={Box}
-          container
-          alignItems="center"
-          direction="column"
-          xs={1}
-          p={1}
-          mr={4}
-        >
-          <ShoutVoteButtons
-            initShout={treeRoot}
-          />
+  let content : any = '';
+  if (treeRoot !== null) {
+    console.log('Inside if');
+    content = (
+      <Grid
+        container
+        component={Box}
+        bgcolor={
+          treeRoot.ID === focus
+            ? '#414ec4'
+            : color
+        }
+        padding={1}
+        m={1}
+        borderRadius="borderRadius"
+        direction="column"
+      >
+        <Grid container direction="row" wrap="nowrap">
+          {/* @ts-ignore */}
+          <Grid
+            component={Box}
+            container
+            alignItems="center"
+            direction="column"
+            xs={1}
+            p={1}
+            mr={4}
+          >
+            <ShoutVoteButtons
+              initShout={treeRoot}
+            />
+          </Grid>
+
+          <Grid container component={Box} m={1}>
+            <Grid container component={Box} m={1} wrap="nowrap" spacing={1}>
+              <Grid item component={Box}>
+                {treeRoot.Author.UserName}
+              </Grid>
+              <Grid item component={Box}>
+                {DateTime.fromISO(treeRoot.CreatedAt.toString(), {
+                  zone: 'utc',
+                }).toRelative()}
+              </Grid>
+            </Grid>
+
+            <Grid item component={Box}>
+              {treeRoot.Comment}
+            </Grid>
+
+            <Grid container component={Box} m={1} wrap="nowrap" spacing={1}>
+              <LeaveReply website={website} parent={treeRoot} url={url} />
+              {!isSaved && reg && (
+                <Box>
+                  <Button
+                    disabled={clicked}
+                    size="small"
+                    onClick={(e) => {
+                      onSaveItem(e, true);
+                      setClicked(true);
+                    }}
+                  >
+                    SAVE
+                    <BookmarkBorderIcon />
+                  </Button>
+                </Box>
+              )}
+              {isSaved && reg && (
+                <Box>
+                  <Button
+                    disabled={clicked}
+                    size="small"
+                    onClick={(e) => {
+                      onSaveItem(e, false);
+                      setClicked(true);
+                    }}
+                  >
+                    UNDO
+                    <BookmarkBorderIcon />
+                  </Button>
+                </Box>
+              )}
+            </Grid>
+          </Grid>
         </Grid>
 
-        <Grid container component={Box} m={1}>
-          <Grid container component={Box} m={1} wrap="nowrap" spacing={1}>
-            <Grid item component={Box}>
-              {treeRoot.Author.UserName}
-            </Grid>
-            <Grid item component={Box}>
-              {DateTime.fromISO(treeRoot.CreatedAt.toString(), {
-                zone: 'utc',
-              }).toRelative()}
-            </Grid>
-          </Grid>
-
-          <Grid item component={Box}>
-            {treeRoot.Comment}
-          </Grid>
-
-          <Grid container component={Box} m={1} wrap="nowrap" spacing={1}>
-            <LeaveReply website={website} parent={treeRoot} url={url} />
-            {!isSaved && reg && (
-              <Box>
-                <Button
-                  disabled={clicked}
-                  size="small"
-                  onClick={(e) => {
-                    onSaveItem(e, true);
-                    setClicked(true);
-                  }}
-                >
-                  SAVE
-                  <BookmarkBorderIcon />
-                </Button>
-              </Box>
-            )}
-            {isSaved && reg && (
-              <Box>
-                <Button
-                  disabled={clicked}
-                  size="small"
-                  onClick={(e) => {
-                    onSaveItem(e, false);
-                    setClicked(true);
-                  }}
-                >
-                  UNDO
-                  <BookmarkBorderIcon />
-                </Button>
-              </Box>
-            )}
-          </Grid>
+        <Grid item component={Box}>
+          {children}
         </Grid>
       </Grid>
-
+    );
+  } else {
+    console.log('Inside else');
+    content = (
       <Grid item component={Box}>
-        {children}
+        No comments
       </Grid>
-    </Grid>
-  );
+    );
+  }
 
   return <CssBaseline>{content}</CssBaseline>;
 };

@@ -6,7 +6,9 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import WebsiteBox from './WebsiteBox';
 import ActionBox from './ActionBox';
 import ShoutTree from './ShoutTree';
@@ -102,7 +104,17 @@ const Discussion = ({ initCurrentUser, initUrl } : GetUserQuery) => {
     website = <div>Error</div>;
     children = null;
   } else if (status === 'loading') {
-    website = <div>Loading</div>;
+    website = (
+      <Grid
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <CircularProgress />
+      </Grid>
+    );
     children = null;
   } else {
     website = (
@@ -117,15 +129,29 @@ const Discussion = ({ initCurrentUser, initUrl } : GetUserQuery) => {
       </>
     );
     if (data.Roots) {
-      trees = data.Roots.map((treeRoot : any) => (
-        <ShoutTree
-          website={data.Website}
-          treeRoot={treeRoot}
-          // reg={false}
-          reg={!user?.Registered}
-          url={url}
-        />
-      ));
+      if (data.Roots.length > 0) {
+        trees = data.Roots.map((treeRoot : any) => (
+          <ShoutTree
+            website={data.Website}
+            treeRoot={treeRoot}
+            // reg={false}
+            reg={!user?.Registered}
+            url={url}
+          />
+        ));
+      } else {
+        trees = (
+          <Grid item component={Box}>
+            No comments
+          </Grid>
+        );
+      }
+    } else {
+      trees = (
+        <Grid item component={Box}>
+          No comments
+        </Grid>
+      );
     }
   }
   return (
