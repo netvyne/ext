@@ -17,6 +17,8 @@ Sentry.init({
   // of transactions for performance monitoring.
   // We recommend adjusting this value in production
   tracesSampleRate: 1.0,
+  release: process.env.VERSION,
+  environment: process.env.NODE_ENV,
 });
 
 browser.tabs.query({ active: true, currentWindow: true }).then(() => {
