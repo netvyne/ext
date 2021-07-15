@@ -6,12 +6,15 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import WebsiteBox from './WebsiteBox';
 import ActionBox from './ActionBox';
-import WebcommentTree from './WebcommentTree';
+import ShoutTree from './ShoutTree';
 import LeaveReply from './LeaveReply';
 import Shares from './Shares';
+import Chat from './Chat';
 
 import {
   User, Shout, Website, Url,
@@ -24,7 +27,7 @@ interface GetUserQuery {
   initUrl: Url
 }
 
-interface GetWebcommentTreesQuery {
+interface GetShoutTreesQuery {
   Roots: Shout[];
   initWebsite: Website;
 }
@@ -81,38 +84,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 // export const Discussion: FunctionComponent = () => {
 const Discussion = ({ initCurrentUser, initUrl } : GetUserQuery) => {
-  // const [user, setUser] = React.useState<User|any>();
-  // getCurrentUser().then((currentUser:User|any) => setUser(initCurrentUser));
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
   };
 
-  // const [user, setUser] = React.useState<User|any>();
-  // getCurrentUser().then((currentUser:User|any) => setUser(initCurrentUser));
-
   const url : any = initUrl;
   const user : any = initCurrentUser;
-  // const [url, setUrl] = useState<any>(initUrl);
-  // console.log("Init url after :::", url);
-
-  // useEffect(() => {
-  //   const queryInfo = { active: true };
-  //   if (chrome.tabs) {
-  //     chrome.tabs.query(queryInfo, (tabs) => {
-  //       console.log("tabs :::: ", tabs);
-  //       const newUrl : any = isValidURL(tabs[0].url);
-  //       const formatedUrl = {
-  //         pathname: newUrl.pathname,
-  //         host: newUrl.host,
-  //         search: newUrl.search,
-  //         Title: tabs[0].title,
-  //       };
-  //       setUrl(formatedUrl);
-  //     });
-  //   }
-  // }, []);
 
   const route = `/get_shout_trees?host=${url.host}&pathname=${url.pathname}&search=${encodeURIComponent(url.search)}`;
 
@@ -125,7 +104,17 @@ const Discussion = ({ initCurrentUser, initUrl } : GetUserQuery) => {
     website = <div>Error</div>;
     children = null;
   } else if (status === 'loading') {
-    website = <div>Loading</div>;
+    website = (
+      <Grid
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <CircularProgress />
+      </Grid>
+    );
     children = null;
   } else {
     website = (
@@ -140,15 +129,29 @@ const Discussion = ({ initCurrentUser, initUrl } : GetUserQuery) => {
       </>
     );
     if (data.Roots) {
-      trees = data.Roots.map((treeRoot : any) => (
-        <WebcommentTree
-          website={data.Website}
-          treeRoot={treeRoot}
-          // reg={false}
-          reg={!user?.Registered}
-          url={url}
-        />
-      ));
+      if (data.Roots.length > 0) {
+        trees = data.Roots.map((treeRoot : any) => (
+          <ShoutTree
+            website={data.Website}
+            treeRoot={treeRoot}
+            // reg={false}
+            reg={!user?.Registered}
+            url={url}
+          />
+        ));
+      } else {
+        trees = (
+          <Grid item component={Box}>
+            No comments
+          </Grid>
+        );
+      }
+    } else {
+      trees = (
+        <Grid item component={Box}>
+          No comments
+        </Grid>
+      );
     }
   }
   return (
@@ -158,6 +161,7 @@ const Discussion = ({ initCurrentUser, initUrl } : GetUserQuery) => {
           <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
             <Tab label="Discussion" {...a11yProps(0)} />
             <Tab label="Talks" {...a11yProps(1)} />
+            <Tab label="Chat" {...a11yProps(2)} />
           </Tabs>
         </AppBar>
         <TabPanel value={value} index={0} className={classes.tab}>
@@ -167,6 +171,9 @@ const Discussion = ({ initCurrentUser, initUrl } : GetUserQuery) => {
         </TabPanel>
         <TabPanel value={value} index={1} className={classes.tab}>
           <Shares />
+        </TabPanel>
+        <TabPanel value={value} index={2} className={classes.tab}>
+          <Chat initCurrentUser={user} />
         </TabPanel>
       </div>
     </Box>

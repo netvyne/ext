@@ -16,9 +16,9 @@ import { isValidURL } from '../../utils';
 import { ChatMessage, User } from '../../../types/common/types';
 import { getCurrentUser } from '../../auth/auth';
 
-interface GetUserQuery {
-  initCurrentUser: User[];
-}
+  interface GetUserQuery {
+    initCurrentUser: User[];
+  }
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -59,7 +59,9 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
   const classes = useStyles();
 
   function createSocket(currentUrl : any) {
-    const socket = new WebSocket(`${process.env.REACT_SOCKET_API}/get_chat_socket?website_id=0&host=${currentUrl.host}&pathname=${currentUrl.pathname}&search=${encodeURIComponent(currentUrl.search)}`);
+    const publicApiUrl : any = process.env.REACT_APP_PUBLIC_API;
+    const socketUrl = publicApiUrl.replace('http', 'ws');
+    const socket = new WebSocket(`${socketUrl}/get_chat_socket?website_id=0&host=${currentUrl.host}&pathname=${currentUrl.pathname}&search=${encodeURIComponent(currentUrl.search)}`);
     console.log('Socket created', socket);
     webSocket.current = socket;
     webSocket.current.onmessage = (message : any) => {
@@ -105,7 +107,7 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
         Search: url.search,
       },
     };
-    // @ts-ignore
+      // @ts-ignore
     const res = mutation.mutate(
       // @ts-ignore
       {

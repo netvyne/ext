@@ -10,7 +10,7 @@ interface Props {
   initShout: Shout;
 }
 
-export default function WebcommentVoteButtons({ initShout } : Props) {
+export default function ShoutVoteButtons({ initShout } : Props) {
   const [shout, setShout] = React.useState(initShout);
   const postVote = async (event : any) => {
     event.preventDefault();

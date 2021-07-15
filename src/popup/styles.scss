@@ -1,5 +1,12 @@
 .popup-container {
     min-width: 500px;
-    min-height: 1000px; 
+    min-height: 700px; 
     display: flex;
+}
+
+.popup-container .container{
+    padding-left: 0px;
+    padding-right: 0px;
+    margin-left: 0px !important;
+    margin-right: 0px !important;
 }

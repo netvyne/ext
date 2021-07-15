@@ -3,7 +3,7 @@ import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import SendIcon from '@material-ui/icons/Send';
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient, useQuery } from 'react-query';
 import { Talk } from '../../../types/common/types';
 
 interface Props {
@@ -11,9 +11,10 @@ interface Props {
 }
 
 const LeaveReply = (props: Props) => {
+  const queryClient = useQueryClient();
   const [comment, setComment] = React.useState('');
   const [showForm, setShowForm] = React.useState(false);
-  const mutation = useMutation({});
+  const talkReplyMutation = useMutation({});
   const postComment = async (event: any) => {
     event.preventDefault();
     const data = {
@@ -21,11 +22,20 @@ const LeaveReply = (props: Props) => {
       ParentTalkID: props.parent.ID,
       Comment: comment,
     };
-    // @ts-ignore
-    const res = mutation.mutate({ route: '/post_talk', data });
-    setShowForm(false);
-    setComment('');
-    // window.location.reload();
+    const res: any = talkReplyMutation.mutate(
+      // @ts-ignore
+      {
+        route: '/post_talk',
+        data,
+      },
+      {
+        onSuccess: (response : any) => {
+          setShowForm(false);
+          setComment('');
+          queryClient.invalidateQueries(`/get_talk_trees?post_id=${props.parent.Post.ID}`);
+        },
+      },
+    );
     return res;
   };
   const commentForm = (
