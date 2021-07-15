@@ -144,7 +144,7 @@ export const Popup: FunctionComponent = () => {
             >
               <Tab icon={<ChatBubbleOutlineIcon />} {...a11yProps(0)} />
               <Tab icon={<ShareIcon />} {...a11yProps(1)} />
-              {/* <Tab icon={<NotificationsActiveIcon />} {...a11yProps(2)} /> */}
+              <Tab icon={<NotificationsActiveIcon />} {...a11yProps(2)} />
               {/* <Tab icon={<ChatIcon />} {...a11yProps(2)} /> */}
               <Tab icon={<PersonIcon />} onClick={(event : any) => clickHandler(event)} />
             </Tabs>
@@ -155,6 +155,9 @@ export const Popup: FunctionComponent = () => {
           </TabPanel>
           <TabPanel value={value} index={1} dir={theme.direction}>
             <Sharing />
+          </TabPanel>
+          <TabPanel value={value} index={2} dir={theme.direction}>
+            Notifications
           </TabPanel>
           {/* <TabPanel value={value} index={2} dir={theme.direction}>
             <Chat initCurrentUser={user} />

@@ -13,12 +13,28 @@ import {
   useMutation,
 } from 'react-query';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
+import { makeStyles, Theme } from '@material-ui/core/styles';
 
 // import { render } from 'react-dom';
 import Screenshot from './screenshot';
 import Dropdown from './dropdown';
 // import { fetchResource } from '../../utils';
 import { isValidURL } from '../../utils';
+
+function Alert(props: AlertProps) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    width: '100%',
+    '& > * + *': {
+      marginTop: theme.spacing(2),
+    },
+  },
+}));
 
 export const Sharing: FunctionComponent = () => {
 //   const queryClient = new QueryClient();
@@ -27,6 +43,8 @@ export const Sharing: FunctionComponent = () => {
   const [url, setUrl] = useState<any>({});
   const [comment, setComment] = React.useState('');
   const [friendIds, setFriendIds] = React.useState([]);
+  const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
 
   const [dataURL, setDataURL] = React.useState('');
   const [rect, setRect] = React.useState({ startX: 0, startY: 0 });
@@ -47,6 +65,14 @@ export const Sharing: FunctionComponent = () => {
     }
   }, []);
   // // // // // //
+
+  const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   const dataURLtoFile = (dataurl : any, filename : any) => {
     const arr = dataurl.split(',');
@@ -101,6 +127,7 @@ export const Sharing: FunctionComponent = () => {
           setFriendIds([]);
           setComment('');
           setDataURL('');
+          setOpen(true);
           // uploadImage(event, "1");
         },
       },
@@ -145,6 +172,11 @@ export const Sharing: FunctionComponent = () => {
 
   return (
     <Box m={1}>
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="success">
+          Post has been shared successfully!
+        </Alert>
+      </Snackbar>
       <form onSubmit={postShare}>
         <Dropdown setFriendIds={setFriendIds} key={mutation.isLoading} />
         {bbox}
