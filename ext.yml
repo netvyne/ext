@@ -1,0 +1,23 @@
+version: "3"
+
+services:
+  ext:
+    container_name: "ext_main"
+    build: ../ext
+    image: ext
+    environment:
+      REACT_APP_PUBLIC_API: http://localhost:5000/api
+      CHOKIDAR_USEPOLLING: "true"
+      FAST_REFRESH: "false" # temporary fix from: https://github.com/facebook/create-react-app/issues/9904#issuecomment-803488928
+      NODE_ENV: "development"
+    volumes:
+      - "/ext/node_modules"
+      - "../ext:/ext"
+    command: >
+      sh -c "cd /ext &&
+      yarn install &&
+      npm run dev"
+
+networks:
+  default:
+    name: netvyne
