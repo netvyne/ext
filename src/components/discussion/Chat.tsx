@@ -44,6 +44,23 @@ const useStyles = makeStyles((theme) => ({
     margin: `${theme.spacing(1)}px auto`,
     padding: theme.spacing(2),
   },
+  messageContainer: {
+    position: 'fixed',
+    bottom: '0',
+  },
+  chatForm: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'space-evenly',
+    marginBottom: '10px',
+  },
+  messageTextField: {
+    width: '70%',
+  },
+  messageSendButton: {
+    width: '30%',
+  },
 }));
 
 // export const Chat : FunctionComponent = (props : any) => {
@@ -197,21 +214,28 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
       <Box height="75%">
         {msgs}
       </Box>
-      {parentChatTitle}
-      <form onSubmit={postChat}>
-        <TextField
-          value={comment}
-          onInput={(e : any) => setComment(e.target.value)}
-          id="nv-message"
-          label="Message"
-          placeholder="Send a message"
-        />
-        <Button type="submit" size="small" color="primary" endIcon={<SendIcon />}>
-          {' '}
-          Submit
-          {' '}
-        </Button>
-      </form>
+      <Grid item xs container className={classes.messageContainer}>
+        <Grid item xs={12}>
+          {parentChatTitle}
+        </Grid>
+        <Grid item xs={12}>
+          <form onSubmit={postChat} className={classes.chatForm}>
+            <TextField
+              value={comment}
+              onInput={(e : any) => setComment(e.target.value)}
+              id="nv-message"
+              label="Message"
+              placeholder="Send a message"
+              className={classes.messageTextField}
+            />
+            <Button type="submit" size="small" color="primary" endIcon={<SendIcon />} className={classes.messageSendButton}>
+              {' '}
+              Submit
+              {' '}
+            </Button>
+          </form>
+        </Grid>
+      </Grid>
     </Box>
   );
 };
