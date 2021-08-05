@@ -97,6 +97,7 @@ export default function Shares() {
     );
   } else if (status === 'success') {
     if (data.Shares && data.Shares.length > 0) {
+      console.log('Shares ::: ', data.Shares, 'user ::: ', user);
       shares = data!.Shares?.map((share: PostShare) => (
         <div className={classes.root}>
           <List>
@@ -109,7 +110,7 @@ export default function Shares() {
                 </ListItemAvatar>
                 <ListItemText primary={
                   // eslint-disable-next-line max-len
-                  (user && user.ID && user.ID === share.Sender.ID) ? share.Receiver.UserName : share.Sender.UserName
+                  (user && user.ID && user.ID === share.Sender.ID) ? `${share.Receiver.FirstName} ${share.Receiver.LastName}` : `${share.Sender.FirstName} ${share.Sender.LastName}`
                   }
                 />
               </ListItem>

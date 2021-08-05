@@ -21,7 +21,7 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 import Screenshot from './screenshot';
 import Dropdown from './dropdown';
 // import { fetchResource } from '../../utils';
-import { isValidURL } from '../../utils';
+import { isValidURL, createDiv, screenShot } from '../../utils';
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -49,6 +49,24 @@ export const Sharing: FunctionComponent = () => {
   const [dataURL, setDataURL] = React.useState('');
   const [rect, setRect] = React.useState({ startX: 0, startY: 0 });
 
+  const [message, setMessage] = React.useState<any>('');
+
+  function cropcallback() {
+    chrome.storage.local.get({ screenshot: null }, (data) => {
+      setDataURL(data.screenshot);
+    });
+  }
+
+  const handleMessage = (msg : any) => {
+    if (msg.target === 'app') {
+      if (msg.type === 'screenshotcropped') {
+        chrome.storage.local.get({ screenshot: null }, (data) => {
+          setDataURL(data.screenshot);
+        });
+      }
+    }
+  };
+
   useEffect(() => {
     const queryInfo = { active: true };
     if (chrome.tabs) {
@@ -63,6 +81,7 @@ export const Sharing: FunctionComponent = () => {
         setUrl(formatedUrl);
       });
     }
+    chrome.runtime.onMessage.addListener(handleMessage);
   }, []);
   // // // // // //
 
@@ -103,6 +122,14 @@ export const Sharing: FunctionComponent = () => {
       },
     );
   };
+
+  function createTestDiv() {
+    createDiv('createDiv'); // saves to local storage
+  }
+
+  function clearScreenShot() {
+    screenShot('clear', cropcallback);
+  }
 
   const postShare = async (event : any) => {
     event.preventDefault();
@@ -180,13 +207,33 @@ export const Sharing: FunctionComponent = () => {
       <form onSubmit={postShare}>
         <Dropdown setFriendIds={setFriendIds} key={mutation.isLoading} />
         {bbox}
-        <Screenshot
+        <Box>
+          <Button
+            type="button"
+            onClick={createTestDiv}
+          >
+            Include Screenshot
+          </Button>
+          <img
+            style={{ display: dataURL ? 'block' : 'none' }}
+            src={dataURL}
+            alt="cropped"
+          />
+          <Button
+            style={{ display: dataURL ? 'block' : 'none' }}
+            type="button"
+            onClick={clearScreenShot}
+          >
+            Clear
+          </Button>
+        </Box>
+        {/* <Screenshot
           modalContainer={bbox}
           dataURL={dataURL}
           setDataURL={setDataURL}
           rect={rect}
           setRect={setRect}
-        />
+        /> */}
         <FormControlLabel
           control={(
             <Checkbox

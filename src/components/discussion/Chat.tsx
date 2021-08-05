@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'flex-end',
-    justifyContent: 'space-evenly',
+    marginLeft: '20px',
     marginBottom: '10px',
   },
   messageTextField: {

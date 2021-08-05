@@ -19,21 +19,6 @@ const LeaveReply = ({ parent, website, url }: Props) => {
   const queryClient = useQueryClient();
   const [comment, setComment] = React.useState('');
   const [showForm, setShowForm] = React.useState(false);
-
-  // const [url, setUrl] = useState<any>('');
-  /**
-   * Get current URL
-   */
-  // useEffect(() => {
-  //   const queryInfo = { active: true, lastFocusedWindow: true };
-  //   // eslint-disable-next-line no-unused-expressions
-  //   chrome.tabs && chrome.tabs.query(queryInfo, (tabs) => {
-  //     let { newurl } : any = tabs[0];
-  //     newurl = new URL(newurl);
-  //     setUrl(newurl);
-  //   });
-  // }, []);
-
   const replyMutation = useMutation({});
   const postComment = async (event : any) => {
     event.preventDefault();
