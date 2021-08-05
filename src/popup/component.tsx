@@ -1,12 +1,14 @@
 import React, { FunctionComponent, useState, useEffect } from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import PropTypes from 'prop-types';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { makeStyles, useTheme, Theme } from '@material-ui/core/styles';
 import { browser } from 'webextension-polyfill-ts';
 import { Sharing } from '@src/components/sharing';
 import { Profile } from '@src/components/profile';
 import { Discussion } from '@src/components/discussion';
-// import { Capture } from "@src/components/capture";
+import Chat from '@src/components/discussion/Chat';
+import Shares from '@src/components/discussion/Shares';
+// import { Capture } from '@src/components/capture';
 import { Notifications } from '@src/components/notifications';
 // import { Chat } from '@src/components/chat';
 import AppBar from '@material-ui/core/AppBar';
@@ -19,7 +21,9 @@ import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
 import ShareIcon from '@material-ui/icons/Share';
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import PersonIcon from '@material-ui/icons/Person';
-// import ChatIcon from '@material-ui/icons/Chat';
+import ChatIcon from '@material-ui/icons/Chat';
+import ForumIcon from '@material-ui/icons/Forum';
+import Avatar from '@material-ui/core/Avatar';
 import { User } from '../../types/common/types';
 // import {
 //   Row, Col, Button, Nav,
@@ -32,6 +36,14 @@ import { isValidURL } from '../utils';
 import './styles.scss';
 
 // // // //
+interface TabPanelProps {
+  // eslint-disable-next-line react/require-default-props
+  children?: React.ReactNode;
+  index: any;
+  value: any;
+  // eslint-disable-next-line react/require-default-props
+  className?: any;
+}
 
 function TabPanel(props : any) {
   const {
@@ -55,18 +67,18 @@ function TabPanel(props : any) {
   );
 }
 
-TabPanel.propTypes = {
-  // eslint-disable-next-line react/require-default-props
-  children: PropTypes.node,
-  // eslint-disable-next-line react/forbid-prop-types
-  index: PropTypes.any.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  value: PropTypes.any.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  dir: PropTypes.any.isRequired,
-  // eslint-disable-next-line react/require-default-props
-  className: PropTypes.node,
-};
+// TabPanel.propTypes = {
+//   // eslint-disable-next-line react/require-default-props
+//   children: PropTypes.node,
+//   // eslint-disable-next-line react/forbid-prop-types
+//   index: PropTypes.any.isRequired,
+//   // eslint-disable-next-line react/forbid-prop-types
+//   value: PropTypes.any.isRequired,
+//   // eslint-disable-next-line react/forbid-prop-types
+//   dir: PropTypes.any.isRequired,
+//   // eslint-disable-next-line react/require-default-props
+//   className: PropTypes.node,
+// };
 
 function a11yProps(index : any) {
   return {
@@ -81,8 +93,9 @@ const useStyles = makeStyles((theme) => ({
     width: 'auto',
   },
   tab: {
+    padding: '10px',
     '& .MuiBox-root-10': {
-      padding: '0px',
+      padding: '10px',
     },
   },
 }));
@@ -143,21 +156,28 @@ export const Popup: FunctionComponent = () => {
               aria-label="full width tabs example"
             >
               <Tab icon={<ChatBubbleOutlineIcon />} {...a11yProps(0)} />
-              <Tab icon={<ShareIcon />} {...a11yProps(1)} />
-              <Tab icon={<NotificationsActiveIcon />} {...a11yProps(2)} />
-              {/* <Tab icon={<ChatIcon />} {...a11yProps(2)} /> */}
-              <Tab icon={<PersonIcon />} onClick={(event : any) => clickHandler(event)} />
+              <Tab icon={<ChatIcon />} {...a11yProps(1)} />
+              <Tab icon={<ForumIcon />} {...a11yProps(2)} />
+              <Tab icon={<ShareIcon />} {...a11yProps(3)} />
+              <Tab icon={<NotificationsActiveIcon />} {...a11yProps(4)} />
+              <Tab icon={<Avatar alt="Netvyne Logo" src="../icon-128.png" />} onClick={(event : any) => clickHandler(event)} />
             </Tabs>
           </AppBar>
 
           <TabPanel value={value} index={0} dir={theme.direction} className={classes.tab}>
             <Discussion initCurrentUser={user} initUrl={url} />
           </TabPanel>
-          <TabPanel value={value} index={1} dir={theme.direction}>
+          <TabPanel value={value} index={1} dir={theme.direction} className={classes.tab}>
+            <Chat initCurrentUser={user} />
+          </TabPanel>
+          <TabPanel value={value} index={2} dir={theme.direction} className={classes.tab}>
+            <Shares />
+          </TabPanel>
+          <TabPanel value={value} index={3} dir={theme.direction}>
             <Sharing />
           </TabPanel>
-          <TabPanel value={value} index={2} dir={theme.direction}>
-            Notifications
+          <TabPanel value={value} index={4} dir={theme.direction}>
+            Notification
           </TabPanel>
           {/* <TabPanel value={value} index={2} dir={theme.direction}>
             <Chat initCurrentUser={user} />

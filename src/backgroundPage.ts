@@ -22,61 +22,66 @@ chrome.browserAction.onClicked.addListener((tab) => {
   });
 });
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.screenshot === 'take') {
-    // use background script to take screenshot, move sidebar out of the way
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      const activeTab : any = tabs[0];
-      chrome.tabs.sendMessage(
-        activeTab.id,
-        { message: 'clicked_browser_action' },
-        () => {
-          chrome.tabs.captureVisibleTab({ format: 'png' }, (src) => {
-            chrome.storage.local.set({ screenshot: src }, () => {
-              console.log('Stored screenshot!');
-              chrome.tabs.sendMessage(
-                activeTab.id,
-                { message: 'clicked_browser_action' },
-                () => {
-                  sendResponse([]);
-                },
-              );
-            });
-          });
-        },
-      );
-    });
-  } else if (request.screenshot === 'clear') {
-    // clear screenshot from storage
-    chrome.storage.local.remove('screenshot', () => {
-      sendResponse([]);
-    });
-  } else if (request.clear_notifications) {
-    chrome.browserAction.setBadgeBackgroundColor({ color: [0, 0, 0, 0] });
-    chrome.browserAction.setBadgeText({ text: '' });
-  } else {
-    // this message is a request, use background script to make request
-    fetch(request.url, request.init).then(
-      (response) => {
-        const resp = response.text();
-        return resp.then((text) => {
-          sendResponse([
-            {
-              body: text,
-              status: response.status,
-              statusText: response.statusText,
-            },
-            null,
-          ]);
-        });
-      },
-      (error) => {
-        sendResponse([null, error]);
-      },
-    );
-  }
-  return true;
-});
+// chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+//   console.log('here line 26 page');
+//   if (request.screenshot === 'take') {
+//     // use background script to take screenshot, move sidebar out of the way
+//     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+//       const activeTab : any = tabs[0];
+//       chrome.tabs.sendMessage(
+//         activeTab.id,
+//         { message: 'clicked_browser_action' },
+//         () => {
+//           chrome.tabs.captureVisibleTab({ format: 'png' }, (src) => {
+//             chrome.storage.local.set({ screenshot: src }, () => {
+//               console.log('Stored screenshot!');
+//               chrome.tabs.sendMessage(
+//                 activeTab.id,
+//                 { message: 'clicked_browser_action' },
+//                 () => {
+//                   sendResponse([]);
+//                 },
+//               );
+//             });
+//           });
+//         },
+//       );
+//     });
+//   } else if (request.screenshot === 'clear') {
+//     // clear screenshot from storage
+//     chrome.storage.local.remove('screenshot', () => {
+//       sendResponse([]);
+//     });
+//   } else if (request.screenshot === 'createDiv') {
+//     // eslint-disable-next-line no-alert
+//     console.log('Line 55 here ------');
+//     sendResponse({ confirmation: 'Successfully created div' });
+//   } else if (request.clear_notifications) {
+//     chrome.browserAction.setBadgeBackgroundColor({ color: [0, 0, 0, 0] });
+//     chrome.browserAction.setBadgeText({ text: '' });
+//   } else {
+//     // this message is a request, use background script to make request
+//     fetch(request.url, request.init).then(
+//       (response) => {
+//         const resp = response.text();
+//         return resp.then((text) => {
+//           sendResponse([
+//             {
+//               body: text,
+//               status: response.status,
+//               statusText: response.statusText,
+//             },
+//             null,
+//           ]);
+//         });
+//       },
+//       (error) => {
+//         sendResponse([null, error]);
+//       },
+//     );
+//   }
+//   return true;
+// });
 
 // notification polling
 async function getNotifications() {
@@ -92,5 +97,4 @@ async function getNotifications() {
   // poll every 5 seconds
   setTimeout(getNotifications, 5000);
 }
-
 getNotifications();
