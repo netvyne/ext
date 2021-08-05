@@ -3,7 +3,6 @@
     "version": "1.0.0",
     "description": "A Chrome Extension starter kit built with React, TypeScript, SCSS, Bootstrap, EsLint, Prettier & Webpack",
     "main": "index.js",
-    "type": "module",
     "scripts": {
         "build": "webpack --config webpack.prod.js",
         "dev": "webpack -w --config webpack.dev.js",
