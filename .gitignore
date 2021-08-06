@@ -35,12 +35,10 @@ yarn-error.log*
 bin/
 build/
 develop-eggs/
-dist/js/
 eggs/
 lib/
 lib64/
 parts/
-sdist/
 var/
 *.egg-info/
 .installed.cfg
