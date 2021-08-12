@@ -63,19 +63,15 @@ export function createDiv(action : any) {
   // action is either clear or take
   return new Promise((resolve, reject) => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs : any) => {
-      console.log('Here line 97', tabs);
       chrome.runtime.sendMessage({ screenshot: 'createDiv' }, (response) => {
-        console.log('Here line 99', response);
         if (response.confirmation) {
           chrome.tabs.sendMessage(tabs[0].id, 'toggle');
           chrome.tabs.executeScript(tabs[0].id, { file: 'content-crop.js' }, (res: any) => {
-            console.log('after injection ::: ', res);
             if (chrome.runtime.lastError) {
               console.log(`Script injection failed: ${chrome.runtime.lastError.message}`);
             }
           });
         }
-        console.log(response);
       });
     });
   });

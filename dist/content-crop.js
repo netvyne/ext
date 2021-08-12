@@ -76,6 +76,8 @@ button.setAttribute('type', 'exampleModalLong');
 button.setAttribute('id', 'cropDialogue');
 button.setAttribute('data-toggle', 'modal');
 button.setAttribute('data-target', '#exampleModalLong');
+button.setAttribute('data-backdrop', 'static');
+button.setAttribute('data-keyboard', 'false');
 button.append('Launch demo modal');
 document.body.prepend(button);
 
@@ -93,7 +95,7 @@ setTimeout(() => {
     const innerHTML = `<div class="modal-dialog modal-xl" style="max-width: 1200px;">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+          <h5 class="modal-title" id="exampleModalLongTitle">Crop Screenshot</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -300,7 +302,6 @@ setTimeout(() => {
         }
 
         function startMoving(e) {
-          console.log('start moving event');
           e.preventDefault();
           e.stopPropagation();
 
@@ -372,7 +373,6 @@ setTimeout(() => {
 
           try {
             let base64Img = resize_canvas.toDataURL('image/png', 1.0);
-            console.log(base64Img);
             chrome.storage.local.set({ screenshot: base64Img }, () => {
               console.log('Stored screenshot!');
             });
