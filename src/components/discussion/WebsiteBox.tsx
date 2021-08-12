@@ -1,27 +1,31 @@
-import React from "react";
-import Box from "@material-ui/core/Box";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Grid from "@material-ui/core/Grid";
-import { Typography } from "@material-ui/core";
-import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
-import SentimentSatisfiedSharpIcon from "@material-ui/icons/SentimentSatisfiedSharp";
-import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
-import ShareIcon from "@material-ui/icons/Share";
+import React from 'react';
+import Box from '@material-ui/core/Box';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Grid from '@material-ui/core/Grid';
+import { Typography } from '@material-ui/core';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import SentimentSatisfiedSharpIcon from '@material-ui/icons/SentimentSatisfiedSharp';
+import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
+import ShareIcon from '@material-ui/icons/Share';
+import { Website, Url } from '../../../types/common/types';
 
-const WebsiteBox = (props : any) => {
+interface Props {
+  initWebsite: Website;
+  url: Url
+}
 
-  let websiteTitle : string = "";
-  websiteTitle = (props.website.Title) ? props.website.Title : props.url.title;
-  let website;
-  website = (
+const WebsiteBox = ({ initWebsite, url } : Props) => {
+  let websiteTitle : string = '';
+  websiteTitle = (initWebsite.Title && initWebsite.Title !== '') ? initWebsite.Title : url.Title;
+  const website = (
     <Box mx={2} mt={1} borderRadius="borderRadius">
       <Grid container wrap="nowrap">
         <Grid container direction="column" alignItems="center" justify="center">
           <Box>
             <Typography variant="h5">
-              {websiteTitle.length < 100
+              {(websiteTitle && websiteTitle.length < 100)
                 ? websiteTitle
-                : websiteTitle.substring(0, 100).concat("...")}
+                : websiteTitle.substring(0, 100).concat('...')}
             </Typography>
           </Box>
           <Grid container direction="row" justify="center" spacing={1}>
@@ -32,7 +36,7 @@ const WebsiteBox = (props : any) => {
               justify="center"
             >
               <KeyboardArrowUpIcon />
-              {props.website?.upvotes}
+              {initWebsite?.Upvotes}
             </Grid>
             <Grid
               item
@@ -41,10 +45,10 @@ const WebsiteBox = (props : any) => {
               justify="center"
             >
               <SentimentSatisfiedSharpIcon />
-              {(
-                props.website?.upvotes / props.website?.upvotes +
-                props.website?.downvotes
-              ).toLocaleString("en", { style: "percent" })}
+              {(initWebsite?.Upvotes + initWebsite?.Downvotes) > 0 ? (
+                initWebsite?.Upvotes / initWebsite?.Upvotes
+                + initWebsite?.Downvotes
+              ).toLocaleString('en', { style: 'percent' }) : '0%'}
             </Grid>
             <Grid
               item
@@ -54,7 +58,7 @@ const WebsiteBox = (props : any) => {
               justify="center"
             >
               <ChatBubbleOutlineIcon />
-              {props.website?.webcomments}
+              {initWebsite?.ShoutCount}
             </Grid>
             <Grid
               item
@@ -64,7 +68,7 @@ const WebsiteBox = (props : any) => {
               justify="center"
             >
               <ShareIcon />
-              {props.website?.shares}
+              {initWebsite?.ShareCount}
             </Grid>
           </Grid>
         </Grid>

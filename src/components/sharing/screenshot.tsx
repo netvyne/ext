@@ -1,45 +1,46 @@
-/*global chrome*/
-import React, { useRef, useEffect } from "react";
-import Button from "@material-ui/core/Button";
-import { screenShot } from "../../utils";
-import { Box } from "@material-ui/core";
-import TextField from "@material-ui/core/TextField";
+import React, { useRef, useEffect } from 'react';
+import Button from '@material-ui/core/Button';
+import { Box } from '@material-ui/core';
+import TextField from '@material-ui/core/TextField';
+import { screenShot } from '../../utils';
 
 export default function Screenshot(props : any) {
-  const dataURL : any = props.dataURL;
-  const setDataURL : any = props.setDataURL;
-  const rect : any = props.rect;
-  const setRect : any = props.setRect;
-  
+  const { dataURL } = props;
+  const { setDataURL } = props;
+  const { rect } = props;
+  const { setRect } = props;
+
   const canvasRef = useRef(null);
   // const canvas : any = canvasRef.current;
   // console.log("canvas :::: " , canvas);
-
-  function takeScreenShot() {
-    screenShot("take", cropcallback); // saves to local storage
-  }
-
-  function clearScreenShot() {
-    const canvas : any = canvasRef.current;
-    if(canvas != null) {
-      const context = canvas.getContext("2d");
-      context.clearRect(0, 0, canvas.width, canvas.height);
-      screenShot("clear", cropcallback); // saves to local storage
-    }
-  }
 
   function cropcallback() {
     chrome.storage.local.get({ screenshot: null }, (data) => {
       setDataURL(data.screenshot);
     });
   }
+
+  function takeScreenShot() {
+    screenShot('take', cropcallback); // saves to local storage
+  }
+
+  function clearScreenShot() {
+    const canvas : any = canvasRef.current;
+    if (canvas !== null) {
+      const context = canvas.getContext('2d');
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      screenShot('clear', cropcallback); // saves to local storage
+    }
+  }
+
   cropcallback();
 
   useEffect(() => {
     const canvas : any = canvasRef.current;
-    if(canvas != null) {
-      const context = canvas.getContext("2d");
-      var img = new Image();
+    if (canvas != null && dataURL !== '') {
+      const context = canvas.getContext('2d');
+      const img = new Image();
+      // eslint-disable-next-line func-names
       img.onload = function () {
         context.drawImage(
           img,
@@ -50,18 +51,16 @@ export default function Screenshot(props : any) {
           0,
           0,
           canvas.width,
-          canvas.height
+          canvas.height,
         ); // destination rectangle
         setRect(
-          Object.assign(
-            {
-              width: img.width,
-              height: img.height,
-              maxWidth: img.width,
-              maxHeight: img.height,
-            },
-            rect
-          )
+          {
+            width: img.width,
+            height: img.height,
+            maxWidth: img.width,
+            maxHeight: img.height,
+            ...rect,
+          },
         );
       };
       img.src = dataURL;
@@ -71,9 +70,10 @@ export default function Screenshot(props : any) {
   useEffect(() => {
     const canvas : any = canvasRef.current;
     // const canvas : any = canvasRef.current;
-    if(canvas != null) {
-      const context = canvas.getContext("2d");
-      var img = new Image();
+    if (canvas != null && dataURL !== '') {
+      const context = canvas.getContext('2d');
+      const img = new Image();
+      // eslint-disable-next-line func-names
       img.onload = function () {
         context.drawImage(
           img,
@@ -84,7 +84,7 @@ export default function Screenshot(props : any) {
           0,
           0,
           canvas.width,
-          canvas.height
+          canvas.height,
         ); // destination rectangle
       };
       img.src = dataURL;
@@ -92,17 +92,17 @@ export default function Screenshot(props : any) {
   }, [rect]);
 
   function changeSize(event : any) {
-    const value = parseInt(event.target.value);
+    const value = parseInt(event.target.value, 10);
     const item = event.target.id;
-    var newRect;
+    let newRect;
     switch (item) {
-      case "startX":
+      case 'startX':
         newRect = {
           startX: value,
           startY: rect.startY,
           width: Math.min(
             rect.width,
-            rect.width - (value + rect.width - rect.maxWidth)
+            rect.width - (value + rect.width - rect.maxWidth),
           ),
           height: rect.height,
           maxHeight: rect.maxHeight,
@@ -110,20 +110,20 @@ export default function Screenshot(props : any) {
         };
         break;
 
-      case "startY":
+      case 'startY':
         newRect = {
           startX: rect.startX,
           startY: value,
           width: rect.width,
           height: Math.min(
             rect.height,
-            rect.height - (value + rect.height - rect.maxHeight)
+            rect.height - (value + rect.height - rect.maxHeight),
           ),
           maxHeight: rect.maxHeight,
           maxWidth: rect.maxWidth,
         };
         break;
-      case "rect-width":
+      case 'rect-width':
         newRect = {
           startX: rect.startX,
           startY: rect.startY,
@@ -134,7 +134,7 @@ export default function Screenshot(props : any) {
         };
         break;
 
-      case "rect-height":
+      case 'rect-height':
         newRect = {
           startX: rect.startX,
           startY: rect.startY,
@@ -145,8 +145,8 @@ export default function Screenshot(props : any) {
         };
         break;
 
-        default:
-          break;
+      default:
+        break;
     }
 
     setRect(newRect);
@@ -156,19 +156,20 @@ export default function Screenshot(props : any) {
     <div>
       <Button onClick={takeScreenShot}> Include Screenshot </Button>
       <Button
-        style={{ display: dataURL ? "block" : "none" }}
+        style={{ display: dataURL ? 'block' : 'none' }}
         onClick={clearScreenShot}
       >
-        {" "}
-        Clear{" "}
+        {' '}
+        Clear
+        {' '}
       </Button>
       <canvas
-        style={{ display: dataURL ? "block" : "none" }}
+        style={{ display: dataURL ? 'block' : 'none' }}
         ref={canvasRef}
         width="auto"
         height="auto"
       />
-      <Box display={dataURL ? "block" : "none"}>
+      <Box display={dataURL ? 'block' : 'none'}>
         <TextField
           id="startX"
           label="startX"

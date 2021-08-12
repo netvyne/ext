@@ -1,0 +1,25 @@
+name: Ext Sync
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  file_sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetching Local Repository
+        uses: actions/checkout@master
+      - name: Generate Commit Message
+        run: echo CM=$(git rev-parse --short "$GITHUB_SHA") >> $GITHUB_ENV
+      - name: Copy
+        uses: andstor/copycat-action@v3
+        with:
+          personal_token: ${{ secrets.NETVYNE_ADMIN_GITHUB_PAT }}
+          src_path: /.
+          dst_path: /ext/
+          dst_owner: netvyne
+          dst_repo_name: netvyne
+          clean: true
+          commit_message: ${{ env.CM }}

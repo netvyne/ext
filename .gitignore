@@ -35,12 +35,10 @@ yarn-error.log*
 bin/
 build/
 develop-eggs/
-#dist/
 eggs/
 lib/
 lib64/
 parts/
-sdist/
 var/
 *.egg-info/
 .installed.cfg
@@ -77,9 +75,6 @@ docs/_build/
 
 # DS_store stuff
 *.DS_Store
-
-# VScode
-**.vscode
 
 # node modules
 **/node_modules

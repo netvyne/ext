@@ -2,6 +2,7 @@ name: Ext Build
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened]
     branches: [master]
 
 jobs:
@@ -18,7 +19,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm ci
-      - run: CI=true npm run lint
-      - run: CI=true npm run build
-      - run: CI=true npm run test -- --coverage
+      - run: yarn install
+      - run: npm run lint
+      - run: NODE_ENV=production yarn build
+      # - run: npm run test -- --coverage

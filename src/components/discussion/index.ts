@@ -1,1 +1,1 @@
-export { default as Discussion } from "./component";
+export { default as Discussion } from './component';

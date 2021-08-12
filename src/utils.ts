@@ -1,5 +1,3 @@
-/* global chrome */
-
 export function fetchResource(url : any, init : any) {
   return new Promise((resolve, reject) => {
     chrome.runtime.sendMessage({ url, init }, (messageResponse) => {
@@ -11,7 +9,7 @@ export function fetchResource(url : any, init : any) {
           new Response(new Blob([response.body]), {
             status: response.status,
             statusText: response.statusText,
-          })
+          }),
         );
       }
     });
@@ -19,18 +17,13 @@ export function fetchResource(url : any, init : any) {
 }
 
 export function screenShot(action : any, callback : any) {
-  console.log("action :: ", action, "callback :: ", callback);
   // action is either clear or take
   return new Promise((resolve, reject) => {
-    console.log("Here 1");
     chrome.runtime.sendMessage({ screenshot: action }, (messageResponse) => {
-      console.log("Here 2");
-      console.log("messageResponse", messageResponse);
-      if(!messageResponse){
-        console.log("Last error :: ", chrome.runtime.lastError);
+      if (!messageResponse) {
+        console.log('Last error :: ', chrome.runtime.lastError);
       }
       const [response, error] = messageResponse;
-      console.log("response :: ", response, "error :: ", error);
       if (response === null) {
         reject(error);
       } else {
@@ -52,7 +45,38 @@ export function clearNotificationBadge() {
         } else {
           // callback();
         }
-      }
+      },
     );
+  });
+}
+
+export function isValidURL(url : any) {
+  console.log(url);
+  try {
+    return new URL(url);
+  } catch (err) {
+    return false;
+  }
+}
+
+export function createDiv(action : any) {
+  // action is either clear or take
+  return new Promise((resolve, reject) => {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs : any) => {
+      console.log('Here line 97', tabs);
+      chrome.runtime.sendMessage({ screenshot: 'createDiv' }, (response) => {
+        console.log('Here line 99', response);
+        if (response.confirmation) {
+          chrome.tabs.sendMessage(tabs[0].id, 'toggle');
+          chrome.tabs.executeScript(tabs[0].id, { file: 'content-crop.js' }, (res: any) => {
+            console.log('after injection ::: ', res);
+            if (chrome.runtime.lastError) {
+              console.log(`Script injection failed: ${chrome.runtime.lastError.message}`);
+            }
+          });
+        }
+        console.log(response);
+      });
+    });
   });
 }

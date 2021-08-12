@@ -1,79 +1,105 @@
-import { Box } from "@material-ui/core";
-import React, { FunctionComponent, useEffect, useState  } from "react";
-import { useQuery } from "react-query";
-// import ChildBox from "./ChildBox";
-import WebsiteBox from "./WebsiteBox";
-import ActionBox from "./ActionBox";
-import WebcommentTree from "./WebcommentTree";
-import LeaveReply from "./LeaveReply";
-import { useMutation } from "react-query";
-import { User, Shout, Website } from "../../../types/common/types";
-import {getCurrentUser} from "../../auth/auth"
- 
-interface GetWebcommentTreesQuery {
-  Roots: Shout[];
-  Website: Website;
+import { Box } from '@material-ui/core';
+import React, { FunctionComponent, useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
+import Grid from '@material-ui/core/Grid';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import WebsiteBox from './WebsiteBox';
+import ActionBox from './ActionBox';
+import ShoutTree from './ShoutTree';
+import LeaveReply from './LeaveReply';
+
+import {
+  User, Shout, Website, Url,
+} from '../../../types/common/types';
+
+interface GetUserQuery {
+  initCurrentUser: User[];
+  initUrl: Url
 }
 
-const Discussion = (props : any) => {
-  const [parentId, setParentId] = useState(0);
-  // const [createdWebsite, setCreatedWebsite] = useState<Website>();
+interface GetShoutTreesQuery {
+  Roots: Shout[];
+  initWebsite: Website;
+}
 
-  const [user, setUser] = React.useState<User|any>()
-  getCurrentUser().then( (currentUser:User|any) => setUser(currentUser))
+// export const Discussion: FunctionComponent = () => {
+const Discussion = ({ initCurrentUser, initUrl } : GetUserQuery) => {
+  const [value, setValue] = React.useState(0);
+  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+    setValue(newValue);
+  };
 
-  const [url, setUrl] = useState<any>('');
+  const url : any = initUrl;
+  const user : any = initCurrentUser;
 
-  useEffect(() => {
-      const queryInfo = {active: true, lastFocusedWindow: true};
-      chrome.tabs && chrome.tabs.query(queryInfo, tabs => {
-          let url : any = tabs[0].url;
-          url = new URL(url);
-          url["title"] = tabs[0].title;
-          setUrl(url);
-      });
-  }, []);
-
-  var route = `/get_shout_trees?host=${url.host}&pathname=${url.pathname}&search=${encodeURIComponent(url.search)}`;
+  const route = `/get_shout_trees?host=${url.host}&pathname=${url.pathname}&search=${encodeURIComponent(url.search)}`;
 
   const { data, status } = useQuery<any, string>(route);
   let children;
   let website;
   let trees;
   let actionBox;
-  if (status === "error") {
+  if (status === 'error') {
     website = <div>Error</div>;
     children = null;
-  } else if (status === "loading") {
-    website = <div>Loading</div>;
+  } else if (status === 'loading') {
+    website = (
+      <Grid
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <CircularProgress />
+      </Grid>
+    );
     children = null;
   } else {
-    // setCreatedWebsite(data.Website);
-    // console.log("Created Website", createdWebsite);
-    website = <>
-      <WebsiteBox website={data.Website} url={url} />
-      <LeaveReply website={data.Website} />
-    </>;
-    actionBox = <>
-      <ActionBox  website={data.Website} url={url} reg={user.Registered}/>
-    </>;
-    if(data.Roots){
-      trees = data.Roots.map((treeRoot : any) => (
-        <WebcommentTree
-          website={data.Website}
-          treeRoot={treeRoot}
-          // reg={false}
-          reg={!!user.Registered}
-        />
-      ));
+    website = (
+      <>
+        <WebsiteBox initWebsite={data.Website} url={url} />
+        <LeaveReply website={data.Website} url={url} />
+      </>
+    );
+    actionBox = (
+      <>
+        <ActionBox initWebsite={data.Website} reg={user?.Registered} url={url} />
+      </>
+    );
+    if (data.Roots) {
+      if (data.Roots.length > 0) {
+        trees = data.Roots.map((treeRoot : any) => (
+          <ShoutTree
+            website={data.Website}
+            treeRoot={treeRoot}
+            // reg={false}
+            reg={!user?.Registered}
+            url={url}
+          />
+        ));
+      } else {
+        trees = (
+          <Grid item component={Box}>
+            No comments
+          </Grid>
+        );
+      }
+    } else {
+      trees = (
+        <Grid item component={Box}>
+          No comments
+        </Grid>
+      );
     }
   }
   return (
     <Box>
-      {website}
-      {actionBox}
-      {/* {children} */}
-      {trees}
+      <div>
+        {website}
+        {actionBox}
+        {trees}
+      </div>
     </Box>
   );
 };
