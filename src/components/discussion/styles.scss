@@ -1,0 +1,101 @@
+.websitebox-container{
+    margin: 0px !important;
+}
+
+.website-action-box{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin: 15px 0px;
+}
+
+.websitebox-container h5{
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.website-action-box .votes{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 110px;
+}
+
+.website-action-box .votes button{
+    padding: 0px !important;
+}
+
+.website-action-box .comments, .website-action-box .shares, .website-action-box .save{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: auto;
+}
+
+.website-action-box img{
+    width: 30px;
+    height: 30px;
+}
+
+.website-action-box .shares img{
+    width: 25px;
+    height: 25px;
+}
+
+.website-action-box p{
+    font-weight: 700;
+    font-size: 14px;
+    margin: 0px 10px;
+}
+
+.website-action-box .save button{
+    font-weight: 700;
+    font-size: 14px;
+    color: #9395A3;
+    padding: 0px;
+    margin: 0px;
+}
+.website-action-box .save button:hover{
+    background-color: transparent !important;
+}
+
+.website-action-box .comments p, .website-action-box .shares p, .website-action-box .save p{
+    color: #9395A3;
+}
+.website-comment{
+    display: flex;
+    flex-direction: row;
+}
+
+.website-comment input{
+    width: 330px;
+    background-color: #EFF2F5;
+    height: 46px;
+    border-radius: 60px;
+    color: #84919D;
+    padding: 20px;
+    box-sizing: border-box !important;
+}
+
+.website-comment .MuiInput-underline:before, .website-comment .MuiInput-underline:after{
+    border-bottom: 0px !important;
+}
+
+.website-comment form{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.website-comment button{
+    background-color: #EFF2F5;
+    width: 108px;
+    height: 46px;
+    border-radius: 60px;
+    color: #22D21F;
+    font-size: 15px;
+    font-weight: bold;
+}

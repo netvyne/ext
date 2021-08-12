@@ -2,6 +2,7 @@ import React from 'react';
 import Box from '@material-ui/core/Box';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { DateTime } from 'luxon';
+import ReactMarkdown from 'react-markdown';
 import Grid from '@material-ui/core/Grid';
 import TalkVoteButtons from './TalkVoteButtons';
 import TalkLeaveReply from './TalkLeaveReply';
@@ -58,7 +59,7 @@ const TalkTree = ({ treeRoot }: Props) => {
           </Grid>
 
           <Grid item component={Box}>
-            {treeRoot.Comment}
+            <ReactMarkdown>{treeRoot.Comment}</ReactMarkdown>
           </Grid>
 
           <Grid container component={Box} m={1} wrap="nowrap" spacing={1}>

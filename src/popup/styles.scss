@@ -10,4 +10,52 @@
     padding-right: 0px;
     margin-left: 0px !important;
     margin-right: 0px !important;
+    background-color: #F6F8FA !important;
+}
+
+.topbar{
+    display: flex;
+    flex-direction: row;
+    height: 67px;
+    align-items: center;
+}
+
+.topbar .logo{
+    width: 30%;
+}
+
+.topbar .logo img{
+    width: 80%;
+}
+
+.topbar .tabs{
+    width: 69%;
+}
+
+.tabIcon{
+    width: 25px !important;
+    height: 25px !important;
+    border-radius: 0% !important;
+}
+
+.tabIcon img{
+    object-fit: contain !important;
+}
+
+.MuiTab-root{
+    min-width: 66px !important;
+    min-height: 66px !important;
+}
+
+.MuiPaper-elevation1{
+    box-shadow: none !important;
+}
+
+.MuiAppBar-colorDefault{
+    background-color: #ffffff !important;
+    margin-top: -4px !important;
+}
+
+.MuiTypography-h5{
+    font-family: 'Montserrat';
 }

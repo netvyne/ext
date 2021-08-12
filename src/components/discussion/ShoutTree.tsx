@@ -3,6 +3,7 @@ import React from 'react';
 import Box from '@material-ui/core/Box';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { DateTime } from 'luxon';
+import ReactMarkdown from 'react-markdown';
 import Grid from '@material-ui/core/Grid';
 import { useMutation, useQueryClient } from 'react-query';
 import Button from '@material-ui/core/Button';
@@ -108,7 +109,7 @@ const ShoutTree = ({
             </Grid>
 
             <Grid item component={Box}>
-              {treeRoot.Comment}
+              <ReactMarkdown>{treeRoot.Comment}</ReactMarkdown>
             </Grid>
 
             <Grid container component={Box} m={1} wrap="nowrap" spacing={1}>

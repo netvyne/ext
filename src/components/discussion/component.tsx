@@ -1,5 +1,6 @@
 import { Box } from '@material-ui/core';
 import React, { FunctionComponent, useEffect, useState } from 'react';
+import { makeStyles, useTheme, Theme } from '@material-ui/core/styles';
 import { useQuery } from 'react-query';
 import Grid from '@material-ui/core/Grid';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -11,6 +12,7 @@ import LeaveReply from './LeaveReply';
 import {
   User, Shout, Website, Url,
 } from '../../../types/common/types';
+import './styles.scss';
 
 interface GetUserQuery {
   initCurrentUser: User[];
@@ -22,6 +24,13 @@ interface GetShoutTreesQuery {
   initWebsite: Website;
 }
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    backgroundColor: theme.palette.background.paper,
+    width: 'auto',
+  },
+}));
+
 // export const Discussion: FunctionComponent = () => {
 const Discussion = ({ initCurrentUser, initUrl } : GetUserQuery) => {
   const [value, setValue] = React.useState(0);
@@ -29,6 +38,7 @@ const Discussion = ({ initCurrentUser, initUrl } : GetUserQuery) => {
     setValue(newValue);
   };
 
+  const classes = useStyles();
   const url : any = initUrl;
   const user : any = initCurrentUser;
 
@@ -59,12 +69,8 @@ const Discussion = ({ initCurrentUser, initUrl } : GetUserQuery) => {
     website = (
       <>
         <WebsiteBox initWebsite={data.Website} url={url} />
-        <LeaveReply website={data.Website} url={url} />
-      </>
-    );
-    actionBox = (
-      <>
         <ActionBox initWebsite={data.Website} reg={user?.Registered} url={url} />
+        <LeaveReply website={data.Website} url={url} />
       </>
     );
     if (data.Roots) {
@@ -95,9 +101,8 @@ const Discussion = ({ initCurrentUser, initUrl } : GetUserQuery) => {
   }
   return (
     <Box>
-      <div>
+      <div className="discussion-container">
         {website}
-        {actionBox}
         {trees}
       </div>
     </Box>

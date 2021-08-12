@@ -3,8 +3,8 @@ import React, { FunctionComponent, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles, useTheme, Theme } from '@material-ui/core/styles';
 import { browser } from 'webextension-polyfill-ts';
+// import WebFont from 'webfontloader';
 import { Sharing } from '@src/components/sharing';
-import { Profile } from '@src/components/profile';
 import { Discussion } from '@src/components/discussion';
 import Chat from '@src/components/discussion/Chat';
 import Shares from '@src/components/discussion/Shares';
@@ -17,13 +17,8 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import { QueryClientProvider } from 'react-query';
-import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
-import ShareIcon from '@material-ui/icons/Share';
-import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
-import PersonIcon from '@material-ui/icons/Person';
-import ChatIcon from '@material-ui/icons/Chat';
-import ForumIcon from '@material-ui/icons/Forum';
 import Avatar from '@material-ui/core/Avatar';
+import { Grid } from '@material-ui/core';
 import { User } from '../../types/common/types';
 // import {
 //   Row, Col, Button, Nav,
@@ -97,10 +92,19 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiBox-root-10': {
       padding: '10px',
     },
+    margin: '16px',
+    backgroundColor: '#ffffff',
+    borderRadius: '8px',
   },
 }));
 
 export const Popup: FunctionComponent = () => {
+  // WebFont.load({
+  //   google: {
+  //     families: ['Montserrat'],
+  //   },
+  // });
+
   const [user, setUser] = React.useState<User|any>();
   getCurrentUser().then((currentUser:User|any) => setUser(currentUser));
   const [url, setUrl] = useState<any>({});
@@ -138,6 +142,8 @@ export const Popup: FunctionComponent = () => {
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
   const handleChange = (event : any, newValue : any) => {
+    console.log('newValue', newValue);
+    console.log('event', event);
     setValue(newValue);
   };
 
@@ -147,21 +153,31 @@ export const Popup: FunctionComponent = () => {
       <div className="popup-container">
         <div className="container mx-1 my-1">
           <AppBar position="static" color="default" elevation={1}>
-            <Tabs
-              value={value}
-              onChange={handleChange}
-              indicatorColor="primary"
-              textColor="primary"
-              variant="fullWidth"
-              aria-label="full width tabs example"
-            >
-              <Tab icon={<ChatBubbleOutlineIcon />} {...a11yProps(0)} />
-              <Tab icon={<ChatIcon />} {...a11yProps(1)} />
-              <Tab icon={<ForumIcon />} {...a11yProps(2)} />
-              <Tab icon={<ShareIcon />} {...a11yProps(3)} />
-              <Tab icon={<NotificationsActiveIcon />} {...a11yProps(4)} />
-              <Tab icon={<Avatar alt="Netvyne Logo" src="../icon-128.png" />} onClick={(event : any) => clickHandler(event)} />
-            </Tabs>
+            <Grid className="topbar">
+              <Grid className="logo">
+                <img src="../landscap-logo.png" alt="logo" />
+              </Grid>
+              <Tabs
+                className="tabs"
+                value={value}
+                onChange={handleChange}
+                indicatorColor="primary"
+                textColor="primary"
+                variant="fullWidth"
+                aria-label="full width tabs example"
+                TabIndicatorProps={{
+                  style: {
+                    backgroundColor: '#9F00CF',
+                  },
+                }}
+              >
+                <Tab icon={<Avatar alt="World feed" src={value === 0 ? '../images/world_feed_selected.png' : '../images/world_feed_normal.png'} className="tabIcon" />} {...a11yProps(0)} />
+                <Tab icon={<Avatar alt="Conversation" src={value === 1 ? '../images/conversation_selected.png' : '../images/conversation_normal.png'} className="tabIcon" />} {...a11yProps(1)} />
+                <Tab icon={<Avatar alt="Home" src={value === 2 ? '../images/home_selected.png' : '../images/home_normal.png'} className="tabIcon" />} {...a11yProps(2)} />
+                <Tab icon={<Avatar alt="Share" src={value === 3 ? '../images/share_selected.png' : '../images/share_normal.png'} className="tabIcon" />} {...a11yProps(3)} />
+                <Tab icon={<Avatar alt="Notification" src={value === 4 ? '../images/notification_selected.png' : '../images/notification_normal.png'} className="tabIcon" />} {...a11yProps(4)} />
+              </Tabs>
+            </Grid>
           </AppBar>
 
           <TabPanel value={value} index={0} dir={theme.direction} className={classes.tab}>

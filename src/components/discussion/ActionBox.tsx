@@ -4,14 +4,11 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
-import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import ShareIcon from '@material-ui/icons/Share';
-import AddCommentSharpIcon from '@material-ui/icons/AddCommentSharp';
+import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
 import { useMutation } from 'react-query';
 import { Website, Url } from '../../../types/common/types';
+import './styles.scss';
 
 interface Props {
   initWebsite: Website;
@@ -70,27 +67,28 @@ const ActionBox = ({ initWebsite, reg, url } : Props) => {
   };
 
   const actionbox = (
-    <Box mx={2} borderTop={1}>
-      <Grid container wrap="nowrap" justify="space-around">
-        <Grid item component={IconButton} value="upvote" onClick={postVote}>
-          <KeyboardArrowUpIcon
-            color={
-              website.VoteStatus === 'upvote' ? 'primary' : 'secondary'
-            }
-          />
-        </Grid>
-        <Grid item component={IconButton} value="downvote" onClick={postVote}>
-          <KeyboardArrowDownIcon
-            color={
-              website.VoteStatus === 'downvote' ? 'primary' : 'secondary'
-            }
-          />
-        </Grid>
-        {/* <Grid item component={IconButton}>
-          <BookmarkBorderIcon />
-        </Grid> */}
+    <Box>
+      <Grid className="website-action-box">
+        <Box className="votes">
+          <Grid item component={IconButton} value="upvote" onClick={postVote}>
+            <img src="../images/vote_up_icon.png" alt="vote up" />
+          </Grid>
+          <p>Vote</p>
+          <Grid item component={IconButton} value="downvote" onClick={postVote}>
+            <img src="../images/vote_down_icon.png" alt="vote down" />
+          </Grid>
+        </Box>
+        <Box className="comments">
+          <img src="../images/comments_icon.png" alt="Comments" />
+          <p>{initWebsite?.ShoutCount}</p>
+        </Box>
+        <Box className="shares">
+          <img src="../images/share_gray.png" alt="Shares" />
+          <p>{initWebsite?.ShareCount}</p>
+        </Box>
         {!isSaved && (
-          <Grid item component={Box}>
+          <Box className="save">
+            <img src="../images/save_bookmark_icon.png" alt="Saves" />
             {disabled && (
               <Tooltip title="You need to get registered first" arrow>
                 <span>
@@ -108,13 +106,13 @@ const ActionBox = ({ initWebsite, reg, url } : Props) => {
                 }}
               >
                 SAVE
-                <BookmarkBorderIcon />
               </Button>
             )}
-          </Grid>
+          </Box>
         )}
         {isSaved && (
-          <Grid item component={Box}>
+          <Box className="save">
+            <img src="../images/save_bookmark_icon.png" alt="Saves" />
             <Button
               disabled={disabled}
               onClick={(e) => {
@@ -123,11 +121,19 @@ const ActionBox = ({ initWebsite, reg, url } : Props) => {
               }}
             >
               UNDO
-              <BookmarkBorderIcon />
             </Button>
-          </Grid>
+          </Box>
         )}
       </Grid>
+      <Grid className="website-comment">
+        <form>
+          <TextField value="Comment" />
+          <Button type="submit" size="small" color="primary">
+            Submit
+          </Button>
+        </form>
+      </Grid>
+      <hr />
     </Box>
   );
 
