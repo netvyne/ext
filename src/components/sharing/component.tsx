@@ -42,7 +42,7 @@ export const Sharing: FunctionComponent = () => {
   const [shareSeparately, setShareSeparately] = React.useState(true);
   const [url, setUrl] = useState<any>({});
   const [comment, setComment] = React.useState('');
-  const [friendIds, setFriendIds] = React.useState([]);
+  const [friendEmails, setFriendEmails] = React.useState([]);
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
@@ -140,7 +140,7 @@ export const Sharing: FunctionComponent = () => {
       Search: url.search,
       Comment: comment,
       Separate: shareSeparately,
-      ReceiverIDs: friendIds,
+      ReceiverEmails: friendEmails,
     };
     const res = mutation.mutate(
       // @ts-ignore
@@ -151,7 +151,7 @@ export const Sharing: FunctionComponent = () => {
       {
         onSuccess: (response : any) => {
           uploadImage(event, response.Post.ID);
-          setFriendIds([]);
+          setFriendEmails([]);
           setComment('');
           setDataURL('');
           setOpen(true);
@@ -205,7 +205,7 @@ export const Sharing: FunctionComponent = () => {
         </Alert>
       </Snackbar>
       <form onSubmit={postShare}>
-        <Dropdown setFriendIds={setFriendIds} key={mutation.isLoading} />
+        <Dropdown setFriendEmails={setFriendEmails} key={mutation.isLoading} />
         {bbox}
         <Box>
           <Button

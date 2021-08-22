@@ -20,7 +20,7 @@ export default function Dropdown(props : any) {
   // };
 
   function changed(event : any, value : any) {
-    props.setFriendIds(value.map((user : User) => user.ID));
+    props.setFriendEmails(value.map((user : User) => user.Email));
   }
 
   const friendsPlaceholder: User[] = [];
