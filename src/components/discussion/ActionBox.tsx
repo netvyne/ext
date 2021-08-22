@@ -75,14 +75,14 @@ const ActionBox = ({ initWebsite, reg, url } : Props) => {
         <Grid item component={IconButton} value="upvote" onClick={postVote}>
           <KeyboardArrowUpIcon
             color={
-              website.VoteStatus === 'upvote' ? 'primary' : 'secondary'
+              website.VoteStatus === 1 ? 'primary' : 'secondary'
             }
           />
         </Grid>
         <Grid item component={IconButton} value="downvote" onClick={postVote}>
           <KeyboardArrowDownIcon
             color={
-              website.VoteStatus === 'downvote' ? 'primary' : 'secondary'
+              website.VoteStatus === -1 ? 'primary' : 'secondary'
             }
           />
         </Grid>
