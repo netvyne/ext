@@ -1,0 +1,113 @@
+section .chat_section {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    background-color: #f7f7f7;
+}
+section .chat_box {
+    border: 2px solid #ada2a2;
+    border-radius: 5px;
+    margin: 15px 0px;
+}
+section .message {
+    padding: 0px 5px;
+    min-width: 70%;
+    max-width: 70%;
+    word-break: normal;
+}
+section .user_name {
+    word-break: normal;
+    font-size: 15px;
+    max-width: 21%;
+    min-width: 20%;
+    color: #b725b3;
+    font-weight: 500;
+}
+section .icon {
+    min-width: 6%;
+}
+section i.fas.fa-smile {
+    font-size: 29px;
+    color: #ffae1bd1;
+}
+section i.fas.fa-paper-plane {
+    font-size: 25px;
+    color: green;
+}
+section .chat {
+  height: calc(100vh - 200px);
+  padding: 0px 10px 0px 0px;
+  overflow: auto;
+  background-color: #fff;
+  transform: rotate(180deg);
+  direction: rtl;
+}
+section .chat__wrapper {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+}
+section .chat__message {
+  font-size: 18px;
+  padding: 10px 5px;
+  max-width: 600px;
+  word-break: break-all;
+  transform: rotate(180deg);
+  direction: ltr;
+}
+section .chat__message-own {
+  color: #fff;
+  align-items: baseline;
+  display: flex;
+  width: 100%;
+  color: gray;
+  justify-content: space-between;
+}
+section .chat__form form {
+  background: #ffffff;  
+  border-top:1px solid #80808078;
+  display: flex;
+  align-items: center;
+  padding: 5px 15px;  
+  justify-content: space-around;
+}
+section .chat__form input {
+  height: 40px;
+  font-size: 16px;
+  background-color: #fff;
+  border: none;
+}
+section .chat__form button {
+  width: 10%;
+  height: 100%;
+  font-size: 16px;
+  background-color: transparent;
+  border: none;
+  text-align: center;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+section .chat__form button:hover {
+  font-weight: bold;
+}
+section input:focus-visible {
+    outline: none;
+}
+section input:active {
+    background-color: #fff !important;
+}
+section ::-webkit-scrollbar {
+    width: 5px;
+}
+ 
+::-webkit-scrollbar-track {
+    background-color: #ebebeb;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+
+section ::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: #ada2a2; 
+}

@@ -71,18 +71,21 @@ const Discussion = ({ initCurrentUser, initUrl } : GetUserQuery) => {
         <WebsiteBox initWebsite={data.Website} url={url} />
         <ActionBox initWebsite={data.Website} reg={user?.Registered} url={url} />
         <LeaveReply website={data.Website} url={url} />
+        <hr />
       </>
     );
     if (data.Roots) {
       if (data.Roots.length > 0) {
         trees = data.Roots.map((treeRoot : any) => (
+          // <Grid className="main_user">
           <ShoutTree
             website={data.Website}
             treeRoot={treeRoot}
-            // reg={false}
+              // reg={false}
             reg={!user?.Registered}
             url={url}
           />
+          // </Grid>
         ));
       } else {
         trees = (
@@ -103,7 +106,9 @@ const Discussion = ({ initCurrentUser, initUrl } : GetUserQuery) => {
     <Box>
       <div className="discussion-container">
         {website}
+        {/* <Grid className="comments_section"> */}
         {trees}
+        {/* </Grid> */}
       </div>
     </Box>
   );

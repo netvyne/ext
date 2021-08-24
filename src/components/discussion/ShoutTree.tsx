@@ -7,6 +7,7 @@ import ReactMarkdown from 'react-markdown';
 import Grid from '@material-ui/core/Grid';
 import { useMutation, useQueryClient } from 'react-query';
 import Button from '@material-ui/core/Button';
+import Avatar from '@material-ui/core/Avatar';
 import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
 import ShoutVoteButtons from './ShoutVoteButtons';
 import LeaveReply from './LeaveReply';
@@ -70,80 +71,90 @@ const ShoutTree = ({
       <Grid
         container
         component={Box}
-        bgcolor={
-          treeRoot.ID === focus
-            ? '#414ec4'
-            : color
-        }
         padding={1}
         m={1}
         borderRadius="borderRadius"
         direction="column"
+        className="main_user"
       >
-        <Grid container direction="row" wrap="nowrap">
-          {/* @ts-ignore */}
-          <Grid
-            component={Box}
-            container
-            alignItems="center"
-            direction="column"
-            xs={1}
-            p={1}
-            mr={4}
-          >
-            <ShoutVoteButtons
-              initShout={treeRoot}
-            />
-          </Grid>
-
-          <Grid container component={Box} m={1}>
-            <Grid container component={Box} m={1} wrap="nowrap" spacing={1}>
-              <Grid item component={Box}>
-                {treeRoot.Author.UserName}
-              </Grid>
-              <Grid item component={Box}>
-                {DateTime.fromISO(treeRoot.CreatedAt.toString(), {
-                  zone: 'utc',
-                }).toRelative()}
-              </Grid>
+        <Grid className="parent" container direction="row" wrap="nowrap">
+          <Grid className="user_name">
+            {/* @ts-ignore */}
+            {/* <Grid
+              component={Box}
+              container
+              alignItems="center"
+              direction="column"
+              xs={1}
+              p={1}
+              mr={4}
+            >
+              <ShoutVoteButtons
+                initShout={treeRoot}
+              />
+            </Grid> */}
+            <Grid className="profile_img">
+              <Avatar>A</Avatar>
             </Grid>
 
-            <Grid item component={Box}>
-              <ReactMarkdown>{treeRoot.Comment}</ReactMarkdown>
-            </Grid>
+            <Grid className="comment_text">
+              <Grid className="text_area">
+                <h1>
+                  {treeRoot.Author.UserName}
+                </h1>
+                <p>
+                  <ReactMarkdown>{treeRoot.Comment}</ReactMarkdown>
+                </p>
+                {/* <Grid item component={Box}>
+                  {DateTime.fromISO(treeRoot.CreatedAt.toString(), {
+                    zone: 'utc',
+                  }).toRelative()}
+                </Grid> */}
+              </Grid>
 
-            <Grid container component={Box} m={1} wrap="nowrap" spacing={1}>
-              <LeaveReply website={website} parent={treeRoot} url={url} />
-              {!isSaved && reg && (
-                <Box>
-                  <Button
-                    disabled={clicked}
-                    size="small"
-                    onClick={(e) => {
-                      onSaveItem(e, true);
-                      setClicked(true);
-                    }}
-                  >
-                    SAVE
-                    <BookmarkBorderIcon />
-                  </Button>
-                </Box>
-              )}
-              {isSaved && reg && (
-                <Box>
-                  <Button
-                    disabled={clicked}
-                    size="small"
-                    onClick={(e) => {
-                      onSaveItem(e, false);
-                      setClicked(true);
-                    }}
-                  >
-                    UNDO
-                    <BookmarkBorderIcon />
-                  </Button>
-                </Box>
-              )}
+              <Grid className="comment_box">
+                <Grid className="counter_box">
+                  <img src="../images/vote_up_icon.png" alt="upvote" />
+                  <p>1.1k</p>
+                  <img src="../images/vote_down_icon.png" alt="downvote" />
+                </Grid>
+                <Grid className="comment_btn">
+                  {!isSaved && reg && (
+                    <Box>
+                      <Button
+                        disabled={clicked}
+                        size="small"
+                        onClick={(e) => {
+                          onSaveItem(e, true);
+                          setClicked(true);
+                        }}
+                        className="btn"
+                      >
+                        SAVE
+                        <BookmarkBorderIcon />
+                      </Button>
+                    </Box>
+                  )}
+                  {isSaved && reg && (
+                    <Box>
+                      <Button
+                        disabled={clicked}
+                        size="small"
+                        onClick={(e) => {
+                          onSaveItem(e, false);
+                          setClicked(true);
+                        }}
+                        className="btn"
+                      >
+                        UNDO
+                        <BookmarkBorderIcon />
+                      </Button>
+                    </Box>
+                  )}
+                  {/* <button type="button" className="btn">Reply</button> */}
+                </Grid>
+                <LeaveReply website={website} parent={treeRoot} url={url} />
+              </Grid>
             </Grid>
           </Grid>
         </Grid>

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useMutation, useQueryClient, useQuery } from 'react-query';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import ReplyIcon from '@material-ui/icons/Reply';
 import SendIcon from '@material-ui/icons/Send';
@@ -51,33 +52,42 @@ const LeaveReply = ({ parent, website, url }: Props) => {
   // queryClient.invalidateQueries('/get_website_feed');
 
   const commentForm = (
-    <form onSubmit={postComment}>
-      <TextField value={comment} onInput={(e : any) => setComment(e.target.value)} />
-      <Button
-        size="small"
-        onClick={() => {
-          setShowForm(false);
-        }}
-      >
-        Cancel
-      </Button>
-      <Button type="submit" size="small" color="primary" endIcon={<SendIcon />}>
-        {' '}
-        Submit
-        {' '}
-      </Button>
-    </form>
+    <Grid className="website-comment">
+      <form onSubmit={postComment}>
+        <TextField value={comment} onInput={(e : any) => setComment(e.target.value)} />
+        <Button type="submit" size="small" color="primary">
+          Submit
+        </Button>
+      </form>
+    </Grid>
+
+    // <form onSubmit={postComment}>
+    //   <TextField value={comment} onInput={(e : any) => setComment(e.target.value)} />
+    //   <Button
+    //     size="small"
+    //     onClick={() => {
+    //       setShowForm(false);
+    //     }}
+    //   >
+    //     Cancel
+    //   </Button>
+    //   <Button type="submit" size="small" color="primary" endIcon={<SendIcon />}>
+    //     {' '}
+    //     Submit
+    //     {' '}
+    //   </Button>
+    // </form>
   );
 
-  const content = showForm ? (
-    commentForm
-  ) : (
-    <Button size="small" onClick={() => setShowForm(!showForm)}>
-      Reply
-      <ReplyIcon />
-    </Button>
-  );
-  return <Box>{content}</Box>;
+  // const content = showForm ? (
+  //   commentForm
+  // ) : (
+  //   <Button size="small" onClick={() => setShowForm(!showForm)}>
+  //     Reply
+  //     <ReplyIcon />
+  //   </Button>
+  // );
+  return <Box className="leave-reply">{commentForm}</Box>;
 };
 
 export default LeaveReply;

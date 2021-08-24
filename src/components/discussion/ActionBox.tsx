@@ -83,7 +83,7 @@ const ActionBox = ({ initWebsite, reg, url } : Props) => {
           <p>{initWebsite?.ShoutCount}</p>
         </Box>
         <Box className="shares">
-          <img src="../images/share_gray.png" alt="Shares" />
+          <img src="../images/forward_icon.png" alt="Shares" />
           <p>{initWebsite?.ShareCount}</p>
         </Box>
         {!isSaved && (
@@ -125,15 +125,6 @@ const ActionBox = ({ initWebsite, reg, url } : Props) => {
           </Box>
         )}
       </Grid>
-      <Grid className="website-comment">
-        <form>
-          <TextField value="Comment" />
-          <Button type="submit" size="small" color="primary">
-            Submit
-          </Button>
-        </form>
-      </Grid>
-      <hr />
     </Box>
   );
 
