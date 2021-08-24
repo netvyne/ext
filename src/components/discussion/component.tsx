@@ -7,6 +7,7 @@ import WebsiteBox from './WebsiteBox';
 import ActionBox from './ActionBox';
 import ShoutTree from './ShoutTree';
 import LeaveReply from './LeaveReply';
+import { Error } from '../error';
 
 import {
   User, Shout, Website, Url,
@@ -40,7 +41,8 @@ const Discussion = ({ initCurrentUser, initUrl } : GetUserQuery) => {
   let trees;
   let actionBox;
   if (status === 'error') {
-    website = <div>Error</div>;
+    // website = <div>Error</div>;
+    website = <Error />;
     children = null;
   } else if (status === 'loading') {
     website = (

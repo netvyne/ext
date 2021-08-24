@@ -16,6 +16,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
 import { QueryClientProvider } from 'react-query';
 import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
 import ShareIcon from '@material-ui/icons/Share';
@@ -110,10 +111,14 @@ export const Popup: FunctionComponent = () => {
   }, []);
 
   function clickHandler(e : any) {
-    // console.log(event);
-    // window.location.href = 'http://www.w3schools.com';
     e.preventDefault();
     chrome.tabs.create({ url: `${process.env.PUBLIC_WEB}/profile`, active: false });
+    return false;
+  }
+
+  function feedbackClick(e : any) {
+    e.preventDefault();
+    chrome.tabs.create({ url: 'https://forms.gle/LUzvrWqhtWnKwAxX6', active: false });
     return false;
   }
 
@@ -163,7 +168,7 @@ export const Popup: FunctionComponent = () => {
               <Tab icon={<Avatar alt="Netvyne Logo" src="../icon-128.png" />} onClick={(event : any) => clickHandler(event)} />
             </Tabs>
           </AppBar>
-
+          <Button type="button" size="small" color="primary" onClick={(event : any) => feedbackClick(event)}>FeedBack</Button>
           <TabPanel value={value} index={0} dir={theme.direction} className={classes.tab}>
             <Discussion initCurrentUser={user} initUrl={url} />
           </TabPanel>

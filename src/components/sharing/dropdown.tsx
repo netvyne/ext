@@ -13,8 +13,19 @@ interface GetFriendQuery {
 export default function Dropdown(props : any) {
 // export const Dropdown: FunctionComponent = (props : any) => {
   // const { isLoading, data } = useQuery<any, any>("/get_friends");
-
-  const { isLoading, data } = useQuery<GetFriendQuery>('/get_user_friends');
+  let friendsPlaceholder: User[] = [];
+  const { data, status } = useQuery<any, string>('/get_user_friends');
+  let loadingStatus : boolean = true;
+  console.log('isLoading : ', status);
+  if (status === 'error') {
+    friendsPlaceholder = [];
+    loadingStatus = false;
+  } else if (status === 'loading') {
+    friendsPlaceholder = [];
+  } else if (status === 'success') {
+    friendsPlaceholder = data!.Friends;
+    loadingStatus = false;
+  }
   // const changed = function (event : any, value : any) {
   //   props.setFriendIds(value.map((user : User) => user.ID));
   // };
@@ -23,16 +34,15 @@ export default function Dropdown(props : any) {
     props.setFriendEmails(value.map((user : User) => user.Email));
   }
 
-  const friendsPlaceholder: User[] = [];
   return (
     <Autocomplete
       multiple
       onChange={changed}
       id="tags-standard"
       style={{ width: 'auto' }}
-      options={isLoading ? friendsPlaceholder : data!.Friends}
+      options={friendsPlaceholder}
       disablePortal
-      loading={isLoading}
+      loading={loadingStatus}
       getOptionLabel={(option : User) => `${option.FirstName} ${option.LastName}`}
       renderInput={(params) => (
         <TextField
@@ -43,7 +53,7 @@ export default function Dropdown(props : any) {
             ...params.InputProps,
             endAdornment: (
               <>
-                {isLoading ? (
+                {loadingStatus ? (
                   <CircularProgress color="inherit" size={20} />
                 ) : null}
                 {params.InputProps.endAdornment}

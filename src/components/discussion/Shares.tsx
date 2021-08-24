@@ -21,6 +21,7 @@ import Button from '@material-ui/core/Button';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import FreedPost from './FreedPost';
+import { Error } from '../error';
 import { Website, User, PostShare } from '../../../types/common/types';
 import { getCurrentUser } from '../../auth/auth';
 import { isValidURL } from '../../utils';
@@ -81,7 +82,8 @@ export default function Shares() {
   // console.log(data);
   let shares;
   if (status === 'error') {
-    shares = <div>Error</div>;
+    // shares = <div>Error</div>;
+    shares = <Error />;
   } else if (status === 'loading') {
     shares = <div>Loading</div>;
     shares = (
