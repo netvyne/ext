@@ -17,7 +17,7 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
-import { QueryClientProvider } from 'react-query';
+import { QueryClientProvider, useQuery } from 'react-query';
 import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
 import ShareIcon from '@material-ui/icons/Share';
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
@@ -25,6 +25,7 @@ import PersonIcon from '@material-ui/icons/Person';
 import ChatIcon from '@material-ui/icons/Chat';
 import ForumIcon from '@material-ui/icons/Forum';
 import Avatar from '@material-ui/core/Avatar';
+import Badge from '@material-ui/core/Badge';
 import { User } from '../../types/common/types';
 // import {
 //   Row, Col, Button, Nav,
@@ -105,6 +106,7 @@ export const Popup: FunctionComponent = () => {
   const [user, setUser] = React.useState<User|any>();
   getCurrentUser().then((currentUser:User|any) => setUser(currentUser));
   const [url, setUrl] = useState<any>({});
+  const [shareCount, setShareCount] = useState(0);
   // Sends the `popupMounted` event
   React.useEffect(() => {
     browser.runtime.sendMessage({ popupMounted: true });
@@ -122,6 +124,10 @@ export const Popup: FunctionComponent = () => {
     return false;
   }
 
+  const route = `/get_user_notifications?host=${url.host}&pathname=${url.pathname}&search=${encodeURIComponent(url.search)}`;
+
+  const { data, status } = useQuery<any, string>(route);
+
   useEffect(() => {
     const queryInfo = { active: true };
     if (chrome.tabs) {
@@ -136,7 +142,11 @@ export const Popup: FunctionComponent = () => {
         setUrl(formatedUrl);
       });
     }
-  }, []);
+    if (data && data.WebsitePostShareCount >= 0) {
+      console.log('use effect data ', data.WebsitePostShareCount);
+      setShareCount(data.WebsitePostShareCount);
+    }
+  }, [data]);
 
   const classes = useStyles();
   // const classes = useStyles();
@@ -162,7 +172,7 @@ export const Popup: FunctionComponent = () => {
             >
               <Tab icon={<ChatBubbleOutlineIcon />} {...a11yProps(0)} />
               <Tab icon={<ChatIcon />} {...a11yProps(1)} />
-              <Tab icon={<ForumIcon />} {...a11yProps(2)} />
+              <Tab icon={<Badge badgeContent={shareCount} color="primary"><ForumIcon /></Badge>} {...a11yProps(2)} />
               <Tab icon={<ShareIcon />} {...a11yProps(3)} />
               <Tab icon={<NotificationsActiveIcon />} {...a11yProps(4)} />
               <Tab icon={<Avatar alt="Netvyne Logo" src="../icon-128.png" />} onClick={(event : any) => clickHandler(event)} />
