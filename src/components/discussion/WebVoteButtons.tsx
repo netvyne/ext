@@ -14,10 +14,10 @@ interface Props {
 
 export default function WebVoteButtons({ item, setItem }: Props) {
   const voteMutation = useMutation({});
-  const onPostVote = async (e: any) => {
-    e.preventDefault();
+  const onPostVote = async (event: any) => {
+    event.preventDefault();
     const data = {
-      Status: e.currentTarget.value,
+      Status: event.currentTarget.value === 'upvote' ? 1 : -1,
       Host: item.Host,
       Pathname: item.Pathname,
       Search: item.Search,
@@ -45,7 +45,7 @@ export default function WebVoteButtons({ item, setItem }: Props) {
       <Button value="upvote" onClick={onPostVote}>
         <KeyboardArrowUpIcon
           color={
-            item.VoteStatus === 'upvote' ? 'primary' : 'secondary'
+            item.VoteStatus === 1 ? 'primary' : 'secondary'
           }
         />
       </Button>
@@ -53,7 +53,7 @@ export default function WebVoteButtons({ item, setItem }: Props) {
       <Button value="downvote" onClick={onPostVote}>
         <KeyboardArrowDownIcon
           color={
-            item.VoteStatus === 'downvote' ? 'primary' : 'secondary'
+            item.VoteStatus === -1 ? 'primary' : 'secondary'
           }
         />
       </Button>

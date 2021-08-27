@@ -7,8 +7,6 @@ services:
     image: ext
     environment:
       REACT_APP_PUBLIC_API: http://localhost:5000/api
-      CHOKIDAR_USEPOLLING: "true"
-      FAST_REFRESH: "false" # temporary fix from: https://github.com/facebook/create-react-app/issues/9904#issuecomment-803488928
       NODE_ENV: "development"
       VERSION: 0.0
     volumes:

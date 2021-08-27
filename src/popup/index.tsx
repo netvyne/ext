@@ -2,8 +2,11 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { browser } from 'webextension-polyfill-ts';
 import * as Sentry from '@sentry/react';
+import { QueryClientProvider, useQuery } from 'react-query';
 import { Integrations } from '@sentry/tracing';
 import { Popup } from './component';
+import { Error } from '../components/error';
+import { queryClient } from '../query';
 
 import '../scss/app.scss';
 
@@ -22,5 +25,15 @@ Sentry.init({
 });
 
 browser.tabs.query({ active: true, currentWindow: true }).then(() => {
-  ReactDOM.render(<Popup />, document.getElementById('popup'));
+  // ReactDOM.render(<Popup />, document.getElementById('popup'));
+  ReactDOM.render(
+    <QueryClientProvider client={queryClient}>
+      <React.StrictMode>
+        <Sentry.ErrorBoundary fallback={({ error }) => <Error />}>
+          <Popup />
+        </Sentry.ErrorBoundary>
+      </React.StrictMode>
+    </QueryClientProvider>,
+    document.getElementById('popup'),
+  );
 });

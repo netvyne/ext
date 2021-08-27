@@ -1,4 +1,3 @@
-/// <reference path="./response-types.d.ts" />
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { DateTime } from 'luxon';
 
@@ -45,7 +44,7 @@ Search: string;
 Karma: number;
 Upvotes: number;
 Downvotes: number;
-VoteStatus: string;
+VoteStatus: number;
 Saved: boolean;
 ShoutCount: number;
 ShareCount: number;
@@ -106,7 +105,7 @@ Level: number;
 Karma: number;
 Upvotes: number;
 Downvotes: number;
-VoteStatus: string;
+VoteStatus: number;
 Saved: boolean;
 Children: Shout[];
 }

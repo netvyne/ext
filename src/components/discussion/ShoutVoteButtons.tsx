@@ -24,7 +24,7 @@ export default function ShoutVoteButtons({ initShout } : Props) {
       redirect: 'follow',
       referrerPolicy: 'no-referrer',
       body: JSON.stringify({
-        Status: event.currentTarget.value,
+        Status: event.currentTarget.value === 'upvote' ? 1 : -1,
         ShoutID: shout.ID,
       }),
     };
@@ -40,7 +40,7 @@ export default function ShoutVoteButtons({ initShout } : Props) {
       <Button value="upvote" onClick={postVote}>
         <KeyboardArrowUpIcon
           color={
-            shout.VoteStatus === 'upvote' ? 'primary' : 'secondary'
+            shout.VoteStatus === 1 ? 'primary' : 'secondary'
           }
         />
       </Button>
@@ -48,7 +48,7 @@ export default function ShoutVoteButtons({ initShout } : Props) {
       <Button value="downvote" onClick={postVote}>
         <KeyboardArrowDownIcon
           color={
-            shout.VoteStatus === 'downvote' ? 'primary' : 'secondary'
+            shout.VoteStatus === -1 ? 'primary' : 'secondary'
           }
         />
       </Button>
