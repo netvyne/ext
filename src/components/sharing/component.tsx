@@ -278,10 +278,10 @@ export const Sharing: FunctionComponent = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={(e) => handleCloseAlert(e, 'disagree')} color="primary">
-            Yes
+            No
           </Button>
           <Button onClick={(e) => handleCloseAlert(e, 'agree')} color="primary" autoFocus>
-            No
+            Yes
           </Button>
         </DialogActions>
       </Dialog>
