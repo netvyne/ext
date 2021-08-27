@@ -16,7 +16,6 @@ export default function Dropdown(props : any) {
   let friendsPlaceholder: User[] = [];
   const { data, status } = useQuery<any, string>('/get_user_friends');
   let loadingStatus : boolean = true;
-  console.log('isLoading : ', status);
   if (status === 'error') {
     friendsPlaceholder = [];
     loadingStatus = false;

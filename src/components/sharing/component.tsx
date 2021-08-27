@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React, {
   FunctionComponent, useEffect, useState, useRef,
 } from 'react';
@@ -10,18 +11,25 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { Box } from '@material-ui/core';
 import {
-  useMutation,
+  useMutation, useQuery,
 } from 'react-query';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 
 // import { render } from 'react-dom';
+import { AnyAaaaRecord } from 'dns';
 import Screenshot from './screenshot';
 import Dropdown from './dropdown';
-// import { fetchResource } from '../../utils';
+import { getCurrentUser } from '../../auth/auth';
 import { isValidURL, createDiv, screenShot } from '../../utils';
+import { User } from '../../../types/common/types';
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -50,6 +58,13 @@ export const Sharing: FunctionComponent = () => {
   const [rect, setRect] = React.useState({ startX: 0, startY: 0 });
 
   const [message, setMessage] = React.useState<any>('');
+  const [openAlert, setOpenAlert] = React.useState(false);
+  const [alertText, setAlertText] = React.useState('');
+
+  const [sharedEmails, setSharedEmails] = React.useState<any>([]);
+  const [sharedNames, setSharedNames] = React.useState<any>([]);
+  const [user, setUser] = React.useState<User | null>();
+  getCurrentUser().then((currentUser: User | null) => setUser(currentUser));
 
   function cropcallback() {
     chrome.storage.local.get({ screenshot: null }, (data) => {
@@ -67,6 +82,9 @@ export const Sharing: FunctionComponent = () => {
     }
   };
 
+  const route = `/get_website_posts?host=${url.host}&pathname=${url.pathname}&search=${encodeURIComponent(url.search)}`;
+  const { data, status } = useQuery<any, string>(route);
+
   useEffect(() => {
     const queryInfo = { active: true };
     if (chrome.tabs) {
@@ -82,7 +100,23 @@ export const Sharing: FunctionComponent = () => {
       });
     }
     chrome.runtime.onMessage.addListener(handleMessage);
-  }, []);
+    if (data && data.Shares.length > 0) {
+      const emails : any = [];
+      const names : any = [];
+      data.Shares.map((share : any, s : number) => {
+        if ((user && user.Email && user.Email === share.Sender.Email)) {
+          emails.push(`${share.Receiver.Email}`);
+          names.push(`${share.Receiver.FirstName} ${share.Receiver.LastName}`);
+        } else {
+          emails.push(`${share.Sender.Email}`);
+          names.push(`${share.Sender.FirstName} ${share.Sender.LastName}`);
+        }
+        return emails;
+      });
+      setSharedEmails(emails);
+      setSharedNames(names);
+    }
+  }, [data]);
   // // // // // //
 
   const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
@@ -134,7 +168,7 @@ export const Sharing: FunctionComponent = () => {
   const postShare = async (event : any) => {
     event.preventDefault();
     // const shareURL = new URL(url);
-    const data = {
+    const postData = {
       Host: url.host,
       Pathname: url.pathname,
       Search: url.search,
@@ -146,7 +180,7 @@ export const Sharing: FunctionComponent = () => {
       // @ts-ignore
       {
         route: '/post_user_post',
-        data,
+        data: postData,
       },
       {
         onSuccess: (response : any) => {
@@ -155,11 +189,35 @@ export const Sharing: FunctionComponent = () => {
           setComment('');
           setDataURL('');
           setOpen(true);
-          // uploadImage(event, "1");
         },
       },
     );
     return res;
+  };
+
+  const handleClickOpenAlert = (event : any) => {
+    event.preventDefault();
+    let i = 0;
+    const commonEmail : any = [];
+    for (i = 0; i < friendEmails.length; i += 1) {
+      console.log('index :: ', sharedEmails.indexOf(friendEmails[i]), ' value : ', friendEmails[i]);
+      if (sharedEmails.indexOf(friendEmails[i]) > -1) {
+        commonEmail.push(`${sharedNames[sharedEmails.indexOf(friendEmails[i])]} < ${friendEmails[i]}>`);
+      }
+    }
+    if (commonEmail.length > 0) {
+      setAlertText(commonEmail.map((email : any, e: number) => <li>{email}</li>));
+      setOpenAlert(true);
+    } else {
+      postShare(event);
+    }
+  };
+
+  const handleCloseAlert = (event : any, option: string) => {
+    if (option === 'agree') {
+      postShare(event);
+    }
+    setOpenAlert(false);
   };
 
   // const mutation : any = useMutation(postShare);
@@ -204,7 +262,30 @@ export const Sharing: FunctionComponent = () => {
           Post has been shared successfully!
         </Alert>
       </Snackbar>
-      <form onSubmit={postShare}>
+      <Dialog
+        open={openAlert}
+        onClose={(e) => handleCloseAlert(e, 'cancel')}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Duplicate share alert</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            You have already share this post with following friends.
+            Do you want to continue?
+            {alertText}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={(e) => handleCloseAlert(e, 'disagree')} color="primary">
+            Yes
+          </Button>
+          <Button onClick={(e) => handleCloseAlert(e, 'agree')} color="primary" autoFocus>
+            No
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <form>
         <Dropdown setFriendEmails={setFriendEmails} key={mutation.isLoading} />
         {bbox}
         <Box>
@@ -227,13 +308,6 @@ export const Sharing: FunctionComponent = () => {
             Clear
           </Button>
         </Box>
-        {/* <Screenshot
-          modalContainer={bbox}
-          dataURL={dataURL}
-          setDataURL={setDataURL}
-          rect={rect}
-          setRect={setRect}
-        /> */}
         <FormControlLabel
           control={(
             <Checkbox
@@ -256,7 +330,7 @@ export const Sharing: FunctionComponent = () => {
             rows={3}
           />
         </Box>
-        <Button type="submit"> Share </Button>
+        <Button type="button" onClick={handleClickOpenAlert}> Share </Button>
       </form>
     </Box>
   );

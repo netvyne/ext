@@ -112,7 +112,7 @@ export default function Shares() {
                 </ListItemAvatar>
                 <ListItemText primary={
                   // eslint-disable-next-line max-len
-                  (user && user.ID && user.ID === share.Sender.ID) ? `${share.Receiver.FirstName} ${share.Receiver.LastName}` : `${share.Sender.FirstName} ${share.Sender.LastName}`
+                  (user && user.Email && user.Email === share.Sender.Email) ? `${share.Receiver.FirstName} ${share.Receiver.LastName}` : `${share.Sender.FirstName} ${share.Sender.LastName}`
                   }
                 />
               </ListItem>
