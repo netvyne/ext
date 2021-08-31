@@ -61,12 +61,12 @@ const Discussion = ({ initCurrentUser, initUrl } : GetUserQuery) => {
     website = (
       <>
         <WebsiteBox initWebsite={data.Website} url={url} />
-        <LeaveReply website={data.Website} url={url} />
       </>
     );
     actionBox = (
       <>
         <ActionBox initWebsite={data.Website} reg={user?.Registered} url={url} />
+        <LeaveReply website={data.Website} url={url} initShowForm />
       </>
     );
     if (data.Roots) {
@@ -83,14 +83,14 @@ const Discussion = ({ initCurrentUser, initUrl } : GetUserQuery) => {
       } else {
         trees = (
           <Grid item component={Box}>
-            No comments
+            No comments so far
           </Grid>
         );
       }
     } else {
       trees = (
         <Grid item component={Box}>
-          No comments
+          No comments so far
         </Grid>
       );
     }

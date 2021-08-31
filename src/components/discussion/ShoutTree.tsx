@@ -112,7 +112,7 @@ const ShoutTree = ({
             </Grid>
 
             <Grid container component={Box} m={1} wrap="nowrap" spacing={1}>
-              <LeaveReply website={website} parent={treeRoot} url={url} />
+              <LeaveReply website={website} parent={treeRoot} url={url} initShowForm={false} />
               {!isSaved && reg && (
                 <Box>
                   <Button

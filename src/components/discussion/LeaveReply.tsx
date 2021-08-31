@@ -13,12 +13,15 @@ interface Props {
   parent?: Shout;
   website: Website;
   url: URL;
+  initShowForm: boolean;
 }
 
-const LeaveReply = ({ parent, website, url }: Props) => {
+const LeaveReply = ({
+  parent, website, url, initShowForm,
+}: Props) => {
   const queryClient = useQueryClient();
   const [comment, setComment] = React.useState('');
-  const [showForm, setShowForm] = React.useState(false);
+  const [showForm, setShowForm] = React.useState(initShowForm);
   const replyMutation = useMutation({});
   const postComment = async (event : any) => {
     event.preventDefault();
@@ -45,6 +48,7 @@ const LeaveReply = ({ parent, website, url }: Props) => {
         },
       },
     );
+    setShowForm(false);
     return res;
   };
 
@@ -52,7 +56,15 @@ const LeaveReply = ({ parent, website, url }: Props) => {
 
   const commentForm = (
     <form onSubmit={postComment}>
-      <TextField value={comment} onInput={(e : any) => setComment(e.target.value)} />
+      <TextField
+        value={comment}
+        onInput={(e : any) => setComment(e.target.value)}
+        multiline
+        variant="outlined"
+        placeholder={initShowForm ? 'Leave a public comment...' : 'Leave a public reply...'}
+        fullWidth
+      />
+      {!initShowForm && (
       <Button
         size="small"
         onClick={() => {
@@ -61,6 +73,7 @@ const LeaveReply = ({ parent, website, url }: Props) => {
       >
         Cancel
       </Button>
+      )}
       <Button type="submit" size="small" color="primary" endIcon={<SendIcon />}>
         {' '}
         Submit
