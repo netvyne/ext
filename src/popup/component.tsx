@@ -142,9 +142,16 @@ export const Popup: FunctionComponent = () => {
         setUrl(formatedUrl);
       });
     }
-    if (data && data.WebsitePostShareCount >= 0) {
-      console.log('use effect data ', data.WebsitePostShareCount);
-      setShareCount(data.WebsitePostShareCount);
+    if (data) {
+      if (data.WebsitePostShareCount > 0) {
+        console.log('use effect data ', data.WebsitePostShareCount);
+        setShareCount(data.WebsitePostShareCount);
+      }
+      if (data.WebsiteShoutCount > 0) {
+        chrome.browserAction.setBadgeText({ text: `${data.WebsiteShoutCount}` });
+      } else {
+        chrome.browserAction.setBadgeText({ text: '' });
+      }
     }
   }, [data]);
 
