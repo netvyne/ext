@@ -29,7 +29,7 @@ import Screenshot from './screenshot';
 import Dropdown from './dropdown';
 import { getCurrentUser } from '../../auth/auth';
 import { isValidURL, createDiv, screenShot } from '../../utils';
-import { User } from '../../../types/common/types';
+import { User, Conversation } from '../../../types/common/types';
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -50,19 +50,17 @@ export const Sharing: FunctionComponent = () => {
   const [shareSeparately, setShareSeparately] = React.useState(true);
   const [url, setUrl] = useState<any>({});
   const [comment, setComment] = React.useState('');
-  const [friendEmails, setFriendEmails] = React.useState([]);
+  const [conversationIDs, setConversationIDs] = React.useState([]);
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
   const [dataURL, setDataURL] = React.useState('');
-  const [rect, setRect] = React.useState({ startX: 0, startY: 0 });
 
-  const [message, setMessage] = React.useState<any>('');
   const [openAlert, setOpenAlert] = React.useState(false);
   const [alertText, setAlertText] = React.useState('');
 
-  const [sharedEmails, setSharedEmails] = React.useState<any>([]);
-  const [sharedNames, setSharedNames] = React.useState<any>([]);
+  const [sharedConvs, setSharedConvs] = React.useState<any>([]);
+  const [sharedConTitles, setSharedConTitles] = React.useState<any>([]);
   const [user, setUser] = React.useState<User | null>();
   getCurrentUser().then((currentUser: User | null) => setUser(currentUser));
 
@@ -100,21 +98,16 @@ export const Sharing: FunctionComponent = () => {
       });
     }
     chrome.runtime.onMessage.addListener(handleMessage);
-    if (data && data.Shares.length > 0) {
-      const emails : any = [];
-      const names : any = [];
-      data.Shares.map((share : any, s : number) => {
-        if ((user && user.Email && user.Email === share.Sender.Email)) {
-          emails.push(`${share.Receiver.Email}`);
-          names.push(`${share.Receiver.FirstName} ${share.Receiver.LastName}`);
-        } else {
-          emails.push(`${share.Sender.Email}`);
-          names.push(`${share.Sender.FirstName} ${share.Sender.LastName}`);
-        }
-        return emails;
+    if (data && data.Posts.length > 0) {
+      const covnIDs : any = [];
+      const ConvTitles : any = [];
+      data.Posts.map((post : any, s : number) => {
+        covnIDs.push(post.Conversation.ID);
+        ConvTitles.push(`${post.Conversation.Title}`);
+        return covnIDs;
       });
-      setSharedEmails(emails);
-      setSharedNames(names);
+      setSharedConvs(covnIDs);
+      setSharedConTitles(ConvTitles);
     }
   }, [data]);
   // // // // // //
@@ -174,7 +167,7 @@ export const Sharing: FunctionComponent = () => {
       Search: url.search,
       Comment: comment,
       Separate: shareSeparately,
-      ReceiverEmails: friendEmails,
+      ConversationIDs: conversationIDs,
     };
     const res = mutation.mutate(
       // @ts-ignore
@@ -185,7 +178,7 @@ export const Sharing: FunctionComponent = () => {
       {
         onSuccess: (response : any) => {
           uploadImage(event, response.Post.ID);
-          setFriendEmails([]);
+          setConversationIDs([]);
           setComment('');
           setDataURL('');
           setOpen(true);
@@ -198,15 +191,14 @@ export const Sharing: FunctionComponent = () => {
   const handleClickOpenAlert = (event : any) => {
     event.preventDefault();
     let i = 0;
-    const commonEmail : any = [];
-    for (i = 0; i < friendEmails.length; i += 1) {
-      console.log('index :: ', sharedEmails.indexOf(friendEmails[i]), ' value : ', friendEmails[i]);
-      if (sharedEmails.indexOf(friendEmails[i]) > -1) {
-        commonEmail.push(`${sharedNames[sharedEmails.indexOf(friendEmails[i])]} < ${friendEmails[i]}>`);
+    const commonConvs : any = [];
+    for (i = 0; i < conversationIDs.length; i += 1) {
+      if (sharedConvs.indexOf(conversationIDs[i]) > -1) {
+        commonConvs.push(`${sharedConTitles[sharedConvs.indexOf(conversationIDs[i])]}`);
       }
     }
-    if (commonEmail.length > 0) {
-      setAlertText(commonEmail.map((email : any, e: number) => <li>{email}</li>));
+    if (commonConvs.length > 0) {
+      setAlertText(commonConvs.map((email : any, e: number) => <li>{email}</li>));
       setOpenAlert(true);
     } else {
       postShare(event);
@@ -271,7 +263,7 @@ export const Sharing: FunctionComponent = () => {
         <DialogTitle id="alert-dialog-title">Duplicate share alert</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            You have already share this post with following friends.
+            You have already share this post with following conversation(s).
             Do you want to continue?
             {alertText}
           </DialogContentText>
@@ -286,7 +278,7 @@ export const Sharing: FunctionComponent = () => {
         </DialogActions>
       </Dialog>
       <form>
-        <Dropdown setFriendEmails={setFriendEmails} key={mutation.isLoading} />
+        <Dropdown setConversationIDs={setConversationIDs} key={mutation.isLoading} />
         {bbox}
         <Box>
           <Button

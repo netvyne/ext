@@ -22,7 +22,9 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import FreedPost from './FreedPost';
 import { Error } from '../error';
-import { Website, User, PostShare } from '../../../types/common/types';
+import {
+  Website, User, PostShare, Post,
+} from '../../../types/common/types';
 import { getCurrentUser } from '../../auth/auth';
 import { isValidURL } from '../../utils';
 
@@ -46,7 +48,7 @@ export default function Shares() {
   const classes = useStyles();
   const [url, setUrl] = useState<any>({});
   const [clicked, setClicked] = useState<boolean>(false);
-  const [selectedShare, setSelectedShare] = useState<PostShare>();
+  const [selectedShare, setSelectedShare] = useState<Post>();
   const [user, setUser] = React.useState<User | null>();
   getCurrentUser().then((currentUser: User | null) => setUser(currentUser));
   //   const { data, status } = useQuery<GetFeedQuery, string>('/get_website_feed', {
@@ -70,7 +72,7 @@ export default function Shares() {
     }
   }, []);
 
-  const handleClick = (event : any, share : PostShare) => {
+  const handleClick = (event : any, share : Post) => {
     setSelectedShare(share);
     setClicked(true);
   };
@@ -98,9 +100,9 @@ export default function Shares() {
       </Grid>
     );
   } else if (status === 'success') {
-    if (data.Shares && data.Shares.length > 0) {
-      console.log('Shares ::: ', data.Shares, 'user ::: ', user);
-      shares = data!.Shares?.map((share: PostShare) => (
+    if (data.Posts && data.Posts.length > 0) {
+      console.log('Shares ::: ', data.Posts, 'user ::: ', user);
+      shares = data!.Posts?.map((share: Post) => (
         <div className={classes.root}>
           <List>
             <div onClick={(event : any) => handleClick(event, share)} onKeyPress={(event : any) => handleClick(event, share)} role="button" tabIndex={0}>
@@ -112,7 +114,7 @@ export default function Shares() {
                 </ListItemAvatar>
                 <ListItemText primary={
                   // eslint-disable-next-line max-len
-                  (user && user.Email && user.Email === share.Sender.Email) ? `${share.Receiver.FirstName} ${share.Receiver.LastName}` : `${share.Sender.FirstName} ${share.Sender.LastName}`
+                  (share.Conversation.Title)
                   }
                 />
               </ListItem>
@@ -156,7 +158,7 @@ export default function Shares() {
               </Grid>
               <Grid item xs container direction="row" spacing={2}>
                 <Grid item xs>
-                  <FreedPost initPost={selectedShare?.Post} key={selectedShare?.PostID} />
+                  <FreedPost initPost={selectedShare} key={selectedShare?.ID} />
                 </Grid>
               </Grid>
             </Grid>

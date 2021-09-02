@@ -71,6 +71,8 @@ Upvotes: number;
 Downvotes: number;
 VoteStatus: string;
 Children: Talk[];
+Conversation: Conversation;
+ConversationID: number;
 }
 
 interface Talk {
@@ -150,4 +152,24 @@ interface PostShare {
     ReceiverID: number;
     Sender: User;
     SenderID: number;
+}
+
+interface Conversation {
+    ID: number;
+    Title: string;
+    AvatarURL: string;
+    // LeaderID: number;
+    Leader: User;
+    DefaultURL: boolean;
+    IsGroup: boolean;
+    LatestComment: string;
+    Members: ConversationMember[];
+  }
+
+interface ConversationMember {
+    ID: number;
+    // MemberID: number;
+    Member: User;
+    ConversationID: number;
+    Conversation: Conversation;
 }
