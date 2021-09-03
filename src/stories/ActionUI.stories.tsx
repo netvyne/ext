@@ -11,7 +11,9 @@ export default {
   },
 } as ComponentMeta<typeof ActionUI>;
 
-const Template: ComponentStory<typeof ActionUI> = (args) => <ActionUI {...args} />;
+const Template: ComponentStory<typeof ActionUI> = (args : any) => <ActionUI {...args} />;
 
 export const Primary = Template.bind({});
-Primary.args = { website:{Title: "HEY"} as Website, postVote: null, saved: true, onSaveItem: null };
+Primary.args = {
+  website: { Title: 'HEY' } as Website, postVote: null, saved: true, onSaveItem: null
+};

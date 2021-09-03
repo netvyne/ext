@@ -15,6 +15,6 @@ const Template: ComponentStory<typeof WebsiteUI> = (args) => <WebsiteUI {...args
 
 export const Primary = Template.bind({});
 Primary.args = {
-  initWebsite : {Title: "HEY"} as Website,
-  url: {Host: "news.ycombinator.com"} as Url
+  initWebsite: { Title: 'HEY' } as Website,
+  url: { Host: 'news.ycombinator.com' } as Url
 };

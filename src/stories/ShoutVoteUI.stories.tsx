@@ -15,6 +15,6 @@ const Template: ComponentStory<typeof ShoutVoteUI> = (args) => <ShoutVoteUI {...
 
 export const Primary = Template.bind({});
 Primary.args = {
-  shout: {Upvotes: 10} as Shout,
+  shout: { Upvotes: 10 } as Shout,
   postVote: null,
 };
