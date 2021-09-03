@@ -10,7 +10,7 @@ interface Props {
   parent: Talk;
 }
 
-const LeaveReply = (props: Props) => {
+const LeaveReply = ({ parent }: Props) => {
   const queryClient = useQueryClient();
   const [comment, setComment] = React.useState('');
   const [showForm, setShowForm] = React.useState(false);
@@ -18,8 +18,8 @@ const LeaveReply = (props: Props) => {
   const postComment = async (event: any) => {
     event.preventDefault();
     const data = {
-      PostID: props.parent.Post.ID,
-      ParentTalkID: props.parent.ID,
+      PostID: parent.Post.ID,
+      ParentTalkID: parent.ID,
       Comment: comment,
     };
     const res: any = talkReplyMutation.mutate(
@@ -32,7 +32,7 @@ const LeaveReply = (props: Props) => {
         onSuccess: (response : any) => {
           setShowForm(false);
           setComment('');
-          queryClient.invalidateQueries(`/get_talk_trees?post_id=${props.parent.Post.ID}`);
+          queryClient.invalidateQueries(`/get_talk_trees?post_id=${parent.Post.ID}`);
         },
       },
     );
