@@ -93,7 +93,6 @@ export default function Shares() {
     );
   } else if (status === 'success') {
     if (data.Posts && data.Posts.length > 0) {
-      console.log('Shares ::: ', data.Posts, 'user ::: ', user);
       shares = data!.Posts?.map((share: Post) => (
         <div className={classes.root}>
           <List>

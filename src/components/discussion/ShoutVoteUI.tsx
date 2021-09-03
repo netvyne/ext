@@ -12,7 +12,6 @@ interface Props {
 }
 
 export default function ShoutVoteUI({ shout, postVote } : Props) {
-
   return (
     // @ts-ignore
     <Grid component={Box} container alignItems="center" direction="column">

@@ -25,7 +25,7 @@ const ShoutTreeContainer = ({
 
   const postVote = async (event : any) => {
     event.preventDefault();
-    const url = new URL(`${process.env.REACT_APP_PUBLIC_API}/post_vote_shout`);
+    const postVoteApiUrl = new URL(`${process.env.REACT_APP_PUBLIC_API}/post_vote_shout`);
     const init = {
       method: 'POST',
       mode: 'cors',
@@ -40,7 +40,7 @@ const ShoutTreeContainer = ({
       }),
     };
     // @ts-ignore
-    const res = await (await fetch(url, init)).json();
+    const res = await (await fetch(postVoteApiUrl, init)).json();
     setShout(res.Shout);
     return res;
   };
@@ -100,9 +100,9 @@ const ShoutTreeContainer = ({
   let content : any = '';
   let children = null;
   if (treeRoot.Children) {
-    children = treeRoot.Children.map((shout : Shout) => (
+    children = treeRoot.Children.map((childShout : Shout) => (
       <ShoutTreeContainer
-        treeRoot={shout}
+        treeRoot={childShout}
         user={user}
         url={url}
       />
