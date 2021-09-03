@@ -24,7 +24,9 @@ export default function Dropdown(props : any) {
   } else if (status === 'loading') {
     friendsPlaceholder = [];
   } else if (status === 'success') {
-    friendsPlaceholder = data!.Conversations;
+    if (data && data!.Conversations !== null) {
+      friendsPlaceholder = data!.Conversations;
+    }
     loadingStatus = false;
   }
   // const changed = function (event : any, value : any) {
