@@ -1,20 +1,20 @@
-import React from 'react';
+import { Typography } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
-import { Typography } from '@material-ui/core';
+import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import SentimentSatisfiedSharpIcon from '@material-ui/icons/SentimentSatisfiedSharp';
-import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
 import ShareIcon from '@material-ui/icons/Share';
-import { Website, Url } from '../../../types/common/types';
+import React from 'react';
+import { Url, Website } from '../../../types/common/types';
 
 interface Props {
   initWebsite: Website;
   url: Url
 }
 
-const WebsiteBox = ({ initWebsite, url } : Props) => {
+const WebsiteUI = ({ initWebsite, url } : Props) => {
   let websiteTitle : string = '';
   websiteTitle = (initWebsite.Title && initWebsite.Title !== '') ? initWebsite.Title : url.Title;
   const website = (
@@ -79,4 +79,4 @@ const WebsiteBox = ({ initWebsite, url } : Props) => {
   return <CssBaseline>{website}</CssBaseline>;
 };
 
-export default WebsiteBox;
+export default WebsiteUI;

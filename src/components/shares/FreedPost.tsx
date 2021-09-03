@@ -1,12 +1,12 @@
-import React from 'react';
 import Box from '@material-ui/core/Box';
-import { DateTime } from 'luxon';
-import { useQuery } from 'react-query';
-import Grid from '@material-ui/core/Grid';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import TalkTree from './TalkTree';
+import Grid from '@material-ui/core/Grid';
+import { DateTime } from 'luxon';
+import React from 'react';
+import { useQuery } from 'react-query';
+import { Talk } from '../../../types/common/types';
 import FeedItem from './FeedItem';
-import { Post, Talk } from '../../../types/common/types';
+import TalkTree from './TalkTree';
 
 interface Props {
   initPost: any;

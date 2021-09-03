@@ -1,39 +1,27 @@
-import React, { FunctionComponent, useState, useEffect } from 'react';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import PropTypes from 'prop-types';
-import { makeStyles, useTheme, Theme } from '@material-ui/core/styles';
-import { browser } from 'webextension-polyfill-ts';
-import { Sharing } from '@src/components/sharing';
-import { Profile } from '@src/components/profile';
-import { Discussion } from '@src/components/discussion';
-import Chat from '@src/components/discussion/Chat';
-import Shares from '@src/components/discussion/Shares';
-// import { Capture } from '@src/components/capture';
-import { Notifications } from '@src/components/notifications';
-// import { Chat } from '@src/components/chat';
 import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
-import { QueryClientProvider, useQuery } from 'react-query';
-import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
-import ShareIcon from '@material-ui/icons/Share';
-import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
-import PersonIcon from '@material-ui/icons/Person';
-import ChatIcon from '@material-ui/icons/Chat';
-import ForumIcon from '@material-ui/icons/Forum';
 import Avatar from '@material-ui/core/Avatar';
 import Badge from '@material-ui/core/Badge';
+import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
+import Typography from '@material-ui/core/Typography';
+import ChatIcon from '@material-ui/icons/Chat';
+import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
+import ForumIcon from '@material-ui/icons/Forum';
+import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
+import ShareIcon from '@material-ui/icons/Share';
+import Shares from '@src/components/shares/Shares';
+import { Sharing } from '@src/components/sharing';
+import React, { FunctionComponent, useEffect, useState } from 'react';
+import { QueryClientProvider, useQuery } from 'react-query';
+import { browser } from 'webextension-polyfill-ts';
 import { User } from '../../types/common/types';
-// import {
-//   Row, Col, Button, Nav,
-// } from 'react-bootstrap';
-
-import { queryClient } from '../query';
-
 import { getCurrentUser } from '../auth/auth';
+import Chat from '../components/chat/Chat';
+import Discussion from '../components/discussion/Discussion';
+import { queryClient } from '../query';
 import { isValidURL } from '../utils';
 import './styles.scss';
 

@@ -1,32 +1,24 @@
-import React, {
-  FunctionComponent, useEffect, useRef, useState,
-} from 'react';
+import Avatar from '@material-ui/core/Avatar';
 import Box from '@material-ui/core/Box';
-import { useQuery } from 'react-query';
-// import { Helmet } from 'react-helmet-async';
-// import FeedItem from './FeedItem';
-// import FeedItemPlaceholder from './FeedItemPlaceholder';
-import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Divider from '@material-ui/core/Divider';
+import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
-import ImageIcon from '@material-ui/icons/Image';
-import Divider from '@material-ui/core/Divider';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
+import ListItemText from '@material-ui/core/ListItemText';
 import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import FreedPost from './FreedPost';
-import { Error } from '../error';
-import {
-  Website, User, PostShare, Post,
-} from '../../../types/common/types';
+import ImageIcon from '@material-ui/icons/Image';
+import React, { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
+import { Post, User, Website } from '../../../types/common/types';
 import { getCurrentUser } from '../../auth/auth';
 import { isValidURL } from '../../utils';
+import { Error } from '../error';
+import FreedPost from './FreedPost';
 
 interface GetFeedQuery {
   Websites: Website[];
@@ -101,7 +93,6 @@ export default function Shares() {
     );
   } else if (status === 'success') {
     if (data.Posts && data.Posts.length > 0) {
-      console.log('Shares ::: ', data.Posts, 'user ::: ', user);
       shares = data!.Posts?.map((share: Post) => (
         <div className={classes.root}>
           <List>
