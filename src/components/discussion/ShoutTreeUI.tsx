@@ -1,79 +1,42 @@
 /* eslint-disable linebreak-style */
-import React from 'react';
 import Box from '@material-ui/core/Box';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import { DateTime } from 'luxon';
-import Grid from '@material-ui/core/Grid';
-import { useMutation, useQueryClient } from 'react-query';
 import Button from '@material-ui/core/Button';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Grid from '@material-ui/core/Grid';
 import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
-import ShoutVoteButtons from './ShoutVoteButtons';
-import LeaveReply from './LeaveReply';
-import { Shout, Website } from '../../../types/common/types';
+import { DateTime } from 'luxon';
+import React from 'react';
+import { Shout, User } from '../../../types/common/types';
+import ReplyUI from './ReplyUI';
+import ShoutVoteButtons from './ShoutVoteUI';
 
 interface Props {
-  website: Website;
   treeRoot: Shout;
-  reg: boolean;
+  postComment: any;
+  setComment: any;
+  comment : string;
+  showForm: any;
+  setShowForm: any;
+  user: User;
   url: URL;
+  replyUI: any;
+  saved: boolean;
+  onSaveItem: any;
+  shoutVoteUI: any;
 }
 
-const ShoutTree = ({
-  treeRoot, website, reg, url,
+const ShoutTreeUI = ({
+  treeRoot, postComment, setComment,
+  comment, showForm, setShowForm, user, url, replyUI, saved, onSaveItem, shoutVoteUI
 } : Props) => {
-  let children = null;
-  if (treeRoot.Children) {
-    children = treeRoot.Children.map((shout : Shout) => (
-      <ShoutTree
-        website={website}
-        treeRoot={shout}
-        reg={reg}
-        url={url}
-      />
-    ));
-  }
-  const queryClient = useQueryClient();
-  let focus = -1;
-  if (window.location.search.includes('focus')) {
-    const urlParams = new URLSearchParams(window.location.search);
-    focus = parseInt(urlParams.get('focus') as string, 10);
-  }
-  const [isSaved, setIsSaved] = React.useState(treeRoot.Saved);
-  const [clicked, setClicked] = React.useState(false);
-  const saveItemMutation = useMutation({});
-  const onSaveItem = async (event : any, save: boolean) => {
-    event.preventDefault();
-    const data = {
-      ShoutID: treeRoot.ID,
-      Save: save,
-    };
-    // @ts-ignore
-    const res = saveItemMutation.mutate({
-      route: '/save_shout',
-      data,
-    },
-    {
-      onSuccess: () => {
-        setIsSaved(treeRoot.Saved);
-        queryClient.invalidateQueries(`/get_shout_trees?website_id=${website.ID}`);
-      },
-    });
-    return res;
-  };
-
   const color = treeRoot.Level % 2 === 0 ? '#eceff1' : '#fafafa';
   let content : any = '';
   if (treeRoot !== null) {
-    console.log('Inside if');
     content = (
       <Grid
         container
         component={Box}
-        bgcolor={
-          treeRoot.ID === focus
-            ? '#414ec4'
-            : color
-        }
+        bgcolor={color}
         padding={1}
         m={1}
         borderRadius="borderRadius"
@@ -90,9 +53,7 @@ const ShoutTree = ({
             p={1}
             mr={4}
           >
-            <ShoutVoteButtons
-              initShout={treeRoot}
-            />
+            {shoutVoteUI}
           </Grid>
 
           <Grid container component={Box} m={1}>
@@ -112,15 +73,19 @@ const ShoutTree = ({
             </Grid>
 
             <Grid container component={Box} m={1} wrap="nowrap" spacing={1}>
-              <LeaveReply website={website} parent={treeRoot} url={url} initShowForm={false} />
-              {!isSaved && reg && (
+              <ReplyUI
+                postComment={postComment}
+                setComment={setComment}
+                comment={comment}
+                setShowForm={setShowForm}
+                showForm={showForm}
+              />
+              {!saved && (
                 <Box>
                   <Button
-                    disabled={clicked}
                     size="small"
                     onClick={(e) => {
                       onSaveItem(e, true);
-                      setClicked(true);
                     }}
                   >
                     SAVE
@@ -128,14 +93,12 @@ const ShoutTree = ({
                   </Button>
                 </Box>
               )}
-              {isSaved && reg && (
+              {saved && (
                 <Box>
                   <Button
-                    disabled={clicked}
                     size="small"
                     onClick={(e) => {
                       onSaveItem(e, false);
-                      setClicked(true);
                     }}
                   >
                     UNDO
@@ -146,14 +109,9 @@ const ShoutTree = ({
             </Grid>
           </Grid>
         </Grid>
-
-        <Grid item component={Box}>
-          {children}
-        </Grid>
       </Grid>
     );
   } else {
-    console.log('Inside else');
     content = (
       <Grid item component={Box}>
         No comments
@@ -164,4 +122,4 @@ const ShoutTree = ({
   return <CssBaseline>{content}</CssBaseline>;
 };
 
-export default ShoutTree;
+export default ShoutTreeUI;
