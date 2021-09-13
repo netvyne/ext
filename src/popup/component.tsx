@@ -1,6 +1,5 @@
 import AppBar from '@material-ui/core/AppBar';
 import Avatar from '@material-ui/core/Avatar';
-import Badge from '@material-ui/core/Badge';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
@@ -8,11 +7,8 @@ import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
 import ChatIcon from '@material-ui/icons/Chat';
-import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
-import ForumIcon from '@material-ui/icons/Forum';
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import ShareIcon from '@material-ui/icons/Share';
-import Shares from '@src/components/shares/Shares';
 import { Sharing } from '@src/components/sharing';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { QueryClientProvider, useQuery } from 'react-query';
@@ -20,7 +16,6 @@ import { browser } from 'webextension-polyfill-ts';
 import { User } from '../../types/common/types';
 import { getCurrentUser } from '../auth/auth';
 import Chat from '../components/chat/Chat';
-import Discussion from '../components/discussion/Discussion';
 import { queryClient } from '../query';
 import { isValidURL } from '../utils';
 import './styles.scss';
@@ -57,19 +52,6 @@ function TabPanel(props : any) {
   );
 }
 
-// TabPanel.propTypes = {
-//   // eslint-disable-next-line react/require-default-props
-//   children: PropTypes.node,
-//   // eslint-disable-next-line react/forbid-prop-types
-//   index: PropTypes.any.isRequired,
-//   // eslint-disable-next-line react/forbid-prop-types
-//   value: PropTypes.any.isRequired,
-//   // eslint-disable-next-line react/forbid-prop-types
-//   dir: PropTypes.any.isRequired,
-//   // eslint-disable-next-line react/require-default-props
-//   className: PropTypes.node,
-// };
-
 function a11yProps(index : any) {
   return {
     id: `full-width-tab-${index}`,
@@ -102,13 +84,13 @@ export const Popup: FunctionComponent = () => {
 
   function clickHandler(e : any) {
     e.preventDefault();
-    chrome.tabs.create({ url: `${process.env.PUBLIC_WEB}/profile`, active: false });
+    window.open(`${process.env.PUBLIC_WEB}/profile`, '_blank', 'noopener,noreferrer');
     return false;
   }
 
   function feedbackClick(e : any) {
     e.preventDefault();
-    chrome.tabs.create({ url: 'https://forms.gle/LUzvrWqhtWnKwAxX6', active: false });
+    window.open('https://forms.gle/LUzvrWqhtWnKwAxX6', '_blank', 'noopener,noreferrer');
     return false;
   }
 
@@ -156,42 +138,37 @@ export const Popup: FunctionComponent = () => {
     <QueryClientProvider client={queryClient}>
       <div className="popup-container">
         <div className="container mx-1 my-1">
-          <AppBar position="static" color="default" elevation={1}>
-            <Tabs
-              value={value}
-              onChange={handleChange}
-              indicatorColor="primary"
-              textColor="primary"
-              variant="fullWidth"
-              aria-label="full width tabs example"
-            >
-              <Tab icon={<ChatBubbleOutlineIcon />} {...a11yProps(0)} />
-              <Tab icon={<ChatIcon />} {...a11yProps(1)} />
-              <Tab icon={<Badge badgeContent={shareCount} color="primary"><ForumIcon /></Badge>} {...a11yProps(2)} />
-              <Tab icon={<ShareIcon />} {...a11yProps(3)} />
-              <Tab icon={<NotificationsActiveIcon />} {...a11yProps(4)} />
-              <Tab icon={<Avatar alt="Netvyne Logo" src="../icon-128.png" />} onClick={(event : any) => clickHandler(event)} />
-            </Tabs>
-          </AppBar>
-          <Button type="button" size="small" color="primary" onClick={(event : any) => feedbackClick(event)}>FeedBack</Button>
+          <div className="top-navbar">
+            <div className="logo-container">
+              <Button onClick={(event : any) => clickHandler(event)}>
+                <Avatar alt="Netvyne Logo" src="../icon-128.png" />
+              </Button>
+              <Button type="button" size="small" color="primary" onClick={(event : any) => feedbackClick(event)}>FeedBack</Button>
+            </div>
+            <AppBar position="static" color="default" elevation={1}>
+              <Tabs
+                value={value}
+                onChange={handleChange}
+                indicatorColor="primary"
+                textColor="primary"
+                variant="fullWidth"
+                aria-label="full width tabs example"
+              >
+                <Tab icon={<ChatIcon />} {...a11yProps(0)} />
+                <Tab icon={<ShareIcon />} {...a11yProps(1)} />
+                <Tab icon={<NotificationsActiveIcon />} {...a11yProps(2)} />
+              </Tabs>
+            </AppBar>
+          </div>
           <TabPanel value={value} index={0} dir={theme.direction} className={classes.tab}>
-            <Discussion initCurrentUser={user} initUrl={url} />
-          </TabPanel>
-          <TabPanel value={value} index={1} dir={theme.direction} className={classes.tab}>
             <Chat initCurrentUser={user} />
           </TabPanel>
-          <TabPanel value={value} index={2} dir={theme.direction} className={classes.tab}>
-            <Shares />
-          </TabPanel>
-          <TabPanel value={value} index={3} dir={theme.direction}>
+          <TabPanel value={value} index={1} dir={theme.direction}>
             <Sharing />
           </TabPanel>
-          <TabPanel value={value} index={4} dir={theme.direction}>
+          <TabPanel value={value} index={2} dir={theme.direction}>
             Notification
           </TabPanel>
-          {/* <TabPanel value={value} index={2} dir={theme.direction}>
-            <Chat initCurrentUser={user} />
-          </TabPanel> */}
         </div>
       </div>
     </QueryClientProvider>

@@ -11,3 +11,15 @@
     margin-left: 0px !important;
     margin-right: 0px !important;
 }
+
+.top-navbar{
+    display: flex;
+}
+
+.logo-container{
+    display: flex;
+    width: 180px;
+}
+.MuiAppBar-root{
+    width: CALC(100% - 35%) !important;
+}
