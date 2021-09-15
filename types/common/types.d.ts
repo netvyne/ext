@@ -48,6 +48,8 @@ VoteStatus: number;
 Saved: boolean;
 ShoutCount: number;
 ShareCount: number;
+Public: boolean;
+URL: string;
 }
 
 // interface WebsiteSave {
