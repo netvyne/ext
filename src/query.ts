@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { QueryClient } from 'react-query';
 import axios from 'axios';
+import { QueryClient } from 'react-query';
 
 const defaultQueryFn = async ({ queryKey }) => {
   const { data } = await axios.get(
@@ -48,3 +48,10 @@ export const queryClient = new QueryClient({
     },
   },
 });
+
+export class CustomError extends Error {
+  // eslint-disable-next-line no-unused-vars
+  constructor(public res: Response, message?: string) {
+    super(message);
+  }
+}

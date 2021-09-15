@@ -1,14 +1,13 @@
+/* eslint-disable max-len */
 import AppBar from '@material-ui/core/AppBar';
 import Avatar from '@material-ui/core/Avatar';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
-import ChatIcon from '@material-ui/icons/Chat';
-import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
-import ShareIcon from '@material-ui/icons/Share';
 import { Sharing } from '@src/components/sharing';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { QueryClientProvider, useQuery } from 'react-query';
@@ -138,28 +137,36 @@ export const Popup: FunctionComponent = () => {
     <QueryClientProvider client={queryClient}>
       <div className="popup-container">
         <div className="container mx-1 my-1">
-          <div className="top-navbar">
-            <div className="logo-container">
-              <Button onClick={(event : any) => clickHandler(event)}>
-                <Avatar alt="Netvyne Logo" src="../icon-128.png" />
-              </Button>
-              <Button type="button" size="small" color="primary" onClick={(event : any) => feedbackClick(event)}>FeedBack</Button>
-            </div>
-            <AppBar position="static" color="default" elevation={1}>
+          <AppBar position="static" color="default" elevation={1}>
+            <Grid className="topbar">
+              <Grid className="logo">
+                <Button onClick={(event : any) => clickHandler(event)}>
+                  <img src="../icon-48.png" alt="logo" />
+                </Button>
+                <Button onClick={(event : any) => feedbackClick(event)}>
+                  <Typography variant="h6" color="primary">Feedback</Typography>
+                </Button>
+              </Grid>
               <Tabs
+                className="tabs"
                 value={value}
                 onChange={handleChange}
                 indicatorColor="primary"
                 textColor="primary"
                 variant="fullWidth"
                 aria-label="full width tabs example"
+                TabIndicatorProps={{
+                  style: {
+                    backgroundColor: '#9F00CF',
+                  },
+                }}
               >
-                <Tab icon={<ChatIcon />} {...a11yProps(0)} />
-                <Tab icon={<ShareIcon />} {...a11yProps(1)} />
-                <Tab icon={<NotificationsActiveIcon />} {...a11yProps(2)} />
+                <Tab icon={<Avatar alt="Conversation" src={value === 0 ? '../images/conversation_selected.png' : '../images/conversation_normal.png'} className="tabIcon" />} {...a11yProps(0)} />
+                <Tab icon={<Avatar alt="Share" src={value === 1 ? '../images/share_selected.png' : '../images/share_normal.png'} className="tabIcon" />} {...a11yProps(1)} />
+                <Tab icon={<Avatar alt="Notification" src={value === 2 ? '../images/notification_selected.png' : '../images/notification_normal.png'} className="tabIcon" />} {...a11yProps(2)} />
               </Tabs>
-            </AppBar>
-          </div>
+            </Grid>
+          </AppBar>
           <TabPanel value={value} index={0} dir={theme.direction} className={classes.tab}>
             <Chat initCurrentUser={user} />
           </TabPanel>

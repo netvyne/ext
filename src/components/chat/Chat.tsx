@@ -1,20 +1,21 @@
-import React, {
-  useEffect, useRef, useState,
-} from 'react';
-import { useQuery, useMutation } from 'react-query';
 import Box from '@material-ui/core/Box';
-import TextField from '@material-ui/core/TextField';
-import SendIcon from '@material-ui/icons/Send';
 import Button from '@material-ui/core/Button';
-import ReplyIcon from '@material-ui/icons/Reply';
-import CancelIcon from '@material-ui/icons/Cancel';
-import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import { isValidURL } from '../../utils';
+import CancelIcon from '@material-ui/icons/Cancel';
+import ReplyIcon from '@material-ui/icons/Reply';
+import SendIcon from '@material-ui/icons/Send';
+import React, {
+  useEffect, useRef, useState
+} from 'react';
+import { useMutation } from 'react-query';
 import { ChatMessage, User } from '../../../types/common/types';
 import { getCurrentUser } from '../../auth/auth';
+import { isValidURL } from '../../utils';
+import Shouts from './Shouts';
 
   interface GetUserQuery {
     initCurrentUser: User[];
@@ -63,7 +64,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// export const Chat : FunctionComponent = (props : any) => {
 const Chat = ({ initCurrentUser } : GetUserQuery) => {
   const [comment, setComment] = React.useState('');
   const [parentChat, setParentChat] = useState<ChatMessage | null>();
@@ -84,7 +84,6 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
     webSocket.current.onmessage = (message : any) => {
       const response : any = JSON.parse(message.data);
       messages.push(response);
-      console.log('messages ::: ', messages);
       setMessages(messages);
     };
     return () => { console.log('Closing'); webSocket.current?.close(); };
@@ -211,6 +210,8 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
   }
   return (
     <Box height="75%">
+      <Shouts initCurrentUser={user} initUrl={url} />
+      <Typography variant="h4">Live Chat</Typography>
       <Box height="75%">
         {msgs}
       </Box>
@@ -240,4 +241,3 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
   );
 };
 export default Chat;
-// export default Notifications;

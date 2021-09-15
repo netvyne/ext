@@ -12,14 +12,73 @@
     margin-right: 0px !important;
 }
 
-.top-navbar{
+// .top-navbar{
+//     display: flex;
+//     background-color: #f5f5f5;
+//     box-shadow: 0px 2px 1px -1px #eeeeee, 0px 1px 1px 0px #eeeeee, 0px 1px 3px 0px #eeeeee;
+// }
+
+// .logo-container{
+//     display: flex;
+//     width: 180px;
+// }
+// .MuiAppBar-root{
+//     width: CALC(100% - 35%) !important;
+// }
+// .MuiPaper-elevation1{
+//     box-shadow: none !important;
+// }
+
+.topbar{
     display: flex;
+    flex-direction: row;
+    height: 67px;
+    align-items: center;
 }
 
-.logo-container{
+.topbar .logo{
+    width: 30%;
     display: flex;
-    width: 180px;
+    align-items: center;
 }
-.MuiAppBar-root{
-    width: CALC(100% - 35%) !important;
+
+.topbar .logo img{
+    width: 100%;
+}
+
+.topbar .logo .MuiButton-root:hover{
+    background-color: transparent !important;
+}
+
+.topbar .tabs{
+    width: 69%;
+}
+
+.tabIcon{
+    width: 25px !important;
+    height: 25px !important;
+    border-radius: 0% !important;
+}
+
+.tabIcon img{
+    object-fit: contain !important;
+}
+
+.MuiTab-root{
+    min-width: 66px !important;
+    min-height: 66px !important;
+}
+
+.MuiPaper-elevation1{
+    box-shadow: none !important;
+}
+
+.MuiAppBar-colorDefault{
+    background-color: #f5f5f5 !important;
+    margin-top: -4px !important;
+    box-shadow: 0px 2px 1px -1px #eeeeee, 0px 1px 1px 0px #eeeeee, 0px 1px 3px 0px #eeeeee;
+}
+
+.MuiTypography-h5{
+    font-family: 'Montserrat';
 }
