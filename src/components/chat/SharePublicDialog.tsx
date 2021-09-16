@@ -5,10 +5,11 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 import SendIcon from '@material-ui/icons/Send';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useMutation } from 'react-query';
 import { Shout, Website } from '../../../types/common/types';
 import { CustomError } from '../../query';
+import { isValidURL } from '../../utils';
 
 interface Props {
   open: any;
@@ -21,12 +22,29 @@ interface SuccessResponse {
   }
 
 function SharePublicDialog({ open, handleClose, website } : Props) {
-  console.log('website :::: ', website);
   const [showCaptcha, setShowCaptcha] = React.useState(false);
-  const [url, setUrl] = React.useState(website?.URL);
+  const [url, setUrl] = React.useState<any>();
+  const [rawUrl, setRawUrl] = React.useState<any>('');
   const [tag, setTag] = React.useState('');
   const [captchaToken, setCaptchaToken] = React.useState('');
   const captchaRef = React.createRef<HCaptcha>();
+
+  useEffect(() => {
+    const queryInfo = { active: true };
+    if (chrome.tabs) {
+      chrome.tabs.query(queryInfo, (tabs) => {
+        const newUrl : any = isValidURL(tabs[0].url);
+        const formatedUrl = {
+          pathname: newUrl.pathname,
+          host: newUrl.host,
+          search: newUrl.search,
+          Title: tabs[0].title,
+        };
+        setRawUrl(tabs[0]?.url);
+        setUrl(formatedUrl);
+      });
+    }
+  }, []);
   const mutation = useMutation<SuccessResponse, CustomError>(
     {
       onSuccess: () => {
@@ -45,7 +63,11 @@ function SharePublicDialog({ open, handleClose, website } : Props) {
   const postSharePublic = async (event: any) => {
     event.preventDefault();
     const mutateData = {
-      URL: url,
+      URL: {
+        Host: url.host,
+        Pathname: url.pathname,
+        Search: url.search,
+      },
       LabelName: tag,
       CaptchaToken: captchaToken
     };
@@ -62,7 +84,7 @@ function SharePublicDialog({ open, handleClose, website } : Props) {
         <form onSubmit={postSharePublic}>
           <TextField
             disabled={!!website}
-            value={url}
+            value={rawUrl}
             onInput={(e: any) => setUrl(e.target.value)}
             autoFocus={!website}
             margin="dense"
