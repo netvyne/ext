@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useMutation } from 'react-query';
 import { Website } from '../../../types/common/types';
 import ActionUI from './ActionUI';
@@ -10,9 +10,12 @@ interface Props {
 }
 
 const ActionContainer = ({ initWebsite, reg, url } : Props) => {
-  const [website, setWebsite] = React.useState(initWebsite);
+  const [website, setWebsite] = React.useState<Website>(initWebsite);
   const [saved, setSaved] = React.useState(website.Saved);
   const mutation = useMutation({});
+  useEffect(() => {
+    setWebsite(initWebsite);
+  }, [initWebsite]);
   const onSaveItem = async (event : any, save: boolean) => {
     event.preventDefault();
     const data = {
@@ -48,9 +51,18 @@ const ActionContainer = ({ initWebsite, reg, url } : Props) => {
         Search: url.search,
       },
     };
-    // @ts-ignore
-    const res : any = mutation.mutate({ route: '/post_vote_website', data });
-    setWebsite(res.Website);
+    const res : any = mutation.mutate(
+      // @ts-ignore
+      {
+        route: '/post_vote_website',
+        data
+      },
+      {
+        onSuccess: (response : any) => {
+          setWebsite(response.Website);
+        },
+      },
+    );
     return res;
   };
 

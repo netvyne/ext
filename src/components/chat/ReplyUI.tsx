@@ -19,7 +19,7 @@ const ReplyUI = ({
   postComment, setComment, comment, showForm, setShowForm,
 }: Props) => {
   const commentForm = (
-    <form onSubmit={postComment}>
+    <form className="reply-form" onSubmit={postComment}>
       <TextField
         value={comment}
         onInput={(e : any) => setComment(e.target.value)}
@@ -27,20 +27,9 @@ const ReplyUI = ({
         variant="outlined"
         placeholder={showForm ? 'Leave a public comment...' : 'Leave a public reply...'}
         fullWidth
+        className="reply-form-textfield"
       />
-      <Button
-        size="small"
-        onClick={() => {
-          setShowForm(false);
-        }}
-      >
-        Cancel
-      </Button>
-      <Button type="submit" size="small" color="primary" endIcon={<SendIcon />}>
-        {' '}
-        Submit
-        {' '}
-      </Button>
+      <Button type="submit" size="large" color="primary" endIcon={<SendIcon />} className="reply-form-button" />
     </form>
   );
 

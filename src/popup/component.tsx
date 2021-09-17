@@ -113,7 +113,6 @@ export const Popup: FunctionComponent = () => {
     }
     if (data) {
       if (data.WebsitePostShareCount > 0) {
-        console.log('use effect data ', data.WebsitePostShareCount);
         setShareCount(data.WebsitePostShareCount);
       }
       if (data.WebsiteShoutCount > 0) {

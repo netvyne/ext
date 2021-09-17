@@ -15,7 +15,7 @@ import { useMutation } from 'react-query';
 import { ChatMessage, User } from '../../../types/common/types';
 import { getCurrentUser } from '../../auth/auth';
 import { isValidURL } from '../../utils';
-import Shouts from './Shouts';
+import ShoutContainer from './ShoutContainer';
 
   interface GetUserQuery {
     initCurrentUser: User[];
@@ -210,7 +210,7 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
   }
   return (
     <Box height="75%">
-      <Shouts initCurrentUser={user} initUrl={url} />
+      <ShoutContainer initCurrentUser={user} initUrl={url} />
       <Typography className="live-chat-title" variant="h5">Live Chat</Typography>
       <Box height="75%">
         {msgs}
