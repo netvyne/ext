@@ -211,7 +211,7 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
   return (
     <Box height="75%">
       <Shouts initCurrentUser={user} initUrl={url} />
-      <Typography variant="h4">Live Chat</Typography>
+      <Typography className="live-chat-title" variant="h5">Live Chat</Typography>
       <Box height="75%">
         {msgs}
       </Box>

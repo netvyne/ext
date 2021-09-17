@@ -3,7 +3,22 @@
     padding: 10px;
     border-radius: 5px;
     margin-bottom: 10px;
+    margin-top: 10px;
 }
 .view-all-comments{
     margin-bottom: 20px;
+}
+.action-items{
+    display: flex !important;
+    align-items: center !important;
+}
+.live-chat-title{
+    margin-top: 10px !important;
+    margin-bottom: 10px !important;
+}
+.comment-author{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px !important;
 }

@@ -1,6 +1,8 @@
 import {
   Box, Button, Grid, Typography
 } from '@material-ui/core';
+import AccessTimeIcon from '@material-ui/icons/AccessTime';
+import { DateTime } from 'luxon';
 import React, { useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import { Url, User } from '../../../types/common/types';
@@ -40,24 +42,41 @@ const Shouts = ({ initCurrentUser, initUrl } : GetUserQuery) => {
       );
     }
     if (data.LatestShout && data.LatestShout.Comment) {
-      latestShout = (
-        <div>
-          <div className="comment">
-            <p>{`${data.LatestShout.Author.UserName}`}</p>
-            <div>{data.LatestShout.Comment}</div>
-          </div>
-          <Button className="view-all-comments" variant="contained" color="primary" fullWidth onClick={(event : any) => clickHandler(event, data.LatestShout.WebsiteID)}>
-            Viwe all comments
-          </Button>
-        </div>
-      );
+      latestShout = data.LatestShout;
     }
+  }
+
+  let shout : any = '';
+  if (latestShout !== '') {
+    shout = (
+      <div>
+        <Typography variant="h5">Latest Comment</Typography>
+        <div className="comment">
+          <Grid item className="comment-author">
+            <Grid item><b>{`${data.LatestShout.Author.UserName}`}</b></Grid>
+            <Grid item component={Box} fontSize="15px">
+              <Grid container direction="row" alignItems="center">
+                <Grid item>
+                  <AccessTimeIcon style={{ fill: 'grey' }} fontSize="inherit" />
+                </Grid>
+                <Grid item component={Box} style={{ color: 'grey' }} fontStyle="italic">
+                  {DateTime.fromISO(data.LatestShout.CreatedAt.toString(), { zone: 'utc' }).toRelative()}
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+          <div>{data.LatestShout.Comment}</div>
+        </div>
+        <Button className="view-all-comments" variant="contained" color="primary" fullWidth onClick={(event : any) => clickHandler(event, data.LatestShout.WebsiteID)}>
+          View all comments
+        </Button>
+      </div>
+    );
   }
   const replyMutation = useMutation({});
   const postComment = async (event : any) => {
     event.preventDefault();
     const commentData = {
-      ParentShoutID: 0,
       Comment: comment,
       URL: {
         Host: url.host,
@@ -75,6 +94,7 @@ const Shouts = ({ initCurrentUser, initUrl } : GetUserQuery) => {
       {
         onSuccess: (response : any) => {
           setComment('');
+          latestShout = response.Shout;
           // TODO: Update cached data
         },
       },
@@ -96,7 +116,7 @@ const Shouts = ({ initCurrentUser, initUrl } : GetUserQuery) => {
   return (
     <Box>
       {actionBox}
-      {!latestShout && (
+      {!shout && (
       <Grid>
         <Grid>
           <Typography>Be the First to comment on this page</Typography>
@@ -106,10 +126,10 @@ const Shouts = ({ initCurrentUser, initUrl } : GetUserQuery) => {
         </Grid>
       </Grid>
       )}
-      {latestShout && (
+      {shout && (
       <Grid>
         <Grid>
-          <Typography>{latestShout}</Typography>
+          <Typography>{shout}</Typography>
         </Grid>
       </Grid>
       )}

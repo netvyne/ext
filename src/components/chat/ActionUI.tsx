@@ -1,4 +1,4 @@
-import { Switch, Tooltip } from '@material-ui/core';
+import { Switch, Tooltip, Typography } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -25,7 +25,7 @@ const ActionUI = ({
 } : Props) => {
   const [showShare, setShowShare] = React.useState(false);
   const actionbox = (
-    <Box mx={2} mt={2} mb={2}>
+    <Box>
       <Grid container wrap="nowrap" justify="space-around">
         <Grid item component={IconButton} value="1" onClick={postVote}>
           <KeyboardArrowUpIcon
@@ -34,6 +34,7 @@ const ActionUI = ({
             }
           />
         </Grid>
+        {website.Karma > 0 && (<Typography>{website.Karma}</Typography>)}
         <Grid item component={IconButton} value="-1" onClick={postVote}>
           <KeyboardArrowDownIcon
             color={
@@ -41,7 +42,7 @@ const ActionUI = ({
             }
           />
         </Grid>
-        <Grid item alignItems="center">
+        <Grid className="action-items">
           <SharePublicDialog
             open={showShare}
             handleClose={() => setShowShare(false)}
@@ -63,29 +64,31 @@ const ActionUI = ({
             </Tooltip>
           </Box>
         </Grid>
-        {!saved
-              && (
+        <Grid className="action-items">
+          {!saved
+                && (
+                <Button
+                  onClick={(e) => {
+                    onSaveItem(e, !saved);
+                  }}
+                >
+                  SAVE
+                  <BookmarkBorderIcon />
+                </Button>
+                )}
+          {saved && (
+            <Grid item component={Box}>
               <Button
                 onClick={(e) => {
                   onSaveItem(e, !saved);
                 }}
               >
-                SAVE
+                UNDO
                 <BookmarkBorderIcon />
               </Button>
-              )}
-        {saved && (
-          <Grid item component={Box}>
-            <Button
-              onClick={(e) => {
-                onSaveItem(e, !saved);
-              }}
-            >
-              UNDO
-              <BookmarkBorderIcon />
-            </Button>
-          </Grid>
-        )}
+            </Grid>
+          )}
+        </Grid>
       </Grid>
     </Box>
   );
