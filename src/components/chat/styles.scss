@@ -22,3 +22,29 @@
     align-items: center;
     margin-bottom: 10px !important;
 }
+
+.first-comment-title{
+    margin-bottom: 10px !important;
+}
+.reply-form{
+    display: flex !important;
+}
+.reply-form-textfield .MuiOutlinedInput-root{
+    border-top-right-radius: 0px !important;
+    border-bottom-right-radius: 0px !important;
+}
+.reply-form-button{
+    border: solid 1px !important;
+    background-color: #3f51b5 !important;
+    border-top-left-radius: 0px !important;
+    border-bottom-left-radius: 0px !important;
+}
+.reply-form-button .MuiButton-label{
+    color: #ffffff;
+}
+.reply-form-button SVG{
+    font-size: 38px !important;
+}
+.reply-form-button .MuiButton-endIcon{
+    margin-right: 5px !important;
+}
