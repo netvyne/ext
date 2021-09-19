@@ -68,7 +68,7 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
   const [comment, setComment] = React.useState('');
   const [parentChat, setParentChat] = useState<ChatMessage | null>();
   const webSocket = useRef<WebSocket | null>(null);
-  const [messages, setMessages] = React.useState<any>([]);
+  const [messages, setMessages] = React.useState<ChatMessage[]>([]);
   const [url, setUrl] = useState<any>({});
   const [user, setUser] = React.useState<User|any>();
   getCurrentUser().then((currentUser:User|any) => setUser(initCurrentUser));
@@ -78,13 +78,12 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
   function createSocket(currentUrl : any) {
     const publicApiUrl : any = process.env.REACT_APP_PUBLIC_API;
     const socketUrl = publicApiUrl.replace('http', 'ws');
-    const socket = new WebSocket(`${socketUrl}/get_chat_socket?website_id=0&host=${currentUrl.host}&pathname=${currentUrl.pathname}&search=${encodeURIComponent(currentUrl.search)}`);
+    const socket = new WebSocket(`${socketUrl}/get_chat_socket?host=${currentUrl.host}&pathname=${currentUrl.pathname}&search=${encodeURIComponent(currentUrl.search)}`);
     console.log('Socket created', socket);
     webSocket.current = socket;
     webSocket.current.onmessage = (message : any) => {
-      const response : any = JSON.parse(message.data);
-      messages.push(response);
-      setMessages(messages);
+      const response : ChatMessage = JSON.parse(message.data);
+      setMessages((mes : ChatMessage[]) => [...mes, response]);
     };
     return () => { console.log('Closing'); webSocket.current?.close(); };
   }
@@ -142,7 +141,7 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
   };
 
   const msgs = messages.map((message : any) => (
-    <div className={classes.root}>
+    <div className={classes.root} key={message.ID}>
       <Grid container spacing={2}>
         <Grid item xs={12} sm container>
           <Grid item xs container direction="column" spacing={2}>
