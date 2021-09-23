@@ -16,7 +16,8 @@ interface User {
   Registered: boolean;
   Birthday: DateTime;
   LastRequest: DateTime;
-  IncludeNSFW: boolean
+  IncludeNSFW: boolean;
+  Handle: string;
 }
 
 // interface UserRelation {
@@ -175,3 +176,18 @@ interface ConversationMember {
     ConversationID: number;
     Conversation: Conversation;
 }
+
+interface Notification {
+    UpdatedAt: DateTime;
+    CreatedAt: DateTime;
+    ID: number;
+    // SenderID: number;
+    Sender: User;
+    // ReceiverID: number;
+    Receiver: User;
+    Type: string;
+    Text: string;
+    Viewed: boolean;
+    Link: string;
+    Details: JSON;
+  }

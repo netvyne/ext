@@ -15,7 +15,7 @@ import { useMutation } from 'react-query';
 import { ChatMessage, User } from '../../../types/common/types';
 import { getCurrentUser } from '../../auth/auth';
 import { isValidURL } from '../../utils';
-import ShoutContainer from './ShoutContainer';
+import './styles.scss';
 
   interface GetUserQuery {
     initCurrentUser: User[];
@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
   },
   messageSendButton: {
     width: '30%',
-  },
+  }
 }));
 
 const Chat = ({ initCurrentUser } : GetUserQuery) => {
@@ -71,9 +71,16 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
   const [messages, setMessages] = React.useState<any>([]);
   const [url, setUrl] = useState<any>({});
   const [user, setUser] = React.useState<User|any>();
+  const [showAction, setShowAction] = React.useState(false);
+  const divRef : any = useRef(null);
+  const messagesEndRef: any = useRef(null);
   getCurrentUser().then((currentUser:User|any) => setUser(initCurrentUser));
 
   const classes = useStyles();
+
+  const scrollToBottom = () => {
+    messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+  };
 
   function createSocket(currentUrl : any) {
     const publicApiUrl : any = process.env.REACT_APP_PUBLIC_API;
@@ -82,6 +89,7 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
     console.log('Socket created', socket);
     webSocket.current = socket;
     webSocket.current.onmessage = (message : any) => {
+      console.log('messages :::::', message);
       const response : any = JSON.parse(message.data);
       messages.push(response);
       setMessages(messages);
@@ -105,7 +113,12 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
         createSocket(formatedUrl);
       });
     }
+    // setTimeout(() => {
+    //   alert('Sup!');
+    // }, 1000);// wait 2 seconds
   }, []);
+
+  useEffect(scrollToBottom, [messages]);
 
   const mutation = useMutation({});
   const postChat = async (event : any) => {
@@ -142,8 +155,15 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
   };
 
   const msgs = messages.map((message : any) => (
-    <div className={classes.root}>
-      <Grid container spacing={2}>
+    <div
+      className={classes.root}
+    >
+      <Grid
+        container
+        spacing={2}
+        onMouseOver={() => setShowAction(true)}
+        onMouseLeave={() => setShowAction(false)}
+      >
         <Grid item xs={12} sm container>
           <Grid item xs container direction="column" spacing={2}>
             <Grid item xs>
@@ -162,17 +182,19 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
               </Typography>
             </Grid>
           </Grid>
-          <Grid item>
-            <Button
-              type="submit"
-              size="small"
-              color="primary"
-              endIcon={<ReplyIcon />}
-              onClick={() => {
-                setParentChat(message);
-              }}
-            />
-          </Grid>
+          {showAction && (
+            <Grid item>
+              <Button
+                type="submit"
+                size="small"
+                color="primary"
+                endIcon={<ReplyIcon />}
+                onClick={() => {
+                  setParentChat(message);
+                }}
+              />
+            </Grid>
+          )}
         </Grid>
       </Grid>
     </div>
@@ -209,12 +231,12 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
     );
   }
   return (
-    <Box height="75%">
-      <ShoutContainer initCurrentUser={user} initUrl={url} />
+    <Box height="100%">
       <Typography className="live-chat-title" variant="h5">Live Chat</Typography>
-      <Box height="75%">
+      <div className="chat-messages">
         {msgs}
-      </Box>
+        <div ref={messagesEndRef} />
+      </div>
       <Grid item xs container className={classes.messageContainer}>
         <Grid item xs={12}>
           {parentChatTitle}
