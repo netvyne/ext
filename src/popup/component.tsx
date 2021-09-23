@@ -4,6 +4,8 @@ import Avatar from '@material-ui/core/Avatar';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
@@ -15,6 +17,8 @@ import { browser } from 'webextension-polyfill-ts';
 import { User } from '../../types/common/types';
 import { getCurrentUser } from '../auth/auth';
 import Chat from '../components/chat/Chat';
+import Discussion from '../components/discussion/Discussion';
+import { Notifications } from '../components/notifications';
 import { queryClient } from '../query';
 import { isValidURL } from '../utils';
 import './styles.scss';
@@ -76,6 +80,9 @@ export const Popup: FunctionComponent = () => {
   getCurrentUser().then((currentUser:User|any) => setUser(currentUser));
   const [url, setUrl] = useState<any>({});
   const [shareCount, setShareCount] = useState(0);
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
   // Sends the `popupMounted` event
   React.useEffect(() => {
     browser.runtime.sendMessage({ popupMounted: true });
@@ -87,9 +94,9 @@ export const Popup: FunctionComponent = () => {
     return false;
   }
 
-  function feedbackClick(e : any) {
-    e.preventDefault();
+  function feedbackClick() {
     window.open('https://forms.gle/LUzvrWqhtWnKwAxX6', '_blank', 'noopener,noreferrer');
+    setAnchorEl(null);
     return false;
   }
 
@@ -131,6 +138,15 @@ export const Popup: FunctionComponent = () => {
     setValue(newValue);
   };
 
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setValue(3);
+    setAnchorEl(null);
+  };
+
   // Renders the component tree
   return (
     <QueryClientProvider client={queryClient}>
@@ -142,9 +158,9 @@ export const Popup: FunctionComponent = () => {
                 <Button onClick={(event : any) => clickHandler(event)}>
                   <img src="../icon-48.png" alt="logo" />
                 </Button>
-                <Button onClick={(event : any) => feedbackClick(event)}>
+                {/* <Button onClick={(event : any) => feedbackClick(event)}>
                   <Typography variant="h6" color="primary">Feedback</Typography>
-                </Button>
+                </Button> */}
               </Grid>
               <Tabs
                 className="tabs"
@@ -153,27 +169,46 @@ export const Popup: FunctionComponent = () => {
                 indicatorColor="primary"
                 textColor="primary"
                 variant="fullWidth"
-                aria-label="full width tabs example"
+                aria-label="icon label tabs example"
                 TabIndicatorProps={{
                   style: {
                     backgroundColor: '#9F00CF',
                   },
                 }}
               >
-                <Tab icon={<Avatar alt="Conversation" src={value === 0 ? '../images/conversation_selected.png' : '../images/conversation_normal.png'} className="tabIcon" />} {...a11yProps(0)} />
-                <Tab icon={<Avatar alt="Share" src={value === 1 ? '../images/share_selected.png' : '../images/share_normal.png'} className="tabIcon" />} {...a11yProps(1)} />
-                <Tab icon={<Avatar alt="Notification" src={value === 2 ? '../images/notification_selected.png' : '../images/notification_normal.png'} className="tabIcon" />} {...a11yProps(2)} />
+                <Tab icon={<Avatar alt="Conversation" src={value === 0 ? '../images/conversation_selected.png' : '../images/conversation_normal.png'} className="tabIcon" />} label="Discuss" {...a11yProps(0)} />
+                <Tab icon={<Avatar alt="Share" src={value === 1 ? '../images/share_selected.png' : '../images/share_normal.png'} className="tabIcon" />} label="Share" {...a11yProps(1)} />
+                <Tab icon={<Avatar alt="Notification" src={value === 2 ? '../images/notification_selected.png' : '../images/notification_normal.png'} className="tabIcon" />} label="Notifications" {...a11yProps(2)} />
+                <Tab className="livechat-tab" label="" {...a11yProps(3)} />
               </Tabs>
+              <div className="more-icon">
+                <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+                  <img src={value === 3 ? '../images/three_dots_selected.png' : '../images/three_dots_normal.png'} alt="more icon" />
+                </Button>
+                <Menu
+                  id="simple-menu"
+                  anchorEl={anchorEl}
+                  keepMounted
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                  <MenuItem onClick={handleClose}>Live Chat</MenuItem>
+                  <MenuItem onClick={feedbackClick}>Feedback</MenuItem>
+                </Menu>
+              </div>
             </Grid>
           </AppBar>
           <TabPanel value={value} index={0} dir={theme.direction} className={classes.tab}>
-            <Chat initCurrentUser={user} />
+            <Discussion initCurrentUser={user} initUrl={url} />
           </TabPanel>
           <TabPanel value={value} index={1} dir={theme.direction}>
             <Sharing />
           </TabPanel>
           <TabPanel value={value} index={2} dir={theme.direction}>
-            Notification
+            <Notifications />
+          </TabPanel>
+          <TabPanel value={value} index={3} dir={theme.direction}>
+            <Chat initCurrentUser={user} />
           </TabPanel>
         </div>
       </div>

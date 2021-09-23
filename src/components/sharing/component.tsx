@@ -1,35 +1,28 @@
 /* eslint-disable max-len */
-import React, {
-  FunctionComponent, useEffect, useState, useRef,
-} from 'react';
+import {
+  Box, Grid, IconButton, Tooltip
+} from '@material-ui/core';
 // import "./styles.scss";
-
 import Button from '@material-ui/core/Button';
+import Checkbox from '@material-ui/core/Checkbox';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Snackbar from '@material-ui/core/Snackbar';
+import { makeStyles, Theme } from '@material-ui/core/styles';
 // import ScreenCapture from './screenCapture'
 import TextField from '@material-ui/core/TextField';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { Box } from '@material-ui/core';
-import {
-  useMutation, useQuery,
-} from 'react-query';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Snackbar from '@material-ui/core/Snackbar';
+import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import { makeStyles, Theme } from '@material-ui/core/styles';
-
-// import { render } from 'react-dom';
-import { AnyAaaaRecord } from 'dns';
-import Screenshot from './screenshot';
-import Dropdown from './dropdown';
+import React, {
+  FunctionComponent, useEffect, useState
+} from 'react';
+import {
+  useMutation
+} from 'react-query';
+import { User } from '../../../types/common/types';
 import { getCurrentUser } from '../../auth/auth';
-import { isValidURL, createDiv, screenShot } from '../../utils';
-import { User, Conversation } from '../../../types/common/types';
+import { createDiv, isValidURL, screenShot } from '../../utils';
+import Dropdown from './dropdown';
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -47,9 +40,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 export const Sharing: FunctionComponent = () => {
 //   const queryClient = new QueryClient();
 
-  const [shareSeparately, setShareSeparately] = React.useState(true);
+  const [shareSeparately, setShareSeparately] = React.useState(false);
   const [url, setUrl] = useState<any>({});
-  const [comment, setComment] = React.useState('');
+  const [comment, setComment] = React.useState('Check this out!');
   const [conversationIDs, setConversationIDs] = React.useState([]);
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
@@ -62,6 +55,10 @@ export const Sharing: FunctionComponent = () => {
   const [sharedConvs, setSharedConvs] = React.useState<any>([]);
   const [sharedConTitles, setSharedConTitles] = React.useState<any>([]);
   const [user, setUser] = React.useState<User | null>();
+
+  const [friendHandles, setFriendHandles] = React.useState([]);
+  const [createConv, setCreateConv] = React.useState(false);
+
   getCurrentUser().then((currentUser: User | null) => setUser(currentUser));
 
   function cropcallback() {
@@ -80,8 +77,8 @@ export const Sharing: FunctionComponent = () => {
     }
   };
 
-  const route = `/get_website_posts?host=${url.host}&pathname=${url.pathname}&search=${encodeURIComponent(url.search)}`;
-  const { data, status } = useQuery<any, string>(route);
+  // const route = `/get_website_posts?host=${url.host}&pathname=${url.pathname}&search=${encodeURIComponent(url.search)}`;
+  // const { data, status } = useQuery<any, string>(route);
 
   useEffect(() => {
     const queryInfo = { active: true };
@@ -94,22 +91,23 @@ export const Sharing: FunctionComponent = () => {
           search: newUrl.search,
           Title: tabs[0].title,
         };
+        console.log('formatedUrl :::: ', formatedUrl);
         setUrl(formatedUrl);
       });
     }
     chrome.runtime.onMessage.addListener(handleMessage);
-    if (data && data.Posts.length > 0) {
-      const covnIDs : any = [];
-      const ConvTitles : any = [];
-      data.Posts.map((post : any, s : number) => {
-        covnIDs.push(post.Conversation.ID);
-        ConvTitles.push(`${post.Conversation.Title}`);
-        return covnIDs;
-      });
-      setSharedConvs(covnIDs);
-      setSharedConTitles(ConvTitles);
-    }
-  }, [data]);
+    // if (data && data.Posts.length > 0) {
+    //   const covnIDs : any = [];
+    //   const ConvTitles : any = [];
+    //   data.Posts.map((post : any, s : number) => {
+    //     covnIDs.push(post.Conversation.ID);
+    //     ConvTitles.push(`${post.Conversation.Title}`);
+    //     return covnIDs;
+    //   });
+    //   setSharedConvs(covnIDs);
+    //   setSharedConTitles(ConvTitles);
+    // }
+  }, []);
   // // // // // //
 
   const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
@@ -158,28 +156,33 @@ export const Sharing: FunctionComponent = () => {
     screenShot('clear', cropcallback);
   }
 
-  const postShare = async (event : any) => {
+  const shareMutation = useMutation({});
+  const postShare = async (event: any) => {
     event.preventDefault();
-    // const shareURL = new URL(url);
-    const postData = {
+    const mutateData = {
       Host: url.host,
       Pathname: url.pathname,
       Search: url.search,
       Comment: comment,
       Separate: shareSeparately,
+      ReceiverHandles: friendHandles,
+      CreateConv: createConv,
       ConversationIDs: conversationIDs,
     };
-    const res = mutation.mutate(
+    const res = shareMutation.mutate(
       // @ts-ignore
       {
         route: '/post_user_post',
-        data: postData,
+        data: mutateData,
       },
       {
         onSuccess: (response : any) => {
-          uploadImage(event, response.Post.ID);
+          setUrl('');
+          setComment('Check this out!');
           setConversationIDs([]);
-          setComment('');
+          setFriendHandles([]);
+          setCreateConv(false);
+          uploadImage(event, response.Post.ID);
           setDataURL('');
           setOpen(true);
         },
@@ -254,7 +257,7 @@ export const Sharing: FunctionComponent = () => {
           Post has been shared successfully!
         </Alert>
       </Snackbar>
-      <Dialog
+      {/* <Dialog
         open={openAlert}
         onClose={(e) => handleCloseAlert(e, 'cancel')}
         aria-labelledby="alert-dialog-title"
@@ -276,9 +279,14 @@ export const Sharing: FunctionComponent = () => {
             Yes
           </Button>
         </DialogActions>
-      </Dialog>
-      <form>
-        <Dropdown setConversationIDs={setConversationIDs} key={mutation.isLoading} />
+      </Dialog> */}
+      <form onSubmit={postShare}>
+        <Grid component={Box} mb={2}>
+          <Dropdown setConversationIDs={setConversationIDs} mode="conv" />
+        </Grid>
+        <Grid component={Box}>
+          <Dropdown setFriendHandles={setFriendHandles} mode="friends" />
+        </Grid>
         {bbox}
         <Box>
           <Button
@@ -300,16 +308,38 @@ export const Sharing: FunctionComponent = () => {
             Clear
           </Button>
         </Box>
-        <FormControlLabel
-          control={(
-            <Checkbox
-              defaultChecked
-              checked={shareSeparately}
-              onChange={(e : any) => setShareSeparately(e.target.checked)}
-            />
-              )}
-          label="Share Separately"
-        />
+        <Grid>
+          <FormControlLabel
+            control={(
+              <Checkbox
+                checked={shareSeparately}
+                onChange={(e: any) => setShareSeparately(e.target.checked)}
+              />
+            )}
+            label="Share Separately"
+          />
+          <Tooltip title="This creates a separate comment thread for each friend you share with.">
+            <span>
+              <IconButton disabled><HelpOutlineIcon /></IconButton>
+            </span>
+          </Tooltip>
+        </Grid>
+        <Grid>
+          <FormControlLabel
+            control={(
+              <Checkbox
+                checked={createConv}
+                onChange={(e: any) => setCreateConv(e.target.checked)}
+              />
+            )}
+            label="Create Group Conversation"
+          />
+          <Tooltip title="This creates a group conversation out of the friend(s) selected from the 'Select Friend(s)...' dropdown.">
+            <span>
+              <IconButton disabled><HelpOutlineIcon /></IconButton>
+            </span>
+          </Tooltip>
+        </Grid>
         <Box m={1}>
           <TextField
             value={comment}
@@ -322,7 +352,7 @@ export const Sharing: FunctionComponent = () => {
             rows={3}
           />
         </Box>
-        <Button type="button" onClick={handleClickOpenAlert}> Share </Button>
+        <Button type="submit" disabled={(conversationIDs.length === 0 && friendHandles.length === 0) || !user?.Registered}> Share </Button>
       </form>
     </Box>
   );

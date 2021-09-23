@@ -1,10 +1,12 @@
 /* eslint-disable indent */
+import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { Typography } from '@material-ui/core';
 import React from 'react';
 import { useMutation, useQuery } from 'react-query';
 import {
     Shout, Url, User, Website
 } from '../../../types/common/types';
+import { CustomError } from '../../query';
 import ActionContainer from './ActionContainer';
 import ReplyUI from './ReplyUI';
 import ShoutUI from './ShoutUI';
@@ -20,6 +22,10 @@ interface GetShout {
     Website: Website,
 }
 
+interface SuccessResponse {
+    Shout: Shout;
+  }
+
 const ShoutContainer = ({ initCurrentUser, initUrl }: GetUserQuery) => {
   const url : any = initUrl;
   const [showCommentField, setShowCommentField] = React.useState<boolean>(true);
@@ -27,6 +33,9 @@ const ShoutContainer = ({ initCurrentUser, initUrl }: GetUserQuery) => {
   const [showForm, setShowForm] = React.useState(true);
   const [latestShout, setLatestShout] = React.useState<any>();
   const [website, setWebsite] = React.useState<any>();
+  const [showCaptcha, setShowCaptcha] = React.useState(false);
+  const [captchaToken, setCaptchaToken] = React.useState('');
+  const captchaRef = React.createRef<HCaptcha>();
   const route = `/get_shout_trees?host=${url.host}&pathname=${url.pathname}&search=${encodeURIComponent(url.search)}`;
 
   const { data, status } = useQuery<GetShout, string>(route, {
@@ -42,7 +51,22 @@ const ShoutContainer = ({ initCurrentUser, initUrl }: GetUserQuery) => {
     return false;
   }
 
-  const replyMutation = useMutation({});
+  const mutation = useMutation<SuccessResponse, CustomError>(
+    {
+      onSuccess: () => {
+        setComment('');
+        setShowCaptcha(false);
+        setCaptchaToken('');
+      },
+      onError: (err : CustomError) => {
+          console.log(' ------- ', err.res.status);
+        if (err.res.status === 402) {
+          setShowCaptcha(true);
+        }
+      }
+    }
+  );
+
   const postComment = async (event : any) => {
     event.preventDefault();
     const commentData = {
@@ -52,9 +76,10 @@ const ShoutContainer = ({ initCurrentUser, initUrl }: GetUserQuery) => {
         Pathname: url.pathname,
         Search: url.search,
       },
+      CaptchaToken: captchaToken
     };
 
-    const res: any = replyMutation.mutate(
+    const res: any = mutation.mutate(
       // @ts-ignore
       {
         route: '/post_shout',
@@ -101,6 +126,9 @@ const ShoutContainer = ({ initCurrentUser, initUrl }: GetUserQuery) => {
           comment={comment}
           showForm={showForm}
           setShowForm={setShowForm}
+          showCaptcha={showCaptcha}
+          setCaptchaToken={setCaptchaToken}
+          captchaRef={captchaRef}
         />
       </>
     );

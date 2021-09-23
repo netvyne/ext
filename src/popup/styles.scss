@@ -12,23 +12,6 @@
     margin-right: 0px !important;
 }
 
-// .top-navbar{
-//     display: flex;
-//     background-color: #f5f5f5;
-//     box-shadow: 0px 2px 1px -1px #eeeeee, 0px 1px 1px 0px #eeeeee, 0px 1px 3px 0px #eeeeee;
-// }
-
-// .logo-container{
-//     display: flex;
-//     width: 180px;
-// }
-// .MuiAppBar-root{
-//     width: CALC(100% - 35%) !important;
-// }
-// .MuiPaper-elevation1{
-//     box-shadow: none !important;
-// }
-
 .topbar{
     display: flex;
     flex-direction: row;
@@ -37,7 +20,7 @@
 }
 
 .topbar .logo{
-    width: 30%;
+    width: 15%;
     display: flex;
     align-items: center;
 }
@@ -58,6 +41,10 @@
     width: 25px !important;
     height: 25px !important;
     border-radius: 0% !important;
+}
+
+.MuiTab-textColorPrimary.Mui-selected{
+    color: #9F00CF !important;
 }
 
 .tabIcon img{
@@ -81,4 +68,11 @@
 
 .MuiTypography-h5{
     font-family: 'Montserrat';
+}
+
+.more-icon img{
+    width: 20px;
+}
+.livechat-tab{
+    display: none !important;
 }

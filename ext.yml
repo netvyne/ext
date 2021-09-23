@@ -9,6 +9,7 @@ services:
       REACT_APP_PUBLIC_API: http://localhost:5000/api
       NODE_ENV: "development"
       VERSION: 0.0
+      REACT_APP_CAPTCHA_SITE_KEY: "10000000-ffff-ffff-ffff-000000000001"
     volumes:
       - "/ext/node_modules"
       - "../ext:/ext"
