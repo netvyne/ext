@@ -48,3 +48,11 @@
 .reply-form-button .MuiButton-endIcon{
     margin-right: 5px !important;
 }
+.chat-messages {
+    width: 100%;
+    position: fixed;
+    overflow: scroll;
+    height: 80%!important;
+    padding: 10px 5px 10px 20px;
+    height: '75%',
+}
