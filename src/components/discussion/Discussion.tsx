@@ -58,8 +58,10 @@ const Discussion = ({ initCurrentUser, initUrl } : Props) => {
   };
 
   const route = `/get_shout_trees?host=${url.host}&pathname=${url.pathname}&search=${encodeURIComponent(url.search)}`;
-
-  const { data, status } = useQuery<GetShoutTreesQuery, string>(route);
+  // const { data, status } = useQuery<GetShoutTreesQuery, string>(route);
+  const { data, status, refetch } = useQuery<GetShoutTreesQuery, string>(
+    route, { enabled: !!user },
+  );
   let children;
   let website;
   let trees;
@@ -98,6 +100,8 @@ const Discussion = ({ initCurrentUser, initUrl } : Props) => {
             treeRoot={treeRoot}
             user={user}
             url={url}
+            website={data.Website}
+            refetch={refetch}
           />
         ));
       } else {

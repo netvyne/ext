@@ -21,28 +21,8 @@ function isLinkAlreadyIncluded(href) {
   return false;
 }
 
-link = document.createElement('link');
-if (!isLinkAlreadyIncluded('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css')) {
-  link.rel = 'stylesheet';
-  link.href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css';
-  document.head.appendChild(link);
-}
-
-if (!isLinkAlreadyIncluded('https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css')) {
-  link = document.createElement('link');
-  link.rel = 'stylesheet';
-  link.href = 'https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css';
-  document.head.appendChild(link);
-}
-
-if (!isLinkAlreadyIncluded('https://cdnjs.cloudflare.com/ajax/libs/cropperjs/2.0.0-alpha.1/cropper.min.css')) {
-  link = document.createElement('link');
-  link.rel = 'stylesheet';
-  link.href = 'https://cdnjs.cloudflare.com/ajax/libs/cropperjs/2.0.0-alpha.1/cropper.min.css';
-  document.head.appendChild(link);
-}
-
 script = document.createElement('script');
+
 if (!isScriptAlreadyIncluded('https://code.jquery.com/jquery-3.2.1.slim.min.js')) {
   script.src = 'https://code.jquery.com/jquery-3.2.1.slim.min.js';
   script.crossorigin = 'anonymous';
@@ -67,6 +47,27 @@ if (!isScriptAlreadyIncluded('https://cdnjs.cloudflare.com/ajax/libs/popper.js/1
   script.type = 'text/javascript';
   script.setAttribute('async', 'async');
   document.head.appendChild(script);
+}
+
+link = document.createElement('link');
+if (!isLinkAlreadyIncluded('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css')) {
+  link.rel = 'stylesheet';
+  link.href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css';
+  document.head.appendChild(link);
+}
+
+if (!isLinkAlreadyIncluded('https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css')) {
+  link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = 'https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css';
+  document.head.appendChild(link);
+}
+
+if (!isLinkAlreadyIncluded('https://cdnjs.cloudflare.com/ajax/libs/cropperjs/2.0.0-alpha.1/cropper.min.css')) {
+  link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = 'https://cdnjs.cloudflare.com/ajax/libs/cropperjs/2.0.0-alpha.1/cropper.min.css';
+  document.head.appendChild(link);
 }
 
 button = document.createElement('button');
