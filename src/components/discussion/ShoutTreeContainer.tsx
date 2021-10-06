@@ -177,6 +177,7 @@ const ShoutTreeContainer = ({
           innerContent={innerContent}
           reg={!!user.Registered}
           focus={focus}
+          postVote={postVote}
         />
       </Grid>
     );
