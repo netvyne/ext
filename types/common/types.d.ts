@@ -100,20 +100,33 @@ interface Shout {
     ID: number;
     CreatedAt: DateTime;
     ParentShoutID: number;
-ParentShout: Shout;
-AuthorID: number;
-Author: User;
-WebsiteID: number;
-Website: Website;
-Comment: string;
-Level: number;
-Karma: number;
-Upvotes: number;
-Downvotes: number;
-VoteStatus: number;
-Saved: boolean;
-Children: Shout[];
-}
+    ParentShout: Shout;
+    // AuthorID: number;
+    Author: User;
+    WebsiteID: number;
+    Website: Website;
+    Comment: string;
+    Level: number;
+    Karma: number;
+    Upvotes: number;
+    Downvotes: number;
+    VoteStatus: number;
+    Saved: boolean;
+    Children: Shout[];
+    MoreReplies: number[];
+    // warn
+    Warn?: boolean;
+    Gore?: boolean;
+    Nudity?: boolean;
+    Violence?: boolean;
+    // remove
+    Remove?: boolean;
+    Spam?: boolean;
+    Misinformation?: boolean;
+    Bot?: boolean;
+    Abuse?: boolean;
+    Illegal?: boolean
+  }
 
 // interface ShoutSave {
 // ID: number;

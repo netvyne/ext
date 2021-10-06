@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+import { IconButton } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
@@ -6,8 +8,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import CancelIcon from '@material-ui/icons/Cancel';
+import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import ReplyIcon from '@material-ui/icons/Reply';
-import SendIcon from '@material-ui/icons/Send';
+import { Picker } from 'emoji-mart';
+import 'emoji-mart/css/emoji-mart.css';
 import React, {
   useEffect, useRef, useState
 } from 'react';
@@ -51,16 +55,25 @@ const useStyles = makeStyles((theme) => ({
   },
   chatForm: {
     display: 'flex',
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'flex-end',
     marginLeft: '20px',
     marginBottom: '10px',
+    marginRight: '20px',
   },
   messageTextField: {
-    width: '70%',
+    width: '88%',
   },
   messageSendButton: {
     width: '30%',
+    color: '#ffffff',
+    backgroundColor: '#9F00CF',
+    height: '40px',
+    marginTop: '10px',
+    float: 'right',
+    '&:hover': {
+      background: '#33DA00',
+    },
   }
 }));
 
@@ -72,6 +85,8 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
   const [url, setUrl] = useState<any>({});
   const [user, setUser] = React.useState<User|any>();
   const [showAction, setShowAction] = React.useState(false);
+  const [show, setShow] = React.useState(false);
+  const [websiteId, setWebsiteId] = React.useState<any>(null);
   const divRef : any = useRef(null);
   const messagesEndRef: any = useRef(null);
   getCurrentUser().then((currentUser:User|any) => setUser(initCurrentUser));
@@ -87,6 +102,13 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
     const socketUrl = publicApiUrl.replace('http', 'ws');
     const socket = new WebSocket(`${socketUrl}/get_chat_socket?website_id=0&host=${currentUrl.host}&pathname=${currentUrl.pathname}&search=${encodeURIComponent(currentUrl.search)}`);
     console.log('Socket created', socket);
+    if (!socket) {
+      const intervalID = setInterval(alert, 30000);
+      clearInterval(intervalID);
+      setInterval(() => {
+        createSocket(currentUrl);
+      }, 30000);
+    }
     webSocket.current = socket;
     webSocket.current.onmessage = (message : any) => {
       console.log('messages :::::', message);
@@ -113,9 +135,6 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
         createSocket(formatedUrl);
       });
     }
-    // setTimeout(() => {
-    //   alert('Sup!');
-    // }, 1000);// wait 2 seconds
   }, []);
 
   useEffect(scrollToBottom, [messages]);
@@ -147,11 +166,19 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
         onSuccess: (response : any) => {
           setComment('');
           setParentChat(null);
+          scrollToBottom();
         },
       },
     );
 
     return res;
+  };
+
+  const addEmoji = async (emoji : any) => {
+    console.log('here clicked', emoji);
+    console.log('here clicked', emoji.native);
+    setComment(`${comment} ${emoji.native}`);
+    setShow(false);
   };
 
   const msgs = messages.map((message : any) => (
@@ -243,19 +270,43 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
         </Grid>
         <Grid item xs={12}>
           <form onSubmit={postChat} className={classes.chatForm}>
-            <TextField
-              value={comment}
-              onInput={(e : any) => setComment(e.target.value)}
-              id="nv-message"
-              label="Message"
-              placeholder="Send a message"
-              className={classes.messageTextField}
-            />
-            <Button type="submit" size="small" color="primary" endIcon={<SendIcon />} className={classes.messageSendButton}>
-              {' '}
-              Submit
-              {' '}
-            </Button>
+            <Grid item xs={12} container className="livechat-textfield">
+              <TextField
+                value={comment}
+                onInput={(e : any) => setComment(e.target.value)}
+                placeholder="Send a message"
+                className={classes.messageTextField}
+                inputProps={{
+                  underline: {
+                    '&&&:before': {
+                      borderBottom: 'none'
+                    },
+                    '&&:after': {
+                      borderBottom: 'none'
+                    }
+                  }
+                }}
+              />
+              {show ? (
+                <Picker
+                  set="apple"
+                  title=""
+                  emoji="point_up"
+                  style={{
+                    position: 'fixed', zIndex: 10, bottom: '20px', right: '20px'
+                  }}
+                  onSelect={addEmoji}
+                />
+              )
+                : <IconButton onClick={() => setShow(true)}><InsertEmoticonIcon /></IconButton> }
+            </Grid>
+            <Grid item xs={12} container justify="flex-end">
+              <Button type="submit" size="small" color="primary" className={classes.messageSendButton}>
+                {' '}
+                Chat
+                {' '}
+              </Button>
+            </Grid>
           </form>
         </Grid>
       </Grid>
