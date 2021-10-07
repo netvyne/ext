@@ -11,6 +11,7 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Shout, User } from '../../../types/common/types';
 import ReplyUI from './ReplyUI';
+import ShoutVoteUI from './ShoutVoteUI';
 import './styles.scss';
 import UserKarma from './UserKarma';
 
@@ -30,12 +31,13 @@ interface Props {
   innerContent: any;
   reg: boolean;
   focus: number;
+  postVote: any;
 }
 
 const ShoutTreeUI = ({
   treeRoot, postComment, setComment,
   comment, showForm, setShowForm, defUser, url, replyUI, saved,
-  onSaveItem, shoutVoteUI, innerContent, reg, focus
+  onSaveItem, shoutVoteUI, innerContent, reg, focus, postVote
 } : Props) => {
   const [user] = React.useState<User>(defUser);
   const [root, setRoot] = React.useState<Shout>(treeRoot);
@@ -74,9 +76,10 @@ const ShoutTreeUI = ({
             xs={1}
             p={1}
           >
-            {/* <ShoutVoteButtons
-              initShout={root}
-            /> */}
+            <ShoutVoteUI
+              shout={root}
+              postVote={postVote}
+            />
           </Grid>
 
           <Grid container component={Box} m={1}>

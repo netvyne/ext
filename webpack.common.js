@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const getClientEnvironment = require('./config/env');
 const paths = require('./config/paths');
@@ -13,6 +14,13 @@ const publicPath = '/';
 const publicUrl = '';
 // Get environment variables to inject into our app.
 const env = getClientEnvironment(publicUrl);
+
+function modify(buffer) {
+  const manifest = JSON.parse(buffer.toString());
+  if (process.env.REACT_APP_VERSION) manifest.version = process.env.REACT_APP_VERSION;
+  const manifestJSON = JSON.stringify(manifest, null, 2);
+  return manifestJSON;
+}
 
 module.exports = {
   entry: {
@@ -57,5 +65,18 @@ module.exports = {
       '@src': path.resolve(__dirname, 'src/'),
     },
   },
-  plugins: [new webpack.DefinePlugin(env.stringified)],
+  plugins: [
+    new webpack.DefinePlugin(env.stringified),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: 'extension/manifest.json',
+          to: 'extension/manifest.json',
+          transform(content, _path) {
+            return modify(content);
+          },
+        },
+      ],
+    }),
+  ],
 };

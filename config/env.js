@@ -67,6 +67,7 @@ function getClientEnvironment(publicUrl) {
     // process.env.PUBLIC_API = "http://localhost:5000/api";
     process.env.PUBLIC_WEB = 'http://localhost:3000';
     process.env.REACT_APP_PUBLIC_API = 'http://localhost:5000/api';
+    process.env.REACT_APP_VERSION = '2.0.0';
   } else if (process.env.NODE_ENV === 'staging') {
     process.env.REACT_APP_PUBLIC_API = 'https://staging-api.netvyne.com/api';
     process.env.PUBLIC_WEB = 'https://staging.netvyne.com';

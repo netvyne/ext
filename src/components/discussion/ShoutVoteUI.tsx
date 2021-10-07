@@ -5,6 +5,7 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import React from 'react';
 import { Shout } from '../../../types/common/types';
+import './styles.scss';
 
 interface Props {
   shout: Shout;
@@ -15,7 +16,7 @@ export default function ShoutVoteUI({ shout, postVote } : Props) {
   return (
     // @ts-ignore
     <Grid component={Box} container alignItems="center" direction="column">
-      <Button value="upvote" onClick={postVote}>
+      <Button value="upvote" onClick={postVote} className="vote-bbuttons">
         <KeyboardArrowUpIcon
           color={
             shout.VoteStatus === 1 ? 'primary' : 'secondary'
@@ -23,7 +24,7 @@ export default function ShoutVoteUI({ shout, postVote } : Props) {
         />
       </Button>
       <Box>{shout.Karma}</Box>
-      <Button value="downvote" onClick={postVote}>
+      <Button value="downvote" onClick={postVote} className="vote-bbuttons">
         <KeyboardArrowDownIcon
           color={
             shout.VoteStatus === -1 ? 'primary' : 'secondary'
