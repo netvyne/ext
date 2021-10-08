@@ -70,8 +70,8 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: 'extension/manifest.json',
-          to: 'extension/manifest.json',
+          from: './extension/manifest.json',
+          to: '../manifest.json',
           transform(content, _path) {
             return modify(content);
           },
