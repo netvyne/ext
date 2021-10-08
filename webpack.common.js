@@ -17,7 +17,7 @@ const env = getClientEnvironment(publicUrl);
 
 function modify(buffer) {
   const manifest = JSON.parse(buffer.toString());
-  if (process.env.REACT_APP_VERSION) manifest.version = process.env.REACT_APP_VERSION;
+  if (process.env.REACT_APP_VERSION) manifest.version = process.env.REACT_APP_VERSION.replace('v', '');
   const manifestJSON = JSON.stringify(manifest, null, 2);
   return manifestJSON;
 }
