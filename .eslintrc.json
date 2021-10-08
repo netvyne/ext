@@ -27,6 +27,13 @@
         "@typescript-eslint/no-use-before-define": [
             "error"
         ],
+        "react/jsx-no-bind": [{
+            "ignoreDOMComponents": true,
+            "ignoreRefs": true,
+            "allowArrowFunctions": true,
+            "allowFunctions": true,
+            "allowBind": true
+        }],
         "react/jsx-filename-extension": [
             1,
             {
