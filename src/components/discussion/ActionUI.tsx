@@ -1,4 +1,4 @@
-import { Tooltip } from '@material-ui/core';
+import { Tooltip, Typography } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -34,14 +34,15 @@ const ActionUI = ({
             ? <Tooltip title="Public"><PublicIcon fontSize="inherit" /></Tooltip>
             : <Tooltip title="Unlisted"><LinkIcon fontSize="inherit" /></Tooltip>}
         </Grid>
-        <Grid item component={IconButton} value="upvote" onClick={postVote}>
+        <Grid item component={IconButton} value="1" onClick={postVote}>
           <KeyboardArrowUpIcon
             color={
               website.VoteStatus === 1 ? 'primary' : 'secondary'
             }
           />
         </Grid>
-        <Grid item component={IconButton} value="downvote" onClick={postVote}>
+        <Typography>{website.VoteStatus + website.Karma}</Typography>
+        <Grid item component={IconButton} value="-1" onClick={postVote}>
           <KeyboardArrowDownIcon
             color={
               website.VoteStatus === -1 ? 'primary' : 'secondary'

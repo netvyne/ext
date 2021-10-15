@@ -12,6 +12,13 @@ chrome.runtime.onMessage.addListener(
       });
       sendResponse({ message: 'goodbye cropped' });
     }
+    if (request.message === 'closeDialogue') {
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        const activeTab = tabs[0];
+        chrome.tabs.sendMessage(activeTab.id, 'toggle');
+      });
+      sendResponse({ message: 'goodbye cropped' });
+    }
   },
 );
 

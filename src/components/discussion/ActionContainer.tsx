@@ -42,7 +42,7 @@ const ActionContainer = ({ initWebsite, reg, url } : Props) => {
   const postVote = async (event : any) => {
     event.preventDefault();
     const data = {
-      Status: event.currentTarget.value,
+      Status: parseInt(event.currentTarget.value, 10),
       URL: {
         Host: url.host,
         Pathname: url.pathname,
@@ -50,8 +50,15 @@ const ActionContainer = ({ initWebsite, reg, url } : Props) => {
       },
     };
     // @ts-ignore
-    const res : any = mutation.mutate({ route: '/post_vote_website', data });
-    setWebsite(res.Website);
+    const res = mutation.mutate({
+      route: '/post_vote_website',
+      data,
+    },
+    {
+      onSuccess: (response: any) => {
+        setWebsite(response.Website);
+      },
+    });
     return res;
   };
 
