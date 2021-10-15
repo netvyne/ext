@@ -50,11 +50,11 @@ if (!isScriptAlreadyIncluded('https://cdnjs.cloudflare.com/ajax/libs/popper.js/1
 }
 
 link = document.createElement('link');
-if (!isLinkAlreadyIncluded('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css')) {
-  link.rel = 'stylesheet';
-  link.href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css';
-  document.head.appendChild(link);
-}
+// if (!isLinkAlreadyIncluded('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css')) {
+//   link.rel = 'stylesheet';
+//   link.href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css';
+//   document.head.prepend(link);
+// }
 
 if (!isLinkAlreadyIncluded('https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css')) {
   link = document.createElement('link');
@@ -70,15 +70,22 @@ if (!isLinkAlreadyIncluded('https://cdnjs.cloudflare.com/ajax/libs/cropperjs/2.0
   document.head.appendChild(link);
 }
 
+// button = document.createElement('button');
+// button.setAttribute('class', 'btn btn-primary');
+// button.setAttribute('style', 'display : none');
+// button.setAttribute('type', 'exampleModalLong');
+// button.setAttribute('id', 'cropDialogue');
+// button.setAttribute('data-toggle', 'modal');
+// button.setAttribute('data-target', '#exampleModalLong');
+// button.setAttribute('data-backdrop', 'static');
+// button.setAttribute('data-keyboard', 'false');
+// button.append('Launch demo modal');
+// document.body.prepend(button);
+
 button = document.createElement('button');
-button.setAttribute('class', 'btn btn-primary');
-button.setAttribute('style', 'display : none');
-button.setAttribute('type', 'exampleModalLong');
+button.setAttribute('class', 'trigger_popup_fricc');
 button.setAttribute('id', 'cropDialogue');
-button.setAttribute('data-toggle', 'modal');
-button.setAttribute('data-target', '#exampleModalLong');
-button.setAttribute('data-backdrop', 'static');
-button.setAttribute('data-keyboard', 'false');
+button.setAttribute('style', 'display : none');
 button.append('Launch demo modal');
 document.body.prepend(button);
 
@@ -86,35 +93,47 @@ setTimeout(() => {
   chrome.storage.local.get({ screenshot: null }, (data) => {
     // document.getElementById('cropDialogue').style.visibility = 'hidden';
     const div = document.createElement('div');
-    div.setAttribute('class', 'modal fade');
-    div.setAttribute('id', 'exampleModalLong');
-    div.setAttribute('tabIndex', '-1');
-    div.setAttribute('role', 'dialog');
-    div.setAttribute('aria-labelledby', 'exampleModalLongTitle');
-    div.setAttribute('aria-hidden', 'true');
+    div.setAttribute('class', 'bootstrap-iso"');
+    div.setAttribute('id', 'mainExampleModalLong');
 
-    const innerHTML = `<div class="modal-dialog modal-xl" style="max-width: 1200px;">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle">Cropping Tool</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+    // const innerHTML = `<div class="modal fade" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true" id="exampleModalLong">
+    //   <div class="modal-dialog modal-xl" style="max-width: 1200px;">
+    //     <div class="modal-content">
+    //       <div class="modal-header">
+    //         <h5 class="modal-title" id="exampleModalLongTitle">Cropping Tool</h5>
+    //         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    //           <span aria-hidden="true">&times;</span>
+    //         </button>
+    //       </div>
+    //       <div class="modal-body">
+    //         <div class="center-crop-tool">
+    //           <img crossorigin="Anonymous" src="${data.screenshot}" class="crop-image" alt=""/>
+    //         </div>
+    //       </div>
+    //       <div class="modal-footer">
+    //         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+    //         <button type="button" class="btn btn-primary btn-crop" data-dismiss="modal">Crop</button>
+    //       </div>
+    //     </div>
+    //   </div>
+    // </div>`;
+    const innerHTML = `<div class="hover_bkgr_fricc" id="hover_bkgr_fricc">
+        <span class="helper"></span>
+        <div>
+            <div class="popupCloseButton">&times;</div>
+            <h5 id="exampleModalLongTitle">Cropping Tool</h5>
+            <div class="center-crop-tool">
+              <img crossorigin="Anonymous" src="${data.screenshot}" class="crop-image" alt=""/>
+            </div>
+            <div class="btns-container-crop-tool">
+              <button type="button" class="btn-close-tool" data-dismiss="modal">Close</button>
+              <button type="button" class="btn-crop-tool btn-crop" data-dismiss="modal">Crop</button>
+            </div>
         </div>
-        <div class="modal-body">
-          <div class="center">
-            <img crossorigin="Anonymous" src="${data.screenshot}" class="crop-image" alt=""/>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary btn-crop" data-dismiss="modal">Crop</button>
-        </div>
-      </div>
     </div>`;
     // div.innerText(innerHTML);
     document.body.prepend(div);
-    document.getElementById('exampleModalLong').innerHTML = innerHTML;
+    document.getElementById('mainExampleModalLong').innerHTML = innerHTML;
     // document.getElementById('croppedImage').src = data.screenshot;
 
     (function () {
@@ -135,7 +154,7 @@ setTimeout(() => {
         let cropHeight = 0;
         let resize_canvas = null;
 
-        if (image_target.complete) {
+        if (image_target && image_target.complete) {
           init();
         } else {
           image_target.onload = function () {
@@ -379,6 +398,7 @@ setTimeout(() => {
             });
             chrome.runtime.sendMessage({ message: 'cropped' }, (response) => {
               console.log(response.message);
+              closeCropPopUp();
             });
           } catch (e) {
             console.log(e);
@@ -389,8 +409,27 @@ setTimeout(() => {
       }
 
       resizeableImage(document.querySelector('.crop-image'));
-    }());
 
-    document.getElementById('cropDialogue').click();
+      openPopUp();
+
+      function openPopUp() {
+        document.getElementById('hover_bkgr_fricc').style.display = 'block';
+      }
+
+      document.querySelector('.popupCloseButton').addEventListener('click', closePopUp, false);
+      // document.querySelector('.btn-crop-tool').addEventListener('click', closeCropPopUp, false);
+      document.querySelector('.btn-close-tool').addEventListener('click', closePopUp, false);
+      function closePopUp(e) {
+        e.preventDefault();
+        document.getElementById('hover_bkgr_fricc').style.display = 'none';
+        chrome.runtime.sendMessage({ message: 'closeDialogue' }, (response) => {
+          console.log(response.message);
+        });
+      }
+
+      function closeCropPopUp() {
+        document.getElementById('hover_bkgr_fricc').style.display = 'none';
+      }
+    }());
   });
 }, 500);

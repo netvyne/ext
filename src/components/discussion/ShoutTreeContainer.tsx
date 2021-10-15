@@ -34,25 +34,25 @@ const ShoutTreeContainer = ({
   const [comment, setComment] = React.useState('');
   const [shout, setShout] = React.useState(treeRoot);
 
+  const voteMutation = useMutation({});
   const postVote = async (event : any) => {
     event.preventDefault();
-    const postVoteApiUrl = new URL(`${process.env.REACT_APP_PUBLIC_API}/post_vote_shout`);
-    const init = {
-      method: 'POST',
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      redirect: 'follow',
-      referrerPolicy: 'no-referrer',
-      body: JSON.stringify({
-        Status: event.currentTarget.value === 'upvote' ? 1 : -1,
-        ShoutID: shout.ID,
-      }),
+    const mutateData = {
+      Status: event.currentTarget.value === 'upvote' ? 1 : -1,
+      ShoutID: shout.ID,
     };
-    // @ts-ignore
-    const res = await (await fetch(postVoteApiUrl, init)).json();
-    setShout(res.Shout);
+    const res: any = voteMutation.mutate(
+      // @ts-ignore
+      {
+        route: '/post_vote_shout',
+        data: mutateData,
+      },
+      {
+        onSuccess: (data: any) => {
+          setShout(data.Shout);
+        },
+      },
+    );
     return res;
   };
 
@@ -99,6 +99,7 @@ const ShoutTreeContainer = ({
       {
         onSuccess: (response : any) => {
           setComment('');
+          refetch();
           queryClient.invalidateQueries(`/get_shout_trees?host=${url.host}&pathname=${url.pathname}&search=${encodeURIComponent(url.search)}`);
         },
       },

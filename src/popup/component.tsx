@@ -88,14 +88,12 @@ export const Popup: FunctionComponent = () => {
     browser.runtime.sendMessage({ popupMounted: true });
   }, []);
 
-  function clickHandler(e : any) {
-    e.preventDefault();
-    window.open(`${process.env.PUBLIC_WEB}/profile`, '_blank', 'noopener,noreferrer');
-    return false;
-  }
-
-  function feedbackClick() {
-    window.open('https://forms.gle/LUzvrWqhtWnKwAxX6', '_blank', 'noopener,noreferrer');
+  function moreOptionClick(action : string, link : string) {
+    let href = link;
+    if (action !== 'feedback') {
+      href = `${process.env.PUBLIC_WEB}/${link}`;
+    }
+    window.open(href, '_blank', 'noopener,noreferrer');
     setAnchorEl(null);
     return false;
   }
@@ -142,8 +140,10 @@ export const Popup: FunctionComponent = () => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
-    setValue(3);
+  const handleClose = (action: string) => {
+    if (action === 'livechat') {
+      setValue(3);
+    }
     setAnchorEl(null);
   };
 
@@ -155,12 +155,9 @@ export const Popup: FunctionComponent = () => {
           <AppBar position="static" color="default" elevation={1}>
             <Grid className="topbar">
               <Grid className="logo">
-                <Button onClick={(event : any) => clickHandler(event)}>
+                <Button onClick={() => moreOptionClick('profile', 'profile')}>
                   <img src="../icon-48.png" alt="logo" />
                 </Button>
-                {/* <Button onClick={(event : any) => feedbackClick(event)}>
-                  <Typography variant="h6" color="primary">Feedback</Typography>
-                </Button> */}
               </Grid>
               <Tabs
                 className="tabs"
@@ -190,10 +187,12 @@ export const Popup: FunctionComponent = () => {
                   anchorEl={anchorEl}
                   keepMounted
                   open={Boolean(anchorEl)}
-                  onClose={handleClose}
+                  onClose={() => handleClose('close')}
                 >
-                  <MenuItem onClick={handleClose}>Live Chat</MenuItem>
-                  <MenuItem onClick={feedbackClick}>Feedback</MenuItem>
+                  <MenuItem onClick={() => handleClose('livechat')}>Live Chat</MenuItem>
+                  <MenuItem onClick={() => moreOptionClick('feedback', 'https://forms.gle/LUzvrWqhtWnKwAxX6')}>Feedback</MenuItem>
+                  {user && !!user.Registered && (<MenuItem onClick={() => moreOptionClick('logout', 'profile')}>Logout</MenuItem>)}
+                  {user && !user.Registered && (<MenuItem onClick={() => moreOptionClick('login', 'netvynelogin')}>Login</MenuItem>)}
                 </Menu>
               </div>
             </Grid>
