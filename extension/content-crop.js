@@ -406,6 +406,22 @@ setTimeout(() => {
             // removeHandlers();
           }
         }
+        // console.log(document.getElementsByTagName('body'));
+        document.body.style.overflow = 'hidden';
+        // document.getElementsByClassName('bootstrap-iso"').style.overflow = 'hidden';
+        document.body.addEventListener('wheel DOMMouseScroll', (event) => {
+          console.log('hello here');
+          if (event.ctrlKey === true) {
+            // alert('disabling zooming11');
+            console.log('disabling zooming11');
+            event.preventDefault();
+          }
+        });
+        document.body.addEventListener('keypress', (event) => {
+          if (event.ctrlKey === true && (event.which === '61' || event.which === '107' || event.which === '173' || event.which === '109' || event.which === '187' || event.which === '189')) {
+            event.preventDefault();
+          }
+        });
       }
 
       resizeableImage(document.querySelector('.crop-image'));
@@ -421,6 +437,7 @@ setTimeout(() => {
       document.querySelector('.btn-close-tool').addEventListener('click', closePopUp, false);
       function closePopUp(e) {
         e.preventDefault();
+        document.body.style.overflow = 'auto';
         document.getElementById('hover_bkgr_fricc').style.display = 'none';
         chrome.runtime.sendMessage({ message: 'closeDialogue' }, (response) => {
           console.log(response.message);
@@ -428,8 +445,23 @@ setTimeout(() => {
       }
 
       function closeCropPopUp() {
+        document.body.style.overflow = 'auto';
         document.getElementById('hover_bkgr_fricc').style.display = 'none';
       }
+
+      // window.addEventListener('mousewheel DOMMouseScroll', (event) => {
+      //   if (event.ctrlKey === true) {
+      //     // alert('disabling zooming11');
+      //     console.log('disabling zooming11');
+      //     event.preventDefault();
+      //   }
+      // }, false);
+      // $(window).bind('mousewheel DOMMouseScroll', (event) => {
+      //   if (event.ctrlKey === true) {
+      //     // alert('disabling zooming11');
+      //     event.preventDefault();
+      //   }
+      // });
     }());
   });
 }, 500);
