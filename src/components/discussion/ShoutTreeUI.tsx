@@ -5,7 +5,6 @@ import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
 import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
-import GavelIcon from '@material-ui/icons/Gavel';
 import { DateTime } from 'luxon';
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
@@ -32,12 +31,16 @@ interface Props {
   reg: boolean;
   focus: number;
   postVote: any;
+  showCaptcha: any;
+  captchaRef: any;
+  setCaptchaToken: any;
 }
 
 const ShoutTreeUI = ({
   treeRoot, postComment, setComment,
   comment, showForm, setShowForm, defUser, url, replyUI, saved,
-  onSaveItem, shoutVoteUI, innerContent, reg, focus, postVote
+  onSaveItem, shoutVoteUI, innerContent, reg, focus, postVote,
+  showCaptcha, captchaRef, setCaptchaToken
 } : Props) => {
   const [user] = React.useState<User>(defUser);
   const [root, setRoot] = React.useState<Shout>(treeRoot);
@@ -46,7 +49,7 @@ const ShoutTreeUI = ({
   function toggleUserKarmaOpen() {
     setUserKarmaOpen(!userKarmaOpen);
   }
-  const color = treeRoot.Level % 2 === 0 ? '#eceff1' : '#fafafa';
+  const color = root.Level % 2 === 0 ? '#eceff1' : '#fafafa';
   let content : any = '';
   if (root.ID === 0) {
     // Content is just children directly without a parent comment
@@ -54,13 +57,14 @@ const ShoutTreeUI = ({
   } else {
     content = (
       <Grid
+        key={root.ID}
         container
         component={Box}
         bgcolor={
-        root.ID === focus
-          ? '#f5f77b'
-          : color
-      }
+          root.ID === focus
+            ? '#f5f77b'
+            : color
+        }
         padding={1}
         m={1}
         borderRadius="borderRadius"
@@ -112,6 +116,9 @@ const ShoutTreeUI = ({
                 comment={comment}
                 setShowForm={setShowForm}
                 showForm={showForm}
+                showCaptcha={showCaptcha}
+                captchaRef={captchaRef}
+                setCaptchaToken={setCaptchaToken}
               />
               {!root.Saved && reg && (
               <Box>
@@ -142,14 +149,6 @@ const ShoutTreeUI = ({
                   <BookmarkBorderIcon />
                 </Button>
               </Box>
-              )}
-              { (user?.Role === 'mod' || user?.Role === 'admin')
-              && (
-              <Button href={`${process.env.REACT_APP_MOD_URL}/shout/${root.ID}`} target="_blank">
-                MOD
-                {' '}
-                <GavelIcon />
-              </Button>
               )}
             </Grid>
           </Grid>

@@ -58,6 +58,7 @@ export const Sharing: FunctionComponent = () => {
 
   const [friendHandles, setFriendHandles] = React.useState([]);
   const [createConv, setCreateConv] = React.useState(false);
+  const [dropdownRefetch, setDropdownRefetch] = React.useState(Date());
 
   getCurrentUser().then((currentUser: User | null) => setUser(currentUser));
 
@@ -179,6 +180,7 @@ export const Sharing: FunctionComponent = () => {
         onSuccess: (response : any) => {
           setUrl('');
           setComment('Check this out!');
+          setDropdownRefetch(Date());
           setConversationIDs([]);
           setFriendHandles([]);
           setCreateConv(false);
@@ -282,10 +284,10 @@ export const Sharing: FunctionComponent = () => {
       </Dialog> */}
       <form onSubmit={postShare}>
         <Grid component={Box} mb={2}>
-          <Dropdown setConversationIDs={setConversationIDs} mode="conv" />
+          <Dropdown dropdownRefetch={dropdownRefetch} setConversationIDs={setConversationIDs} mode="conv" />
         </Grid>
         <Grid component={Box}>
-          <Dropdown setFriendHandles={setFriendHandles} mode="friends" />
+          <Dropdown dropdownRefetch={dropdownRefetch} setFriendHandles={setFriendHandles} mode="friends" />
         </Grid>
         {bbox}
         <Box>

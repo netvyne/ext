@@ -4,9 +4,9 @@ import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import LinkIcon from '@material-ui/icons/Link';
 import PublicIcon from '@material-ui/icons/Public';
 import React from 'react';
@@ -35,7 +35,7 @@ const ActionUI = ({
             : <Tooltip title="Unlisted"><LinkIcon fontSize="inherit" /></Tooltip>}
         </Grid>
         <Grid item component={IconButton} value="1" onClick={postVote}>
-          <KeyboardArrowUpIcon
+          <ArrowUpwardIcon
             color={
               website.VoteStatus === 1 ? 'primary' : 'secondary'
             }
@@ -43,7 +43,7 @@ const ActionUI = ({
         </Grid>
         <Typography>{website.VoteStatus + website.Karma}</Typography>
         <Grid item component={IconButton} value="-1" onClick={postVote}>
-          <KeyboardArrowDownIcon
+          <ArrowDownwardIcon
             color={
               website.VoteStatus === -1 ? 'primary' : 'secondary'
             }

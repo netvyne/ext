@@ -1,4 +1,5 @@
 /* eslint-disable linebreak-style */
+import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { TextField } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
@@ -13,10 +14,14 @@ interface Props {
     comment: string;
     setShowForm: any;
     showForm: boolean;
+    showCaptcha: any;
+    captchaRef: any;
+    setCaptchaToken: any;
   }
 
 const ReplyUI = ({
-  postComment, setComment, comment, showForm, setShowForm
+  postComment, setComment, comment, showForm, setShowForm, showCaptcha,
+  captchaRef, setCaptchaToken
 }: Props) => {
   const commentForm = (
     <form onSubmit={postComment}>
@@ -38,9 +43,17 @@ const ReplyUI = ({
       </Button>
       <Button type="submit" size="small" color="primary" endIcon={<SendIcon />}>
         {' '}
-        Submit
+        Submitt
         {' '}
       </Button>
+      {showCaptcha
+        && (
+          <HCaptcha
+            sitekey={process.env.REACT_APP_CAPTCHA_SITE_KEY || ''}
+            onVerify={(token) => setCaptchaToken(token)}
+            ref={captchaRef}
+          />
+        )}
     </form>
   );
 
