@@ -23,9 +23,9 @@ const WebsiteUI = ({ initWebsite, url } : Props) => {
         <Grid container direction="column" alignItems="center" justify="center">
           <Box>
             <Typography variant="h5">
-              {(websiteTitle && websiteTitle.length < 100)
+              {(websiteTitle && websiteTitle.length < 32)
                 ? websiteTitle
-                : websiteTitle.substring(0, 100).concat('...')}
+                : websiteTitle.substring(0, 32).concat('...')}
             </Typography>
           </Box>
           <Grid container direction="row" justify="center" spacing={1}>

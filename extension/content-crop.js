@@ -1,3 +1,4 @@
+/* eslint-disable no-loop-func */
 /* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable no-plusplus */
 /* eslint-disable max-len */
@@ -31,14 +32,14 @@ if (!isScriptAlreadyIncluded('https://code.jquery.com/jquery-3.2.1.slim.min.js')
   document.head.appendChild(script);
 }
 
-if (!isScriptAlreadyIncluded('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js')) {
-  script = document.createElement('script');
-  script.src = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js';
-  script.crossorigin = 'anonymous';
-  script.type = 'text/javascript';
-  script.setAttribute('async', 'async');
-  document.head.appendChild(script);
-}
+// if (!isScriptAlreadyIncluded('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js')) {
+//   script = document.createElement('script');
+//   script.src = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js';
+//   script.crossorigin = 'anonymous';
+//   script.type = 'text/javascript';
+//   script.setAttribute('async', 'async');
+//   document.head.appendChild(script);
+// }
 
 if (!isScriptAlreadyIncluded('https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js')) {
   script = document.createElement('script');
@@ -56,32 +57,6 @@ link = document.createElement('link');
 //   document.head.prepend(link);
 // }
 
-if (!isLinkAlreadyIncluded('https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css')) {
-  link = document.createElement('link');
-  link.rel = 'stylesheet';
-  link.href = 'https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css';
-  document.head.appendChild(link);
-}
-
-if (!isLinkAlreadyIncluded('https://cdnjs.cloudflare.com/ajax/libs/cropperjs/2.0.0-alpha.1/cropper.min.css')) {
-  link = document.createElement('link');
-  link.rel = 'stylesheet';
-  link.href = 'https://cdnjs.cloudflare.com/ajax/libs/cropperjs/2.0.0-alpha.1/cropper.min.css';
-  document.head.appendChild(link);
-}
-
-// button = document.createElement('button');
-// button.setAttribute('class', 'btn btn-primary');
-// button.setAttribute('style', 'display : none');
-// button.setAttribute('type', 'exampleModalLong');
-// button.setAttribute('id', 'cropDialogue');
-// button.setAttribute('data-toggle', 'modal');
-// button.setAttribute('data-target', '#exampleModalLong');
-// button.setAttribute('data-backdrop', 'static');
-// button.setAttribute('data-keyboard', 'false');
-// button.append('Launch demo modal');
-// document.body.prepend(button);
-
 button = document.createElement('button');
 button.setAttribute('class', 'trigger_popup_fricc');
 button.setAttribute('id', 'cropDialogue');
@@ -95,34 +70,15 @@ setTimeout(() => {
     const div = document.createElement('div');
     div.setAttribute('class', 'bootstrap-iso"');
     div.setAttribute('id', 'mainExampleModalLong');
-
-    // const innerHTML = `<div class="modal fade" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true" id="exampleModalLong">
-    //   <div class="modal-dialog modal-xl" style="max-width: 1200px;">
-    //     <div class="modal-content">
-    //       <div class="modal-header">
-    //         <h5 class="modal-title" id="exampleModalLongTitle">Cropping Tool</h5>
-    //         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-    //           <span aria-hidden="true">&times;</span>
-    //         </button>
-    //       </div>
-    //       <div class="modal-body">
-    //         <div class="center-crop-tool">
-    //           <img crossorigin="Anonymous" src="${data.screenshot}" class="crop-image" alt=""/>
-    //         </div>
-    //       </div>
-    //       <div class="modal-footer">
-    //         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-    //         <button type="button" class="btn btn-primary btn-crop" data-dismiss="modal">Crop</button>
-    //       </div>
-    //     </div>
-    //   </div>
-    // </div>`;
     const innerHTML = `<div class="hover_bkgr_fricc" id="hover_bkgr_fricc">
         <span class="helper"></span>
         <div>
             <div class="popupCloseButton">&times;</div>
             <h5 id="exampleModalLongTitle">Cropping Tool</h5>
             <div class="center-crop-tool">
+              <div class="popup-netvyne">
+                <div class="popup-header-netvyne noselect">&nbsp;</div>
+              </div>
               <img crossorigin="Anonymous" src="${data.screenshot}" class="crop-image" alt=""/>
             </div>
             <div class="btns-container-crop-tool">
@@ -135,306 +91,220 @@ setTimeout(() => {
     document.body.prepend(div);
     document.getElementById('mainExampleModalLong').innerHTML = innerHTML;
     // document.getElementById('croppedImage').src = data.screenshot;
-
     (function () {
-      function resizeableImage(image_target) {
-        let cropComponent;
-        let container;
-        let crop_img;
-        let event_state = {};
-        let ratio = 1.0;
-        let keyZoomValue = 4.0;
-        let MINWIDTH = 50;
-        let MINHEIGHT = 50;
-        let CROPWIDTH = 200;
-        let CROPHEIGHT = 200;
-        let cropLeft = 0;
-        let cropTop = 0;
-        let cropWidth = 0;
-        let cropHeight = 0;
-        let resize_canvas = null;
+      let resize_canvas = null;
+      let image_target = document.querySelector('.crop-image');
+      let heightratio = 1.0;
+      let widthratio = 1.0;
+      let cropLeft = 0;
+      let cropTop = 0;
+      let cropWidth = 0;
+      let cropHeight = 0;
+      function initDragElement() {
+        let pos1 = 0;
+        let pos2 = 0;
+        let pos3 = 0;
+        let pos4 = 0;
+        let popups = document.getElementsByClassName('popup-netvyne');
+        let parentCropContainer = document.getElementsByClassName('center-crop-tool')[0];
+        let elmnt = null;
+        let currentZIndex = 100; // TODO reset z index when a threshold is passed
 
-        if (image_target && image_target.complete) {
-          init();
-        } else {
-          image_target.onload = function () {
-            init();
+        for (let i = 0; i < popups.length; i++) {
+          let popup = popups[i];
+          let header = getHeader(popup);
+
+          popup.onmousedown = function () {
+            this.style.zIndex = `${++currentZIndex}`;
           };
-        }
 
-        function removeHandlers() {
-          container.removeEventListener('mousedown', startMoving);
-          container.removeEventListener('touchstart', startMoving);
-          container.removeEventListener('wheel', resizing);
-
-          document.removeEventListener('mouseup', endMoving);
-          document.removeEventListener('touchend', endMoving);
-          document.removeEventListener('mousemove', moving);
-          document.removeEventListener('touchmove', moving);
-          document.removeEventListener('keypress', keyHandler);
-        }
-
-        function addHandlers() {
-          document.addEventListener('mousedown', startMoving, false);
-          document.addEventListener('touchstart', startMoving, false);
-          document.addEventListener('wheel', resizing, false);
-
-          document.querySelector('.overlay').addEventListener('click', resizing, false);
-          document.addEventListener('keypress', keyHandler, false);
-          document.querySelector('.btn-crop').addEventListener('click', openCropCanvasImg);
-        }
-
-        function init() {
-          let wraper; let left; let
-            top;
-
-          if (image_target.dataset.isCrop) {
-            // eslint-disable-next-line no-throw-literal
-            throw 'image is already crop';
+          if (header) {
+            header.parentPopup = popup;
+            header.onmousedown = dragMouseDown;
           }
-
-          image_target.dataset.isCrop = 'true';
-          // image_target.classList.add('crop-blur');
-          image_target.draggable = false;
-
-          crop_img = new Image();
-          crop_img.crossOrigin = image_target.crossOrigin;
-          crop_img.src = image_target.src;
-          crop_img.draggable = false;
-
-          resize_canvas = document.createElement('canvas');
-
-          cropComponent = document.createElement('div');
-          cropComponent.classList.add('crop-component');
-
-          container = document.createElement('div');
-          container.classList.add('overlay');
-
-          cropComponent.appendChild(container);
-          wraper = image_target.parentNode;
-          wraper.appendChild(cropComponent);
-          cropComponent.appendChild(crop_img);
-          cropComponent.appendChild(image_target);
-          container.appendChild(crop_img);
-
-          left = image_target.offsetWidth / 2 - CROPWIDTH / 2;
-          top = image_target.offsetHeight / 2 - CROPHEIGHT / 2;
-
-          updateCropImage(left, top);
-          addHandlers();
         }
 
-        function updateCropSize(width, height) {
-          container.style.width = `${width}px`;
-          container.style.height = `${height}px`;
+        function dragMouseDown(e) {
+          console.log('dragMouseDown func');
+          elmnt = this.parentPopup;
+          elmnt.style.zIndex = `${++currentZIndex}`;
+
+          e = e || window.event;
+          // get the mouse cursor position at startup:
+          pos3 = e.clientX;
+          pos4 = e.clientY;
+          document.onmouseup = closeDragElement;
+          // call a function whenever the cursor moves:
+          document.onmousemove = elementDrag;
         }
 
-        function updateCropImage(left, top) {
-          cropLeft = -left * ratio;
-          cropTop = -top * ratio;
-          left = `${-left}px`;
-          top = `${-top}px`;
-
-          crop_img.style.top = top;
-          crop_img.style.left = left;
-        }
-
-        function updateContainer(left, top) {
-          top = `${top + (CROPWIDTH / 2)}px`;
-          left = `${left + (CROPHEIGHT / 2)}px`;
-
-          container.style.top = top;
-          container.style.left = left;
-        }
-
-        // Save the initial event details and container state
-        function saveEventState(e) {
-          event_state.container_width = container.offsetWidth;
-          event_state.container_height = container.offsetHeight;
-
-          event_state.container_left = container.offsetLeft;
-          event_state.container_top = container.offsetTop;
-
-          event_state.mouse_x = (e.clientX || e.pageX || e.touches && e.touches[0].clientX) + window.scrollX;
-          event_state.mouse_y = (e.clientY || e.pageY || e.touches && e.touches[0].clientY) + window.scrollY;
-        }
-
-        function imgZoom(zoom) {
-          zoom = zoom * Math.PI * 2;
-          let newWidth = Math.floor(container.clientWidth + zoom);
-          let newHeight = Math.floor(container.clientHeight + zoom);
-          let w = crop_img.clientWidth;
-          let h = crop_img.clientHeight;
-          let left;
-          let top;
-          let right;
-          let bottom;
-
-          if (newWidth < MINWIDTH) {
-            return;
-          } if (newWidth > w) {
+        function elementDrag(e) {
+          console.log('elementDrag func');
+          if (!elmnt) {
             return;
           }
 
-          left = container.offsetLeft - (zoom / 2);
-          top = container.offsetTop - (zoom / 2);
-          right = left + newWidth;
-          bottom = top + newHeight;
-
-          if (left < 0) {
-            left = 0;
-          }
-          if (top < 0) {
-            top = 0;
-          }
-          if (right > w) {
-            return;
-          }
-          if (bottom > h) {
-            return;
-          }
-
-          ratio = CROPWIDTH / newWidth;
-
-          updateCropSize(newWidth, newWidth);
-          updateCropImage(left, top);
-          updateContainer(left, top);
-          crop();
-        }
-
-        function keyHandler(e) {
-          e.preventDefault();
-
-          // eslint-disable-next-line default-case
-          switch (String.fromCharCode(e.charCode)) {
-            case '+':
-              imgZoom(keyZoomValue);
-              break;
-            case '-':
-              imgZoom(-keyZoomValue);
-              break;
+          e = e || window.event;
+          // calculate the new cursor position:
+          pos1 = pos3 - e.clientX;
+          pos2 = pos4 - e.clientY;
+          pos3 = e.clientX;
+          pos4 = e.clientY;
+          let leftBoundary = 15;
+          let topBoundary = 42;
+          let righBoundary = (parentCropContainer.offsetWidth + 30) - (elmnt.offsetWidth + 15);
+          let bottomBoundary = (parentCropContainer.offsetHeight + 42 + 65) - (elmnt.offsetHeight + 65);
+          // set the element's new position:
+          if (elmnt.offsetTop < topBoundary && elmnt.offsetLeft < leftBoundary) {
+            elmnt.style.top = `${topBoundary}px`;
+            elmnt.style.left = `${leftBoundary}px`;
+          } else if (elmnt.offsetTop < topBoundary) {
+            elmnt.style.top = `${topBoundary}px`;
+            elmnt.style.left = `${elmnt.offsetLeft - pos1}px`;
+          } else if (elmnt.offsetLeft < leftBoundary) {
+            elmnt.style.top = `${elmnt.offsetTop - pos2}px`;
+            elmnt.style.left = `${leftBoundary}px`;
+          } else if (elmnt.offsetTop > bottomBoundary && elmnt.offsetLeft > righBoundary) {
+            elmnt.style.top = `${bottomBoundary}px`;
+            elmnt.style.left = `${righBoundary}px`;
+          } else if (elmnt.offsetTop > bottomBoundary) {
+            elmnt.style.top = `${bottomBoundary}px`;
+            elmnt.style.left = `${elmnt.offsetLeft - pos1}px`;
+          } else if (elmnt.offsetLeft > righBoundary) {
+            elmnt.style.top = `${elmnt.offsetTop - pos2}px`;
+            elmnt.style.left = `${righBoundary}px`;
+          } else {
+            elmnt.style.top = `${elmnt.offsetTop - pos2}px`;
+            elmnt.style.left = `${elmnt.offsetLeft - pos1}px`;
           }
         }
 
-        function resizing(e) {
-          e.preventDefault();
-          imgZoom(e.deltaY > 0 ? 1 : -1);
+        function closeDragElement() {
+          console.log('closeDragElement func');
+          /* stop moving when mouse button is released: */
+          document.onmouseup = null;
+          document.onmousemove = null;
         }
 
-        function startMoving(e) {
-          e.preventDefault();
-          e.stopPropagation();
+        function getHeader(element) {
+          console.log('getHeader func');
+          let headerItems = element.getElementsByClassName('popup-header-netvyne');
 
-          saveEventState(e);
-
-          document.addEventListener('mousemove', moving);
-          document.addEventListener('touchmove', moving);
-          document.addEventListener('mouseup', endMoving);
-          document.addEventListener('touchend', endMoving);
-        }
-
-        function endMoving(e) {
-          e.preventDefault();
-
-          document.removeEventListener('mouseup', endMoving);
-          document.removeEventListener('touchend', endMoving);
-          document.removeEventListener('mousemove', moving);
-          document.removeEventListener('touchmove', moving);
-        }
-
-        function moving(e) {
-          let curuntTouch = {};
-          let left;
-          let top;
-          let w;
-          let h;
-
-          e.preventDefault();
-          e.stopPropagation();
-
-          curuntTouch.x = e.pageX || e.touches && e.touches[0].pageX;
-          curuntTouch.y = e.pageY || e.touches && e.touches[0].pageY;
-
-          left = curuntTouch.x - (event_state.mouse_x - event_state.container_left);
-          top = curuntTouch.y - (event_state.mouse_y - event_state.container_top);
-          w = container.offsetWidth;
-          h = container.offsetHeight;
-
-          if (left < 0) {
-            left = 0;
-          } else if (left > crop_img.offsetWidth - w) {
-            left = crop_img.offsetWidth - w;
-          }
-          if (top < 0) {
-            top = 0;
-          } else if (top > crop_img.offsetHeight - h) {
-            top = crop_img.offsetHeight - h;
+          if (headerItems.length === 1) {
+            return headerItems[0];
           }
 
-          updateCropImage(left, top);
-          updateContainer(left, top);
+          return null;
         }
-
-        function crop() {
-          cropWidth = crop_img.width * ratio;
-          cropHeight = crop_img.height * ratio;
-
-          resize_canvas.width = CROPWIDTH;
-          resize_canvas.height = CROPHEIGHT;
-
-          let ctx = resize_canvas.getContext('2d');
-          ctx.drawImage(crop_img,
-            cropLeft, cropTop,
-            cropWidth, cropHeight);
-        }
-
-        function openCropCanvasImg() {
-          crop();
-
-          try {
-            let base64Img = resize_canvas.toDataURL('image/png', 1.0);
-            chrome.storage.local.set({ screenshot: base64Img }, () => {
-              console.log('Stored screenshot!');
-            });
-            chrome.runtime.sendMessage({ message: 'cropped' }, (response) => {
-              console.log(response.message);
-              closeCropPopUp();
-            });
-          } catch (e) {
-            console.log(e);
-          } finally {
-            // removeHandlers();
-          }
-        }
-        // console.log(document.getElementsByTagName('body'));
-        document.body.style.overflow = 'hidden';
-        // document.getElementsByClassName('bootstrap-iso"').style.overflow = 'hidden';
-        document.body.addEventListener('wheel DOMMouseScroll', (event) => {
-          console.log('hello here');
-          if (event.ctrlKey === true) {
-            // alert('disabling zooming11');
-            console.log('disabling zooming11');
-            event.preventDefault();
-          }
-        });
-        document.body.addEventListener('keypress', (event) => {
-          if (event.ctrlKey === true && (event.which === '61' || event.which === '107' || event.which === '173' || event.which === '109' || event.which === '187' || event.which === '189')) {
-            event.preventDefault();
-          }
-        });
       }
 
-      resizeableImage(document.querySelector('.crop-image'));
+      function initResizeElement() {
+        console.log('initResizeElement func');
+        let popups = document.getElementsByClassName('popup-netvyne');
+        let element = null;
+        let startX; let startY; let startWidth; let
+          startHeight;
+
+        for (let i = 0; i < popups.length; i++) {
+          let p = popups[i];
+
+          let right = document.createElement('div');
+          right.className = 'resizer-right';
+          p.appendChild(right);
+          right.addEventListener('mousedown', initDrag, false);
+          right.parentPopup = p;
+
+          let bottom = document.createElement('div');
+          bottom.className = 'resizer-bottom';
+          p.appendChild(bottom);
+          bottom.addEventListener('mousedown', initDrag, false);
+          bottom.parentPopup = p;
+
+          let both = document.createElement('div');
+          both.className = 'resizer-both';
+          p.appendChild(both);
+          both.addEventListener('mousedown', initDrag, false);
+          both.parentPopup = p;
+        }
+
+        function initDrag(e) {
+          console.log('initDrag func');
+          element = this.parentPopup;
+          startX = e.clientX;
+          startY = e.clientY;
+          startWidth = parseInt(
+            document.defaultView.getComputedStyle(element).width,
+            10
+          );
+          startHeight = parseInt(
+            document.defaultView.getComputedStyle(element).height,
+            10
+          );
+          document.documentElement.addEventListener('mousemove', doDrag, false);
+          document.documentElement.addEventListener('mouseup', stopDrag, false);
+        }
+
+        function doDrag(e) {
+          element.style.width = `${startWidth + e.clientX - startX}px`;
+          element.style.height = `${startHeight + e.clientY - startY}px`;
+        }
+
+        function stopDrag() {
+          document.documentElement.removeEventListener('mousemove', doDrag, false);
+          document.documentElement.removeEventListener('mouseup', stopDrag, false);
+        }
+      }
+
+      function crop() {
+        let cropBox = document.querySelector('.popup-netvyne');
+        resize_canvas = document.createElement('canvas');
+
+        widthratio = (image_target.naturalWidth / image_target.offsetWidth);
+        heightratio = (image_target.naturalHeight / image_target.offsetHeight);
+
+        cropWidth = cropBox.offsetWidth * widthratio;
+        cropHeight = cropBox.offsetHeight * heightratio;
+        cropLeft = (cropBox.offsetLeft - 15) * widthratio;
+        cropTop = (cropBox.offsetTop - 42) * heightratio;
+
+        resize_canvas.width = cropWidth;
+        resize_canvas.height = cropHeight;
+
+        let ctx = resize_canvas.getContext('2d');
+        ctx.drawImage(image_target, cropLeft, cropTop, cropWidth, cropHeight, 0, 0, cropWidth, cropHeight);
+      }
+
+      function openCropCanvasImg() {
+        crop();
+
+        try {
+          let base64Img = resize_canvas.toDataURL('image/png', 1.0);
+          chrome.storage.local.set({ screenshot: base64Img }, () => {
+            console.log('Stored screenshot!');
+          });
+          chrome.runtime.sendMessage({ message: 'cropped' }, (response) => {
+            console.log(response.message);
+            closeCropPopUp();
+          });
+        } catch (e) {
+          console.log(e);
+        } finally {
+          // removeHandlers();
+        }
+      }
+
+      initDragElement();
+      initResizeElement();
+      document.querySelector('.btn-crop').addEventListener('click', openCropCanvasImg);
 
       openPopUp();
 
       function openPopUp() {
         document.getElementById('hover_bkgr_fricc').style.display = 'block';
       }
-
       document.querySelector('.popupCloseButton').addEventListener('click', closePopUp, false);
-      // document.querySelector('.btn-crop-tool').addEventListener('click', closeCropPopUp, false);
       document.querySelector('.btn-close-tool').addEventListener('click', closePopUp, false);
+
       function closePopUp(e) {
         e.preventDefault();
         document.body.style.overflow = 'auto';
@@ -448,20 +318,6 @@ setTimeout(() => {
         document.body.style.overflow = 'auto';
         document.getElementById('hover_bkgr_fricc').style.display = 'none';
       }
-
-      // window.addEventListener('mousewheel DOMMouseScroll', (event) => {
-      //   if (event.ctrlKey === true) {
-      //     // alert('disabling zooming11');
-      //     console.log('disabling zooming11');
-      //     event.preventDefault();
-      //   }
-      // }, false);
-      // $(window).bind('mousewheel DOMMouseScroll', (event) => {
-      //   if (event.ctrlKey === true) {
-      //     // alert('disabling zooming11');
-      //     event.preventDefault();
-      //   }
-      // });
     }());
   });
 }, 500);

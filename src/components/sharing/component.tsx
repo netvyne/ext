@@ -298,7 +298,7 @@ export const Sharing: FunctionComponent = () => {
             Include Screenshot
           </Button>
           <img
-            style={{ display: dataURL ? 'block' : 'none' }}
+            style={{ display: dataURL ? 'block' : 'none', width: '100%' }}
             src={dataURL}
             alt="cropped"
           />
