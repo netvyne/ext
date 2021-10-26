@@ -74,14 +74,14 @@
     vertical-align: middle;
     margin-left: 8px;
 }
-.center {
+.center-crop-tool {
 		display: flex;
 		justify-content: center;
 	  align-items: center;
 	  min-height: 660px;
 	  width: 100%;
     height: 100%;
-    background: #EAEAEA;
+    background: #ffffff;
 }
 .modal-content {
     max-height: 800px;
@@ -92,3 +92,169 @@
 .modal-body {
     padding: 0px !important;
 }
+
+/* Popup box BEGIN */
+.hover_bkgr_fricc{
+    background:rgba(0,0,0,.4);
+    cursor:pointer;
+    display:none;
+    height:100%;
+    position:fixed;
+    text-align:center;
+    top:0;
+    width:100%;
+    z-index:10000;
+}
+.hover_bkgr_fricc .helper{
+    display:inline-block;
+    height:100%;
+    vertical-align:middle;
+}
+.hover_bkgr_fricc > div {
+    background-color: #fff;
+    box-shadow: 10px 10px 60px #555;
+    display: inline-block;
+    height: auto;
+    max-width: 1170px;
+    min-height: 100px;
+    vertical-align: middle;
+    width: 100%;
+    position: relative;
+    border-radius: 8px;
+    padding: 15px 15px;
+}
+.popupCloseButton {
+    background-color: #fff;
+    border: 3px solid #999;
+    border-radius: 50px;
+    cursor: pointer;
+    display: inline-block;
+    font-family: arial;
+    font-weight: bold;
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    font-size: 25px;
+    line-height: 30px;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+}
+.popupCloseButton:hover {
+    background-color: #ccc;
+}
+.trigger_popup_fricc {
+    cursor: pointer;
+    font-size: 20px;
+    margin: 20px;
+    display: inline-block;
+    font-weight: bold;
+}
+#exampleModalLongTitle{
+    width: 100%;
+    text-align: left;
+    font-size: 24px;
+    margin: 0px;
+    font-family: sans-serif;
+}
+.btns-container-crop-tool button{
+    width: 150px;
+    height: 40px;
+    color: #ffffff;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.btn-close-tool{
+    background-color: red;
+    border: solid 1px red;
+}
+.btn-crop-tool{
+    background-color: #9F00CF;
+    border: solid 1px #9F00CF;
+}
+.btn-crop-tool:hover{
+    background-color: #33DA00;
+    border: solid 1px #33DA00;
+}
+.btns-container-crop-tool{
+    width: 100%;
+    text-align: right;
+}
+/* Popup box BEGIN */
+
+
+
+.popup-ali {
+    z-index: 9;
+    background-color: transparent;
+    border: 3px solid red;
+    text-align: center;
+    min-height: 150px;
+    min-width: 300px;
+    max-height: 1000px;
+    max-width: 1000px;
+    display: flex;
+  }
+  
+  /*Drgable */
+  
+  .popup-ali {
+    position: absolute;
+    /*resize: both; !*enable this to css resize*! */
+    overflow: auto;
+  }
+  
+  .popup-header-ali {
+    padding: 20px;
+    cursor: move;
+    z-index: 10;
+    background-color: transparent;
+    color: #fff;
+    width: 100%;
+    margin: 5px;
+  }
+  
+  /*Resizeable*/
+  
+  .popup-ali .resizer-right {
+    width: 5px;
+    height: 100%;
+    background: transparent;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    cursor: e-resize;
+  }
+  
+  .popup-ali .resizer-bottom {
+    width: 100%;
+    height: 5px;
+    background: transparent;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    cursor: n-resize;
+  }
+  
+  .popup-ali .resizer-both {
+    width: 5px;
+    height: 5px;
+    background: transparent;
+    z-index: 10;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    cursor: nw-resize;
+  }
+  
+  /*NOSELECT*/
+  
+  .popup-ali * {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                    supported by Chrome and Opera */
+  }

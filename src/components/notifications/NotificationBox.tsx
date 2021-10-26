@@ -6,6 +6,7 @@ import { DateTime } from 'luxon';
 import React from 'react';
 import { useMutation } from 'react-query';
 import { Notification } from '../../../types/common/types';
+import './styles.scss';
 
 interface Props {
   notification: Notification
@@ -34,23 +35,36 @@ const NotificationBox = ({ notification } : Props) => {
     );
     return res;
   };
+
+  function notificationLink(link : string) {
+    const href = `${process.env.PUBLIC_WEB}${link}`;
+    window.open(href, '_blank', 'noopener,noreferrer');
+    return false;
+  }
+
   const notif = (
     <Box
       color="text.primary"
       border={1}
       m={1}
       padding={1}
-      onClick={(e) => {
-        if (!notification.Viewed) {
-          handleClickedNotif(e, notification.ID, false);
-        }
+      className="notificationBox"
+      onClick={(link) => {
+        notificationLink(notification.Link);
       }}
     >
       <Box>
         {DateTime.fromISO(notification.CreatedAt.toString(), {
           zone: 'utc',
         }).toRelative()}
-        {notification.Viewed ? <CheckCircleIcon /> : <ErrorIcon />}
+        {notification.Viewed ? <CheckCircleIcon /> : (
+          <ErrorIcon onClick={(e) => {
+            if (!notification.Viewed) {
+              handleClickedNotif(e, notification.ID, false);
+            }
+          }}
+          />
+        )}
       </Box>
       <Box>
         {`${notification.Text}`}

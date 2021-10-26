@@ -10,6 +10,7 @@ interface GetUserNotifsQuery {
 }
 
 export const Notifications : FunctionComponent = () => {
+  const [notificationsCount, setNotificationsCount] = React.useState<number>(0);
   const { data, status } = useQuery<GetUserNotifsQuery, string>('/get_user_notifications');
 
   const updateNotifMutation = useMutation({});
@@ -35,7 +36,7 @@ export const Notifications : FunctionComponent = () => {
     return res;
   };
 
-  let notifications;
+  let notifications: any = '';
   if (status === 'error') {
     notifications = <div>Error</div>;
   } else if (status === 'loading') {
@@ -47,6 +48,7 @@ export const Notifications : FunctionComponent = () => {
   }
   return (
     <Box m={2}>
+
       <Button
         type="button"
         onClick={(e) => { handleClickedNotif(e, 0, true); }}
@@ -54,6 +56,7 @@ export const Notifications : FunctionComponent = () => {
         Mark All as Viewed
 
       </Button>
+
       {notifications}
     </Box>
   );

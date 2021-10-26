@@ -9,6 +9,12 @@ export class CustomError extends Error {
   }
 }
 
+declare module 'axios' {
+  export interface AxiosRequestConfig {
+    crossdomain?: boolean;
+  }
+}
+
 const defaultQueryFn = async ({ queryKey }) => {
   const { data } = await axios.get(
     `${process.env.REACT_APP_PUBLIC_API}${queryKey[0]}`,
@@ -24,29 +30,46 @@ const defaultQueryFn = async ({ queryKey }) => {
   return data;
 };
 
+// const defaultMutationFn = async (args: { route: any; data: any; }) => {
+//   // console.log(
+//   //   'mutation url',
+//   //   `${process.env.REACT_APP_PUBLIC_API}${args.route}`,
+//   // );
+//   // console.log('mutation args', args.data);
+//   try {
+//     const { data } = await axios.post(
+//       `${process.env.REACT_APP_PUBLIC_API}${args.route}`,
+//       args.data,
+//       {
+//         headers: {
+//           Accept: 'application/json',
+//           'Content-Type': 'application/json',
+//         },
+//         withCredentials: true,
+//         crossdomain: true,
+//       },
+//     );
+//     return data;
+//   } catch (error) {
+//     throw new CustomError(error.response);
+//   }
+// };
+
 const defaultMutationFn = async (args: { route: any; data: any; }) => {
-  // console.log(
-  //   'mutation url',
-  //   `${process.env.REACT_APP_PUBLIC_API}${args.route}`,
-  // );
-  // console.log('mutation args', args.data);
-  try {
-    const { data } = await axios.post(
-      `${process.env.REACT_APP_PUBLIC_API}${args.route}`,
-      args.data,
-      {
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        withCredentials: true,
-        crossdomain: true,
+  const { data } = await axios.post(
+    `${process.env.REACT_APP_PUBLIC_API}${args.route}`,
+    args.data,
+    {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
-    );
-    return data;
-  } catch (error) {
-    throw new CustomError(error.response);
-  }
+      withCredentials: true,
+      crossdomain: true,
+    },
+  );
+  // console.log('mutation response', data);
+  return data;
 };
 
 export const queryClient = new QueryClient({

@@ -27,6 +27,7 @@
         "@typescript-eslint/no-use-before-define": [
             "error"
         ],
+        "react/jsx-no-bind": 0,
         "react/jsx-filename-extension": [
             1,
             {

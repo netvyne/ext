@@ -10,6 +10,7 @@ interface GetFriendQuery {
 }
 
 interface Props {
+  dropdownRefetch: string;
   disabled?: boolean;
   setConversationIDs?: any;
   setFriendHandles?: any;
@@ -18,7 +19,7 @@ interface Props {
 }
 
 export default function Dropdown({
-  mode, setFriendHandles, setConversationIDs, convMembers, disabled
+  dropdownRefetch, mode, setFriendHandles, setConversationIDs, convMembers, disabled
 }: Props) {
   const { isLoading, isSuccess, data } = useQuery<any>('/get_conversation_list', { enabled: mode === 'conv' });
   const friendQuery = useQuery<GetFriendQuery>('/get_user_friends', { enabled: mode === 'friends' });
@@ -39,6 +40,7 @@ export default function Dropdown({
     }
     return (
       <Autocomplete
+        key={dropdownRefetch}
         multiple
         onChange={changed}
         id="tags-standard"
@@ -89,6 +91,7 @@ export default function Dropdown({
   }
   return (
     <Autocomplete
+      key={dropdownRefetch}
       multiple
       onChange={changed}
       id="tags-standard"

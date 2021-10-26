@@ -52,7 +52,36 @@
     width: 100%;
     position: fixed;
     overflow: scroll;
-    height: 80%!important;
+    height: 70% !important;
     padding: 10px 5px 10px 20px;
-    height: '75%',
+}
+
+.livechat-textfield{
+    display: flex;
+    border: solid 1px;
+    background-color: #cecece !important;
+    width: 95%;
+}
+
+.livechat-textfield .MuiInput-underline:before{
+    border: none !important;
+}
+
+.livechat-textfield .MuiInput-underline:after{
+    border: none !important;
+}
+
+.livechat-textfield label{
+    padding: 10px !important;
+}
+
+.livechat-textfield input{
+    height: 40px;
+    padding: 5px;
+    background-color: #cecece !important;
+    color: #000000 !important;
+}
+
+.livechat-textfield .MuiInputBase-input:focus{
+    background-color: #ffffff !important;
 }
