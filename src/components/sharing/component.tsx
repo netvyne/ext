@@ -133,8 +133,7 @@ export const Sharing: FunctionComponent = () => {
   };
 
   const mutation = useMutation({});
-  const uploadImage = async (event : any, postId : string) => {
-    event.preventDefault();
+  const uploadImage = async (postId : string) => {
     const file = dataURLtoFile(dataURL, 'Image');
     const formData = new FormData();
     formData.append('Image', file, file.name);
@@ -184,7 +183,7 @@ export const Sharing: FunctionComponent = () => {
           setConversationIDs([]);
           setFriendHandles([]);
           setCreateConv(false);
-          uploadImage(event, response.Post.ID);
+          uploadImage(response.Post.ID);
           setDataURL('');
           setOpen(true);
         },

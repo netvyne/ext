@@ -38,7 +38,7 @@ export default function ShoutVoteButtons({ initShout }: Props) {
 
   return (
     // @ts-ignore
-    <Grid component={Box} container alignItems="center" direction="column">
+    <Grid component={Box} container alignItems="center" direction="row">
       <Button value="1" onClick={onPostVote} className="vote-buttons">
         <KeyboardArrowUpIcon
           key={shout.VoteStatus}

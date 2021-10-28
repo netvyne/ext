@@ -20,7 +20,7 @@ const WebsiteUI = ({ initWebsite, url } : Props) => {
   const website = (
     <Box mx={2} mt={1} borderRadius="borderRadius">
       <Grid container wrap="nowrap">
-        <Grid container direction="column" alignItems="center" justify="center">
+        <Grid container direction="column" style={{ alignItems: 'center' }} justifyContent="center">
           <Box>
             <Typography variant="h5">
               {(websiteTitle && websiteTitle.length < 32)
@@ -28,12 +28,12 @@ const WebsiteUI = ({ initWebsite, url } : Props) => {
                 : websiteTitle.substring(0, 32).concat('...')}
             </Typography>
           </Box>
-          <Grid container direction="row" justify="center" spacing={1}>
+          <Grid container direction="row" justifyContent="center" spacing={1}>
             <Grid
               item
               component={Box}
               display="flex"
-              justify="center"
+              style={{ justifyContent: 'center' }}
             >
               <KeyboardArrowUpIcon />
               {initWebsite?.Upvotes}
@@ -42,7 +42,7 @@ const WebsiteUI = ({ initWebsite, url } : Props) => {
               item
               component={Box}
               display="flex"
-              justify="center"
+              style={{ justifyContent: 'center' }}
             >
               <SentimentSatisfiedSharpIcon />
               {(initWebsite?.Upvotes + initWebsite?.Downvotes) > 0 ? (
@@ -54,8 +54,7 @@ const WebsiteUI = ({ initWebsite, url } : Props) => {
               item
               component={Box}
               display="flex"
-              // alignItems="center"
-              justify="center"
+              style={{ justifyContent: 'center' }}
             >
               <ChatBubbleOutlineIcon />
               {initWebsite?.ShoutCount}
@@ -64,8 +63,7 @@ const WebsiteUI = ({ initWebsite, url } : Props) => {
               item
               component={Box}
               display="flex"
-              // alignItems="center"
-              justify="center"
+              style={{ justifyContent: 'center' }}
             >
               <ShareIcon />
               {initWebsite?.ShareCount}

@@ -1,24 +1,22 @@
 /* eslint-disable max-len */
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { Box } from '@material-ui/core';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Grid from '@material-ui/core/Grid';
 import { AxiosError } from 'axios';
 import React from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import {
   Shout, Url, User, Website
 } from '../../../types/common/types';
-import { Error } from '../error';
 import ActionContainer from './ActionContainer';
+import FeedItemPlaceholder from './FeedItemPlaceholder';
 import ReplyUI from './ReplyUI';
-// import ShoutTreeContainer from './ShoutTreeContainer';
+import ShoutPlaceholder from './ShoutPlaceholder';
 import ShoutTree from './ShoutTree';
 import WebsiteUI from './WebsiteUI';
 
 interface Props {
   initCurrentUser: User[];
-  initUrl: Url
+  initUrl: Url;
 }
 
 interface GetShoutTreesQuery {
@@ -36,23 +34,24 @@ const Discussion = ({ initCurrentUser, initUrl } : Props) => {
   const [showForm, setShowForm] = React.useState(true);
   const [showCaptcha, setShowCaptcha] = React.useState(false);
   const [captchaToken, setCaptchaToken] = React.useState('');
+  const [children, setChildren] = React.useState<Shout[]>([]);
   const captchaRef = React.createRef<HCaptcha>();
   const [comment, setComment] = React.useState('');
 
   const route = `/get_shout_trees?host=${url.host}&pathname=${url.pathname}&search=${encodeURIComponent(url.search)}`;
-  // const { data, status } = useQuery<GetShoutTreesQuery, string>(route);
-  const { data, status, refetch } = useQuery<GetShoutTreesQuery, string>(
-    route, { enabled: !!user },
+
+  const shoutTreeQuery = useQuery<GetShoutTreesQuery, string>(
+    route, { onSuccess: (data) => setChildren(data.Roots) }
   );
 
   // const replyMutation = useMutation({});
   const replyMutation = useMutation<SuccessResponse, AxiosError>(
     {
-      onSuccess: () => {
+      onSuccess: (data) => {
         setComment('');
         setShowCaptcha(false);
         setCaptchaToken('');
-        refetch();
+        setChildren((c) => ((c && c.length > 0) ? [data.Shout, ...c] : [data.Shout]));
       },
       onError: (err: AxiosError) => {
         if (err.response?.status === 402) {
@@ -74,107 +73,44 @@ const Discussion = ({ initCurrentUser, initUrl } : Props) => {
       },
       CaptchaToken: captchaToken
     };
-
-    // const res: any = replyMutation.mutate(
-    //   // @ts-ignore
-    //   {
-    //     route: '/post_shout',
-    //     data: postShoutData,
-    //   },
-    //   {
-    //     onSuccess: (response : any) => {
-    //       setComment('');
-    //       refetch();
-    //       queryClient.invalidateQueries(`/get_shout_trees?host=${url.host}&pathname=${url.pathname}&search=${encodeURIComponent(url.search)}`);
-    //       // TODO: Update cached data
-    //     },
-    //     onError: (err: AxiosError) => {
-    //       if (err.response?.status === 402) {
-    //         setShowCaptcha(true);
-    //       }
-    //     }
-    //   },
-    // );
     // @ts-ignore
     const res = replyMutation.mutate({ route: '/post_shout', data: postShoutData });
-    // setShowForm(false);
-    // setComment('');
-    // refetch();
     return res;
-    // setShowForm(false);
   };
 
-  let children : any = '';
+  const child : any = '';
   let website : any = '';
   let trees : any = '';
   let actionBox;
-  if (status === 'error') {
-    website = <Error />;
-    children = null;
-  } else if (status === 'loading' || !data) {
-    website = (
-      <Grid
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <CircularProgress />
-      </Grid>
-    );
-    children = null;
-  } else {
+
+  if (shoutTreeQuery.status === 'error') {
+    trees = <div>Error</div>;
+    website = <div>Error</div>;
+  } else if (shoutTreeQuery.status === 'loading') {
+    trees = <ShoutPlaceholder />;
+    website = <FeedItemPlaceholder />;
+  } else if (shoutTreeQuery.status === 'success' && user) {
+    if (children) {
+      trees = children.map((treeRoot) => (
+        <ShoutTree
+          key={treeRoot.ID}
+          website={shoutTreeQuery.data.Website}
+          treeRoot={treeRoot}
+          reg={!!user.Registered}
+          defUser={user}
+        />
+      ));
+    }
     website = (
       <>
-        <WebsiteUI initWebsite={data.Website} url={url} />
+        <WebsiteUI initWebsite={shoutTreeQuery.data.Website} url={url} />
       </>
     );
     actionBox = (
       <>
-        <ActionContainer initWebsite={data.Website} reg={user?.Registered} url={url} />
+        <ActionContainer initWebsite={shoutTreeQuery.data.Website} reg={user?.Registered} url={url} />
       </>
     );
-    if (data.Roots) {
-      trees = '';
-      if (data.Roots.length > 0) {
-        trees = data.Roots.map((treeRoot : any) => (
-          // <ShoutTreeContainer
-          //   key={treeRoot.ID}
-          //   treeRoot={treeRoot}
-          //   user={user}
-          //   url={url}
-          //   website={data.Website}
-          //   refetch={refetch}
-          //   showCaptcha={showCaptcha}
-          //   setShowCaptcha={setShowCaptcha}
-          //   captchaRef={captchaRef}
-          //   setCaptchaToken={setCaptchaToken}
-          //   captchaToken={captchaToken}
-          // />
-          <ShoutTree
-            key={treeRoot.ID}
-            website={data.Website}
-            treeRoot={treeRoot}
-            reg={!!user.Registered}
-            defUser={user}
-            refetch={refetch}
-          />
-        ));
-      } else {
-        trees = (
-          <Grid item component={Box}>
-            No comments so far
-          </Grid>
-        );
-      }
-    } else {
-      trees = (
-        <Grid item component={Box}>
-          No comments so far
-        </Grid>
-      );
-    }
   }
   const reply = (
     <ReplyUI

@@ -18,11 +18,9 @@ Sentry.init({
 
 ReactDOM.render(
   <QueryClientProvider client={queryClient}>
-    <React.StrictMode>
-      <Sentry.ErrorBoundary fallback={({ error }) => <Error message={error.toString()} />}>
-        <Popup />
-      </Sentry.ErrorBoundary>
-    </React.StrictMode>
+    <Sentry.ErrorBoundary fallback={({ error }) => <Error message={error.toString()} />}>
+      <Popup />
+    </Sentry.ErrorBoundary>
   </QueryClientProvider>,
   document.getElementById('popup'),
 );
