@@ -9,9 +9,8 @@ import { DateTime } from 'luxon';
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useMutation, useQuery } from 'react-query';
-// import getCurrentUser from '../auth/auth';
 import { Shout, User, Website } from '../../../types/common/types';
-// import FlagShout from './FlagShout';
+import DeleteShout from './DeleteShout';
 import LeaveReply from './LeaveReply';
 import ShoutVoteButtons from './ShoutVoteButtons';
 import './styles.scss';
@@ -22,7 +21,6 @@ interface Props {
   treeRoot: Shout;
   reg: boolean;
   defUser: User;
-  refetch: () => any;
 }
 
 interface GetShoutTreesQuery {
@@ -31,7 +29,7 @@ interface GetShoutTreesQuery {
 }
 
 const ShoutTree = ({
-  treeRoot, reg, website, defUser, refetch
+  treeRoot, reg, website, defUser
 }: Props) => {
   const [user] = React.useState<User>(defUser);
   const [root, setRoot] = React.useState<Shout>(treeRoot);
@@ -65,7 +63,7 @@ const ShoutTree = ({
         onSuccess: (data: any) => {
           root.Saved = data.Shout.Saved;
           setRoot(root);
-          refetch();
+          // refetch();
         },
       },
     );
@@ -96,10 +94,10 @@ const ShoutTree = ({
           treeRoot={shout}
           reg={reg}
           defUser={user}
-          refetch={refetch}
+          // refetch={refetch}
         />
       ))}
-      {(root.MoreReplies.length > 0) && <Button variant="outlined" onClick={() => moreRepliesQuery.refetch()}> Load More Comments</Button>}
+      {(root.MoreReplies && root.MoreReplies.length > 0) && <Button variant="outlined" onClick={() => moreRepliesQuery.refetch()}> Load More Comments</Button>}
     </>
   );
   let content;
@@ -110,6 +108,7 @@ const ShoutTree = ({
     const color = root.Level % 2 === 0 ? '#eceff1' : '#fafafa';
     content = (
       <Grid
+        item
         container
         component={Box}
         bgcolor={
@@ -121,24 +120,13 @@ const ShoutTree = ({
         m={1}
         borderRadius="borderRadius"
         direction="column"
+        style={{ marginBottom: '5px' }}
       >
-        <Grid container direction="row" wrap="nowrap">
+        <Grid item container direction="row" wrap="nowrap">
           {/* @ts-ignore */}
-          <Grid
-            component={Box}
-            container
-            alignItems="center"
-            direction="column"
-            xs={1}
-            p={1}
-          >
-            <ShoutVoteButtons
-              initShout={root}
-            />
-          </Grid>
 
-          <Grid container component={Box} m={1}>
-            <Grid container component={Box} m={1} wrap="nowrap" spacing={1}>
+          <Grid item container component={Box} m={1}>
+            <Grid item container component={Box} m={1} wrap="nowrap" spacing={1}>
               <Grid item component={Box} onClick={toggleUserKarmaOpen}>
                 <Typography variant="body2" color={root.Author.UserName === user?.UserName ? 'primary' : 'textPrimary'}>
                   {root.Author.UserName}
@@ -169,9 +157,14 @@ const ShoutTree = ({
                 : <ReactMarkdown>{root.Comment}</ReactMarkdown>}
             </Grid>
 
-            <Grid container component={Box} m={1} wrap="nowrap" spacing={1} className="reply-actions-box">
-              <LeaveReply website={website} parent={root} refetch={refetch} />
-              <Grid className="reply-actions">
+            <Grid item container component={Box} m={1} wrap="nowrap" spacing={1} className="reply-actions-box">
+              <LeaveReply website={website} parent={root} setChildren={setChildren} />
+              <Grid item className="reply-actions">
+                <Box>
+                  <ShoutVoteButtons
+                    initShout={root}
+                  />
+                </Box>
                 {!root.Saved && reg && (
                   <Box>
                     <Button
@@ -210,16 +203,12 @@ const ShoutTree = ({
                       <GavelIcon />
                     </Button>
                   )}
-                {/* <Grid item alignItems="center">
-                  <FlagShout
-                    open={showFlag}
-                    handleClose={() => setShowFlag(false)}
-                    shout={root}
-                  />
-                  <Box>
-                    <Button onClick={() => { setShowFlag(true); }}>Flag</Button>
-                  </Box>
-                </Grid> */}
+                {defUser.Handle === root.Author.Handle
+                    && (
+                      <DeleteShout
+                        initShout={root}
+                      />
+                    )}
               </Grid>
             </Grid>
           </Grid>

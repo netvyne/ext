@@ -10,8 +10,11 @@ interface GetUserNotifsQuery {
 }
 
 export const Notifications : FunctionComponent = () => {
-  const [notificationsCount, setNotificationsCount] = React.useState<number>(0);
-  const { data, status } = useQuery<GetUserNotifsQuery, string>('/get_user_notifications');
+  const [allNotifications, setAllNotifications] = React.useState<any>([]);
+
+  const notificationsQuery = useQuery<GetUserNotifsQuery, string>(
+    '/get_user_notifications', { onSuccess: (data) => setAllNotifications(data.Notifications) }
+  );
 
   const updateNotifMutation = useMutation({});
   const handleClickedNotif = async (event: any, notif: number, markAll: boolean) => {
@@ -37,27 +40,34 @@ export const Notifications : FunctionComponent = () => {
   };
 
   let notifications: any = '';
-  if (status === 'error') {
+  if (notificationsQuery.status === 'error') {
     notifications = <div>Error</div>;
-  } else if (status === 'loading') {
+  } else if (notificationsQuery.status === 'loading') {
     notifications = <div>Loading</div>;
   } else {
-    notifications = data?.Notifications.map((notification : any) => (
+    notifications = allNotifications.map((notification : any) => (
       <NotificationBox notification={notification} />
     ));
   }
   return (
     <Box m={2}>
 
-      <Button
-        type="button"
-        onClick={(e) => { handleClickedNotif(e, 0, true); }}
-      >
-        Mark All as Viewed
+      {allNotifications.length > 0 && (
+      <Box>
+        <Button
+          type="button"
+          onClick={(e) => { handleClickedNotif(e, 0, true); }}
+        >
+          Mark All as Viewed
 
-      </Button>
+        </Button>
 
-      {notifications}
+        {notifications}
+      </Box>
+      )}
+      {allNotifications.length === 0 && (
+        <Box>No new notifications</Box>
+      )}
     </Box>
   );
 };

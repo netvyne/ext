@@ -1,9 +1,9 @@
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import ReplyIcon from '@material-ui/icons/Reply';
 import SendIcon from '@material-ui/icons/Send';
+import MDEditor from '@uiw/react-md-editor';
 import { AxiosError } from 'axios';
 import React from 'react';
 import { useMutation } from 'react-query';
@@ -13,14 +13,15 @@ import { Shout, Website } from '../../../types/common/types';
 interface Props {
   parent?: Shout;
   website: Website;
-  refetch: () => any;
+  // refetch: () => any;
+  setChildren: React.Dispatch<React.SetStateAction<Shout[]>>;
 }
 
 interface SuccessResponse {
   Shout: Shout;
 }
 
-const LeaveReply = ({ parent, website, refetch }: Props) => {
+const LeaveReply = ({ parent, website, setChildren }: Props) => {
   const [comment, setComment] = React.useState('');
   const [showForm, setShowForm] = React.useState(false);
   const [showCaptcha, setShowCaptcha] = React.useState(false);
@@ -28,12 +29,13 @@ const LeaveReply = ({ parent, website, refetch }: Props) => {
   const captchaRef = React.createRef<HCaptcha>();
   const mutation = useMutation<SuccessResponse, AxiosError>(
     {
-      onSuccess: () => {
+      onSuccess: (data) => {
         setComment('');
         setShowForm(false);
         setShowCaptcha(false);
         setCaptchaToken('');
-        refetch();
+        // refetch();
+        setChildren((c) => [data.Shout, ...c]);
       },
       onError: (err: AxiosError) => {
         if (err.response?.status === 402) {
@@ -52,14 +54,19 @@ const LeaveReply = ({ parent, website, refetch }: Props) => {
     };
     // @ts-ignore
     const res = mutation.mutate({ route: '/post_shout', data: mutateData });
-    // setShowForm(false);
-    // setComment('');
-    // refetch();
     return res;
   };
   const commentForm = (
     <form onSubmit={postComment}>
-      <TextField value={comment} onInput={(e: any) => setComment(e.target.value)} />
+      <MDEditor
+        textareaProps={{
+          placeholder: 'Leave a reply...',
+        }}
+        height={100}
+        value={comment}
+        preview="edit"
+        onChange={(value: string | undefined) => value !== undefined && setComment(value)}
+      />
       <Button
         size="small"
         onClick={() => {

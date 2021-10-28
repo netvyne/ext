@@ -28,7 +28,7 @@ const ActionUI = ({
 } : Props) => {
   const actionbox = (
     <Box mx={2} borderTop={1}>
-      <Grid container wrap="nowrap" justify="space-around" alignItems="center">
+      <Grid container wrap="nowrap" justifyContent="space-around" style={{ alignItems: 'center' }}>
         <Grid item component={Box}>
           {website.Public
             ? <Tooltip title="Public"><PublicIcon fontSize="inherit" /></Tooltip>
@@ -49,7 +49,7 @@ const ActionUI = ({
             }
           />
         </Grid>
-        <Grid item alignItems="center">
+        <Grid container item style={{ alignItems: 'center' }}>
           <PublishWebsite
             open={showShare}
             handleClose={() => setShowShare(false)}
