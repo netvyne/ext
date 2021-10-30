@@ -2,23 +2,24 @@
 import { DateTime } from 'luxon';
 
 interface User {
-    ID: number;
-  CreatedAt: DateTime;
-  UpdatedAt: DateTime;
-  DeletedAt: DateTime;
-  UserName: string;
-  Role: string;
-  FirstName: string;
-  LastName: string;
-  Email: string;
-  AvatarURL: string;
-  VerifiedEmail: boolean;
-  Registered: boolean;
-  Birthday: DateTime;
-  LastRequest: DateTime;
-  IncludeNSFW: boolean;
-  Handle: string;
-}
+    CreatedAt: DateTime;
+    Registered: boolean;
+    UserName: string;
+    Handle: string;
+    Role: string;
+    FirstName: string;
+    LastName: string;
+    Email: string;
+    VerifiedEmail: boolean;
+    Bio: string;
+    Status: string;
+    AvatarURL: string;
+    Birthday: DateTime;
+    ProfileNonce: number;
+    LastRequest: DateTime;
+    UpdatedAt: DateTime;
+    DisableWarnNSFW: boolean;
+  }
 
 // interface UserRelation {
 //     CreatedAt: DateTime;
@@ -33,25 +34,40 @@ interface User {
 // }
 
 interface Website {
-ID: number;
-CreatedAt: DateTime;
-Title: string;
-Description: string;
-Image: string;
-PreviewProcessed: boolean;
-Host: string;
-Pathname: string;
-Search: string;
-Karma: number;
-Upvotes: number;
-Downvotes: number;
-VoteStatus: number;
-Saved: boolean;
-ShoutCount: number;
-ShareCount: number;
-Public: boolean;
-URL: string;
-}
+    // eslint-disable-next-line no-undef
+    map(arg0: (website: Website) => JSX.Element): any;
+    ID: number;
+    CreatedAt: DateTime;
+    Title: string;
+    Description: string;
+    Image: string;
+    PreviewProcessed: boolean;
+    Host: string;
+    Pathname: string;
+    Search: string;
+    Karma: number;
+    Upvotes: number;
+    Downvotes: number;
+    VoteStatus: number;
+    Saved: boolean;
+    ShoutCount: number;
+    TagLabelNames: string[];
+    Public: boolean;
+    URL: string;
+    Paywall?: boolean;
+    // warn
+    Warn?: boolean;
+    Gore?: boolean;
+    Nudity?: boolean;
+    Violence?: boolean;
+    // remove
+    Remove?: boolean;
+    Spam?: boolean;
+    Invalid?: boolean;
+    Misinformation?: boolean;
+    Abuse?: boolean;
+    Illegal?: boolean;
+  }
 
 // interface WebsiteSave {
 // ID: number;
@@ -64,37 +80,42 @@ URL: string;
 interface Post {
     CreatedAt: DateTime;
     ID: number;
-    AuthorID: number;
-Author: User;
-Comment: string;
-WebsiteID: number;
-Website: Website;
-Karma: number;
-Upvotes: number;
-Downvotes: number;
-VoteStatus: string;
-Children: Talk[];
-Conversation: Conversation;
-ConversationID: number;
-}
+    Author: User;
+    Image: string;
+    Comment: string;
+    WebsiteID: number;
+    Website: Website;
+    Karma: number;
+    Upvotes: number;
+    Downvotes: number;
+    VoteStatus: string;
+    LatestTalk: Talk;
+    Children: Talk[];
+    Receivers: User[];
+  }
 
-interface Talk {
+  interface Talk {
     ID: number;
     CreatedAt: DateTime;
-ParentTalkID: number;
-ParentTalk: Talk;
-AuthorID: number;
-Author: User;
-PostID: number;
-Post: Post;
-Comment: string;
-Level: number;
+    ParentTalkID: number;
+    ParentTalk: Talk;
+    Author: User;
+    PostID: number;
+    Post: Post;
+    Comment: string;
+    Level: number;
     Karma: number;
-Upvotes: number;
-Downvotes: number;
-VoteStatus: string;
-Children: Talk[];
-}
+    Upvotes: number;
+    Downvotes: number;
+    VoteStatus: TalkVote[];
+    Children: Talk[];
+  }
+
+  interface TalkVote {
+    UserID: number;
+    MessageID: number;
+    Status: string;
+  }
 
 interface Shout {
     ID: number;
@@ -203,4 +224,45 @@ interface Notification {
     Viewed: boolean;
     Link: string;
     Details: JSON;
+  }
+  interface Label {
+    ID: number;
+    Name: string;
+    AuthorID: number;
+    Author: User;
+    Host: string;
+    Pathname: string;
+    Search: string;
+  }
+
+  interface UserLabel {
+    CreatedAt: DateTime;
+    UpdatedAt: DateTime;
+    ID: number;
+    UserID: number;
+    User: User;
+    LabelID: number;
+    Label: Label;
+    Active: boolean;
+  }
+
+  interface Tag {
+    ID: number;
+    Name: string;
+    AuthorID: number;
+    Author: User;
+    ModeratorProcessedAt: string;
+    LabelID: number;
+    Label: Label;
+    WebsiteID: number;
+    Website: Website;
+  }
+
+  interface WebsiteShare {
+    ID: number;
+    // UserID: number;
+    User: User;
+    WebsiteID: number;
+    Website: Website;
+    Tag: Tag;
   }

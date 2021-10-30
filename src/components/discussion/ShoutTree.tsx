@@ -203,7 +203,7 @@ const ShoutTree = ({
                       <GavelIcon />
                     </Button>
                   )}
-                {defUser.Handle === root.Author.Handle
+                {defUser.UserName === root.Author.UserName
                     && (
                       <DeleteShout
                         initShout={root}
