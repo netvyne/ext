@@ -2,30 +2,32 @@ import { IconButton } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import React from 'react';
 import { useMutation, useQuery } from 'react-query';
-import { Shout } from '../../../types/common/types';
+import { Talk } from '../../../types/common/types';
 
 interface Props {
-  initShout: Shout;
+  initTalk: Talk;
+  setShowTalkTree: any;
 }
-interface GetShoutTreeQuery {
-  Roots: Shout[];
+interface GetTalkTreeQuery {
+  Roots: Talk[];
 }
-const DeleteShout = ({ initShout }: Props) => {
+const DeleteTalk = ({ initTalk, setShowTalkTree }: Props) => {
   const mutation = useMutation({});
-  const { refetch } = useQuery<GetShoutTreeQuery, string>(
-    `/get_talk_trees?post_id=${initShout?.ID}`, { enabled: false }
+  const { refetch } = useQuery<GetTalkTreeQuery, string>(
+    `/get_talk_trees?post_id=${initTalk?.PostID}`, { enabled: false }
   );
   const deleteComment = async (event: any) => {
     event.preventDefault();
     const mutateData = {
-      ShoutID: initShout.ID,
+      TalkID: initTalk.ID,
       Delete: true,
     };
     // @ts-ignore
-    mutation.mutate({ route: '/update_shout', data: mutateData },
+    mutation.mutate({ route: '/update_talk', data: mutateData },
       {
         onSuccess: () => {
           refetch();
+          setShowTalkTree(false);
         }
       });
   };
@@ -37,4 +39,4 @@ const DeleteShout = ({ initShout }: Props) => {
   );
 };
 
-export default DeleteShout;
+export default DeleteTalk;
