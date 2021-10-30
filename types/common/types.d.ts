@@ -67,6 +67,7 @@ interface Website {
     Misinformation?: boolean;
     Abuse?: boolean;
     Illegal?: boolean;
+    ShareCount?: number;
   }
 
 // interface WebsiteSave {
