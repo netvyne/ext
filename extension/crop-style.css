@@ -1,15 +1,8 @@
-.overlay::selection {
-    background: transparent;
-}
-.crop-component::selection {
-    background: transparent;
-}
 .crop-blur {
     -webkit-filter: blur(10px) sepia(0.2);
     filter: blur(10px) sepia(0.2);
 }
-.crop-image,
-.overlay > img {
+.crop-image-netvyne {
     width: auto;
     height: auto;
     /* можно явно указать либо ширину, либо высоту */
@@ -21,65 +14,21 @@
     object-position: center;
 }
 /*add stretch*/
-.crop-image {
+.crop-image-netvyne {
     display: block;
     position: relative;
     pointer-events: none;
 }
-/*add stretch*/
-.overlay > img {
-    position: absolute;
-    display: block;
-}
-.crop-component {
-    position: relative;
-    display: table;
-	
-    z-index: 999;
-    background-color: white;
-    margin: 0 auto;
-    overflow: hidden;
-    border: white 3px solid;
-}
-.overlay {
-    position: absolute;
-  	left: 50%;
-    top: 50%;  
-		z-index: 999;
-    margin-left: -100px;
-    margin-top: -100px;
-    width: 200px;
-    height: 200px;
-    box-shadow: 0 0 0 3px rgb(233, 119, 119);
-    overflow: hidden;
-    box-sizing: content-box;
-}
-.overlay:hover,
-.overlay:active {
-    cursor: move;
-}
-/* .btn-crop {
-    position: fixed;
-	right: 5px;
-    bottom: 5px;
-    vertical-align: bottom;
-    padding: 6px 10px;
-    z-index: 999;
-    background-color: #DE3C50;
-    border: none;
-    border-radius: 5px;
-    color: #FFF;
-} */
 .btn-crop img {
     vertical-align: middle;
     margin-left: 8px;
 }
-.center-crop-tool {
-		display: flex;
-		justify-content: center;
-	  align-items: center;
-	  min-height: 660px;
-	  width: 100%;
+.center-crop-tool-netvyne {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 660px;
+    width: 100%;
     height: 100%;
     background: #ffffff;
 }
@@ -123,7 +72,7 @@
     border-radius: 8px;
     padding: 15px 15px;
 }
-.popupCloseButton {
+.popupCloseButtonNetvyne {
     background-color: #fff;
     border: 3px solid #999;
     border-radius: 50px;
@@ -140,7 +89,7 @@
     height: 30px;
     text-align: center;
 }
-.popupCloseButton:hover {
+.popupCloseButtonNetvyne:hover {
     background-color: #ccc;
 }
 .trigger_popup_fricc {

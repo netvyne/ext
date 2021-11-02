@@ -1,6 +1,6 @@
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import SendIcon from '@material-ui/icons/Send';
+import MDEditor from '@uiw/react-md-editor';
 import React from 'react';
 import { useMutation, useQuery } from 'react-query';
 import { Post, Talk } from '../../../types/common/types';
@@ -62,12 +62,14 @@ const LeaveReply = ({ parent, post, initShowForm }: Props) => {
   );
   const commentForm = (
     <form onSubmit={postComment} style={{ width: '100%' }}>
-      <TextField
+      <MDEditor
+        textareaProps={{
+          placeholder: 'Leave a reply...',
+        }}
+        height={100}
         value={comment}
-        fullWidth
-        multiline
-        variant="outlined"
-        onInput={(e: any) => setComment(e.target.value)}
+        preview="edit"
+        onChange={(value: string | undefined) => value !== undefined && setComment(value)}
       />
       {button}
     </form>

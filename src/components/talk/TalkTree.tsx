@@ -21,21 +21,22 @@ interface Props {
 const TalkTree = ({
   treeRoot, post, defUser, setShowTalkTree
 }: Props) => {
+  const [initTalk, setInitTalk] = React.useState<Talk>(treeRoot);
   let focus = -1;
   if (window.location.search.includes('tfocus')) {
     const urlParams = new URLSearchParams(window.location.search);
     focus = parseInt(urlParams.get('tfocus') as string, 10);
   }
-  const children = treeRoot.Children.map((talk: Talk) => (
+  const children = initTalk.Children.map((talk: Talk) => (
     <TalkTree treeRoot={talk} key={talk.ID} post={post} defUser={defUser} setShowTalkTree={setShowTalkTree} />
   ));
 
-  const color = treeRoot.Level % 2 === 0 ? '#eceff1' : '#fafafa';
+  const color = initTalk.Level % 2 === 0 ? '#eceff1' : '#fafafa';
   const content = (
     <Grid
       container
       component={Box}
-      bgcolor={treeRoot.ID === focus
+      bgcolor={initTalk.ID === focus
         ? '#f5f77b'
         : color}
       padding={1}
@@ -55,15 +56,15 @@ const TalkTree = ({
           <Grid container alignItems="center">
             <Grid item component={Box}>
               <Typography variant="subtitle2">
-                {treeRoot.Author.FirstName}
+                {initTalk.Author.FirstName}
                 {' '}
-                {treeRoot.Author.LastName}
+                {initTalk.Author.LastName}
               </Typography>
             </Grid>
-            {treeRoot.CreatedAt && (
+            {initTalk.CreatedAt && (
               <Grid item component={Box} pl={1}>
                 <Typography variant="caption">
-                  {DateTime.fromISO(treeRoot.CreatedAt.toString(), {
+                  {DateTime.fromISO(initTalk.CreatedAt.toString(), {
                     zone: 'utc',
                   }).toRelative()}
                 </Typography>
@@ -76,7 +77,7 @@ const TalkTree = ({
               p: (props) => <div {...props} />
             }}
             >
-              {treeRoot.Comment}
+              {initTalk.Comment}
 
             </ReactMarkdown>
           </Grid>
@@ -87,18 +88,18 @@ const TalkTree = ({
           >
             <Grid item>
               <TalkVoteButtons
-                initTalk={treeRoot}
+                initTalk={initTalk}
                 defUser={defUser}
               />
             </Grid>
             <Grid item>
-              <LeaveReply parent={treeRoot} post={post} />
+              <LeaveReply parent={initTalk} post={post} />
             </Grid>
-            {defUser.Handle === treeRoot.Author.Handle
+            {defUser.Handle === initTalk.Author.Handle
               && (
                 <DeleteTalk
-                  initTalk={treeRoot}
-                  setShowTalkTree={setShowTalkTree}
+                  initTalk={initTalk}
+                  setInitTalk={setInitTalk}
                 />
               )}
           </Grid>

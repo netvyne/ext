@@ -73,13 +73,13 @@ setTimeout(() => {
     const innerHTML = `<div class="hover_bkgr_fricc" id="hover_bkgr_fricc">
         <span class="helper"></span>
         <div>
-            <div class="popupCloseButton">&times;</div>
+            <div class="popupCloseButtonNetvyne">&times;</div>
             <h5 id="exampleModalLongTitle">Cropping Tool</h5>
-            <div class="center-crop-tool">
+            <div class="center-crop-tool-netvyne">
               <div class="popup-netvyne">
                 <div class="popup-header-netvyne noselect">&nbsp;</div>
               </div>
-              <img crossorigin="Anonymous" src="${data.screenshot}" class="crop-image" alt=""/>
+              <img crossorigin="Anonymous" src="${data.screenshot}" class="crop-image-netvyne" alt=""/>
             </div>
             <div class="btns-container-crop-tool">
               <button type="button" class="btn-close-tool" data-dismiss="modal">Close</button>
@@ -93,7 +93,7 @@ setTimeout(() => {
     // document.getElementById('croppedImage').src = data.screenshot;
     (function () {
       let resize_canvas = null;
-      let image_target = document.querySelector('.crop-image');
+      let image_target = document.querySelector('.crop-image-netvyne');
       let heightratio = 1.0;
       let widthratio = 1.0;
       let cropLeft = 0;
@@ -106,7 +106,7 @@ setTimeout(() => {
         let pos3 = 0;
         let pos4 = 0;
         let popups = document.getElementsByClassName('popup-netvyne');
-        let parentCropContainer = document.getElementsByClassName('center-crop-tool')[0];
+        let parentCropContainer = document.getElementsByClassName('center-crop-tool-netvyne')[0];
         let elmnt = null;
         let currentZIndex = 100; // TODO reset z index when a threshold is passed
 
@@ -302,7 +302,7 @@ setTimeout(() => {
       function openPopUp() {
         document.getElementById('hover_bkgr_fricc').style.display = 'block';
       }
-      document.querySelector('.popupCloseButton').addEventListener('click', closePopUp, false);
+      document.querySelector('.popupCloseButtonNetvyne').addEventListener('click', closePopUp, false);
       document.querySelector('.btn-close-tool').addEventListener('click', closePopUp, false);
 
       function closePopUp(e) {

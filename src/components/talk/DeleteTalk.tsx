@@ -6,12 +6,12 @@ import { Talk } from '../../../types/common/types';
 
 interface Props {
   initTalk: Talk;
-  setShowTalkTree: any;
+  setInitTalk: any
 }
 interface GetTalkTreeQuery {
   Roots: Talk[];
 }
-const DeleteTalk = ({ initTalk, setShowTalkTree }: Props) => {
+const DeleteTalk = ({ initTalk, setInitTalk }: Props) => {
   const mutation = useMutation({});
   const { refetch } = useQuery<GetTalkTreeQuery, string>(
     `/get_talk_trees?post_id=${initTalk?.PostID}`, { enabled: false }
@@ -25,9 +25,9 @@ const DeleteTalk = ({ initTalk, setShowTalkTree }: Props) => {
     // @ts-ignore
     mutation.mutate({ route: '/update_talk', data: mutateData },
       {
-        onSuccess: () => {
+        onSuccess: (response: any) => {
+          setInitTalk(response.Talk);
           refetch();
-          setShowTalkTree(false);
         }
       });
   };

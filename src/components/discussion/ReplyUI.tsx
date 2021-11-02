@@ -36,7 +36,7 @@ const ReplyUI = ({
       />
       <Button type="submit" size="small" color="primary" endIcon={<SendIcon />}>
         {' '}
-        Submitt
+        Submit
         {' '}
       </Button>
       {showCaptcha
