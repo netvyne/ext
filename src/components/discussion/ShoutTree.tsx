@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';

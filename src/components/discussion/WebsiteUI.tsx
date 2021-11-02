@@ -2,19 +2,16 @@ import { Typography } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
-import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import SentimentSatisfiedSharpIcon from '@material-ui/icons/SentimentSatisfiedSharp';
-import ShareIcon from '@material-ui/icons/Share';
 import React from 'react';
 import { Url, Website } from '../../../types/common/types';
 
 interface Props {
   initWebsite: Website;
-  url: Url
+  url: Url;
+  refetch: any;
 }
 
-const WebsiteUI = ({ initWebsite, url } : Props) => {
+const WebsiteUI = ({ initWebsite, url, refetch } : Props) => {
   let websiteTitle : string = '';
   websiteTitle = (initWebsite.Title && initWebsite.Title !== '') ? initWebsite.Title : url.Title;
   const website = (
@@ -28,7 +25,7 @@ const WebsiteUI = ({ initWebsite, url } : Props) => {
                 : websiteTitle.substring(0, 32).concat('...')}
             </Typography>
           </Box>
-          <Grid container direction="row" justifyContent="center" spacing={1}>
+          {/* <Grid container direction="row" justifyContent="center" spacing={1}>
             <Grid
               item
               component={Box}
@@ -68,7 +65,7 @@ const WebsiteUI = ({ initWebsite, url } : Props) => {
               <ShareIcon />
               {initWebsite?.ShareCount}
             </Grid>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Grid>
     </Box>

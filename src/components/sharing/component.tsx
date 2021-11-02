@@ -442,7 +442,7 @@ export const Sharing: FunctionComponent = () => {
       )}
       {showTalkTree && (
         <Box>
-          <IconButton onClick={() => setShowTalkTree(false)}>
+          <IconButton onClick={() => { setShowTalkTree(false); refetch(); }}>
             <KeyboardBackspace />
           </IconButton>
           <PostShare post={post} key={post.ID} defUser={user} setShowTalkTree={setShowTalkTree} refetch={refetch} />

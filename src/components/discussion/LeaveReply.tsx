@@ -12,8 +12,7 @@ import { Shout, Website } from '../../../types/common/types';
 
 interface Props {
   parent?: Shout;
-  website: Website;
-  // refetch: () => any;
+  website: Website
   setChildren: React.Dispatch<React.SetStateAction<Shout[]>>;
 }
 
@@ -21,7 +20,9 @@ interface SuccessResponse {
   Shout: Shout;
 }
 
-const LeaveReply = ({ parent, website, setChildren }: Props) => {
+const LeaveReply = ({
+  parent, website, setChildren
+}: Props) => {
   const [comment, setComment] = React.useState('');
   const [showForm, setShowForm] = React.useState(false);
   const [showCaptcha, setShowCaptcha] = React.useState(false);
@@ -34,7 +35,6 @@ const LeaveReply = ({ parent, website, setChildren }: Props) => {
         setShowForm(false);
         setShowCaptcha(false);
         setCaptchaToken('');
-        // refetch();
         setChildren((c) => [data.Shout, ...c]);
       },
       onError: (err: AxiosError) => {

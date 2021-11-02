@@ -20,6 +20,7 @@ import { Post, Talk, User } from '../../../types/common/types';
 import Dropdown from '../sharing/dropdown';
 import FeedItem from './FeedItem';
 import LeaveReply from './LeaveReply';
+import './styles.scss';
 import TalkTree from './TalkTree';
 
 interface Props {
@@ -88,6 +89,7 @@ export default function PostShare({
           toggleSbar();
           setDropdownRefetch(Date());
           setFriendHandles([]);
+          refetch();
         },
       },
     );
@@ -189,8 +191,12 @@ export default function PostShare({
           )
           : (
             <Grid container component={Box} width={1}>
-              Latest comment:
-              <TalkTree key={post.LatestTalk.ID} treeRoot={post.LatestTalk} post={post} defUser={defUser} setShowTalkTree={setShowTalkTree} />
+              {post.LatestTalk.ID && (
+                <>
+                  Latest comment:
+                  <TalkTree key={post.LatestTalk.ID} treeRoot={post.LatestTalk} post={post} defUser={defUser} setShowTalkTree={setShowTalkTree} />
+                </>
+              )}
               <Button onClick={() => setShowTree(true)}> Show Discussion</Button>
             </Grid>
           )}

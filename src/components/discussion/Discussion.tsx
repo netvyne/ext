@@ -40,18 +40,19 @@ const Discussion = ({ initCurrentUser, initUrl } : Props) => {
 
   const route = `/get_shout_trees?host=${url.host}&pathname=${url.pathname}&search=${encodeURIComponent(url.search)}`;
 
-  const shoutTreeQuery = useQuery<GetShoutTreesQuery, string>(
-    route, { onSuccess: (data) => setChildren(data.Roots) }
+  const { data, status, refetch } = useQuery<GetShoutTreesQuery, string>(
+    route, { onSuccess: (shoutData) => setChildren(shoutData.Roots) }
   );
 
   // const replyMutation = useMutation({});
   const replyMutation = useMutation<SuccessResponse, AxiosError>(
     {
-      onSuccess: (data) => {
+      onSuccess: (mutationData) => {
         setComment('');
         setShowCaptcha(false);
         setCaptchaToken('');
-        setChildren((c) => ((c && c.length > 0) ? [data.Shout, ...c] : [data.Shout]));
+        setChildren((c) => ((c && c.length > 0) ? [mutationData.Shout, ...c] : [mutationData.Shout]));
+        refetch();
       },
       onError: (err: AxiosError) => {
         if (err.response?.status === 402) {
@@ -83,18 +84,18 @@ const Discussion = ({ initCurrentUser, initUrl } : Props) => {
   let trees : any = '';
   let actionBox;
 
-  if (shoutTreeQuery.status === 'error') {
+  if (status === 'error') {
     trees = <div>Error</div>;
     website = <div>Error</div>;
-  } else if (shoutTreeQuery.status === 'loading') {
+  } else if (status === 'loading') {
     trees = <ShoutPlaceholder />;
     website = <FeedItemPlaceholder />;
-  } else if (shoutTreeQuery.status === 'success' && user) {
+  } else if (status === 'success' && user) {
     if (children) {
       trees = children.map((treeRoot) => (
         <ShoutTree
           key={treeRoot.ID}
-          website={shoutTreeQuery.data.Website}
+          website={data!.Website}
           treeRoot={treeRoot}
           reg={!!user.Registered}
           defUser={user}
@@ -103,12 +104,12 @@ const Discussion = ({ initCurrentUser, initUrl } : Props) => {
     }
     website = (
       <>
-        <WebsiteUI initWebsite={shoutTreeQuery.data.Website} url={url} />
+        <WebsiteUI initWebsite={data!.Website} url={url} refetch={refetch} />
       </>
     );
     actionBox = (
       <>
-        <ActionContainer initWebsite={shoutTreeQuery.data.Website} reg={user?.Registered} url={url} />
+        <ActionContainer initWebsite={data!.Website} reg={user?.Registered} url={url} refetch={refetch} />
       </>
     );
   }

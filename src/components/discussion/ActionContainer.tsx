@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useMutation } from 'react-query';
 import { Website } from '../../../types/common/types';
 import ActionUI from './ActionUI';
@@ -7,9 +7,12 @@ interface Props {
   initWebsite: Website;
   reg : boolean;
   url : any;
+  refetch: any;
 }
 
-const ActionContainer = ({ initWebsite, reg, url } : Props) => {
+const ActionContainer = ({
+  initWebsite, reg, url, refetch
+} : Props) => {
   const [website, setWebsite] = React.useState(initWebsite);
   const [saved, setSaved] = React.useState(website.Saved);
   const [showShare, setShowShare] = React.useState(false);
@@ -33,11 +36,16 @@ const ActionContainer = ({ initWebsite, reg, url } : Props) => {
       {
         onSuccess: (response : any) => {
           setSaved(response.Website.Saved);
+          refetch();
         },
       },
     );
     return res;
   };
+
+  useEffect(() => {
+    setWebsite(initWebsite);
+  }, [initWebsite]);
 
   const postVote = async (event : any) => {
     event.preventDefault();
@@ -57,6 +65,7 @@ const ActionContainer = ({ initWebsite, reg, url } : Props) => {
     {
       onSuccess: (response: any) => {
         setWebsite(response.Website);
+        refetch();
       },
     });
     return res;
@@ -71,6 +80,7 @@ const ActionContainer = ({ initWebsite, reg, url } : Props) => {
       onSaveItem={onSaveItem}
       showShare={showShare}
       setShowShare={setShowShare}
+      refetch={refetch}
     />
   );
 };
