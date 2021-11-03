@@ -1,5 +1,7 @@
 import Box from '@material-ui/core/Box';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import Grid from '@material-ui/core/Grid';
+import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ErrorIcon from '@material-ui/icons/Error';
 import { DateTime } from 'luxon';
@@ -9,10 +11,11 @@ import { Notification } from '../../../types/common/types';
 import './styles.scss';
 
 interface Props {
-  notification: Notification
+  notification: Notification;
+  refetch: any;
 }
 
-const NotificationBox = ({ notification } : Props) => {
+const NotificationBox = ({ notification, refetch } : Props) => {
   const updateNotifMutation = useMutation({});
   const handleClickedNotif = async (event: any, notif: number, markAll: boolean) => {
     event.preventDefault();
@@ -30,6 +33,7 @@ const NotificationBox = ({ notification } : Props) => {
       {
         onSuccess: (response : any) => {
           console.log(response);
+          refetch();
         },
       },
     );
@@ -45,26 +49,32 @@ const NotificationBox = ({ notification } : Props) => {
   const notif = (
     <Box
       color="text.primary"
-      border={1}
+      border={0}
       m={1}
       padding={1}
       className="notificationBox"
+      width="100%"
       onClick={(link) => {
         notificationLink(notification.Link);
       }}
     >
       <Box>
-        {DateTime.fromISO(notification.CreatedAt.toString(), {
-          zone: 'utc',
-        }).toRelative()}
-        {notification.Viewed ? <CheckCircleIcon /> : (
-          <ErrorIcon onClick={(e) => {
-            if (!notification.Viewed) {
-              handleClickedNotif(e, notification.ID, false);
-            }
-          }}
-          />
-        )}
+        <Grid item container xs={12} direction="row" spacing={1} alignItems="center" wrap="nowrap">
+          <Grid item container alignItems="center">
+            <AccessTimeIcon style={{ fill: 'grey', marginRight: '5px' }} fontSize="inherit" />
+            {DateTime.fromISO(notification.CreatedAt.toString(), {
+              zone: 'utc',
+            }).toRelative()}
+            {notification.Viewed ? <CheckCircleIcon /> : (
+              <ErrorIcon onClick={(e) => {
+                if (!notification.Viewed) {
+                  handleClickedNotif(e, notification.ID, false);
+                }
+              }}
+              />
+            )}
+          </Grid>
+        </Grid>
       </Box>
       <Box>
         {`${notification.Text}`}

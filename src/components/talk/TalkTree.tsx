@@ -42,6 +42,7 @@ const TalkTree = ({
       padding={1}
       borderRadius="borderRadius"
       direction="column"
+      style={{ marginBottom: '5px' }}
     >
       <Grid
         container
