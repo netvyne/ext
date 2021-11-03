@@ -1,15 +1,18 @@
 import { Button } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
-import React, { FunctionComponent } from 'react';
+import React from 'react';
 import { useMutation, useQuery } from 'react-query';
 import NotificationBox from './NotificationBox';
 
+interface Props {
+  refetch: any;
+}
 interface GetUserNotifsQuery {
   Notifications: Notification[];
   ContainsUnread: boolean;
 }
-
-export const Notifications : FunctionComponent = () => {
+const Notifications = ({ refetch } : Props) => {
+// export const Notifications : FunctionComponent = ({ refetch }: Props) => {
   const [allNotifications, setAllNotifications] = React.useState<any>([]);
 
   const notificationsQuery = useQuery<GetUserNotifsQuery, string>(
@@ -33,6 +36,7 @@ export const Notifications : FunctionComponent = () => {
       {
         onSuccess: (response : any) => {
           console.log(response);
+          refetch();
         },
       },
     );
@@ -46,16 +50,18 @@ export const Notifications : FunctionComponent = () => {
     notifications = <div>Loading</div>;
   } else {
     notifications = allNotifications.map((notification : any) => (
-      <NotificationBox notification={notification} />
+      <NotificationBox notification={notification} refetch={refetch} />
     ));
   }
   return (
     <Box m={2}>
 
       {allNotifications.length > 0 && (
-      <Box>
+      <Box width="100%" justifyContent="center" display="flex" flexDirection="column" alignItems="center">
         <Button
           type="button"
+          variant="outlined"
+          color="primary"
           onClick={(e) => { handleClickedNotif(e, 0, true); }}
         >
           Mark All as Viewed
@@ -71,3 +77,4 @@ export const Notifications : FunctionComponent = () => {
     </Box>
   );
 };
+export default Notifications;

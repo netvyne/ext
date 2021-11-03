@@ -44,7 +44,6 @@ export default function PostShare({
   }));
   const [openShareMore, setOpenShareMore] = React.useState(false);
   const [dropdownRefetch, setDropdownRefetch] = React.useState(Date());
-  const [showTree, setShowTree] = React.useState(false);
   const [friendHandles, setFriendHandles] = React.useState([]);
   const toggleShareMore = () => {
     setOpenShareMore(!openShareMore);
@@ -56,7 +55,7 @@ export default function PostShare({
   const classes = useStyles();
 
   const { data, status } = useQuery<GetTalkTreeQuery, string>(
-    `/get_talk_trees?post_id=${post.ID}`, { enabled: showTree }
+    `/get_talk_trees?post_id=${post.ID}`
   );
   let trees: {} | null | undefined;
   if (status === 'error') {
@@ -182,24 +181,7 @@ export default function PostShare({
             )}
           </Box>
         </Grid>
-        {showTree
-          ? (
-            <Grid container component={Box} width={1}>
-              <Button onClick={() => setShowTree(false)}> Hide Discussion</Button>
-              {trees}
-            </Grid>
-          )
-          : (
-            <Grid container component={Box} width={1}>
-              {post.LatestTalk.ID && (
-                <>
-                  Latest comment:
-                  <TalkTree key={post.LatestTalk.ID} treeRoot={post.LatestTalk} post={post} defUser={defUser} setShowTalkTree={setShowTalkTree} />
-                </>
-              )}
-              <Button onClick={() => setShowTree(true)}> Show Discussion</Button>
-            </Grid>
-          )}
+        {trees}
         <LeaveReply post={post} initShowForm />
       </Grid>
       <Dialog

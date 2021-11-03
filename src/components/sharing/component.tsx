@@ -9,14 +9,13 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Snackbar from '@material-ui/core/Snackbar';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-// import ScreenCapture from './screenCapture'
-import TextField from '@material-ui/core/TextField';
 import GroupIcon from '@material-ui/icons/Group';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import KeyboardBackspace from '@material-ui/icons/KeyboardBackspace';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import PersonIcon from '@material-ui/icons/Person';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
+import MDEditor from '@uiw/react-md-editor';
 import React, {
   FunctionComponent, useEffect, useState
 } from 'react';
@@ -237,6 +236,12 @@ export const Sharing: FunctionComponent = () => {
     setOpenAlert(false);
   };
 
+  function notificationLink() {
+    const href = `${process.env.PUBLIC_WEB}/netvynelogin`;
+    window.open(href, '_blank', 'noopener,noreferrer');
+    return false;
+  }
+
   // const mutation : any = useMutation(postShare);
   let bottom : any;
   if (mutation.isLoading) {
@@ -290,7 +295,7 @@ export const Sharing: FunctionComponent = () => {
         }}
         onClick={() => { setShowTalkTree(true); setPost(friend); }}
       >
-        {friend.Receivers.map((r: any) => ((user?.Handle === r.Handle) ? 'you' : r.FirstName)).join(', ').replace(/,([^,]*)$/, ' and $1')}
+        {friend.Receivers.map((r: any) => ((user?.Handle === r.Handle) ? 'You' : r.FirstName)).join(', ').replace(/,([^,]*)$/, ' and $1')}
       </Grid>
     ));
 
@@ -303,7 +308,7 @@ export const Sharing: FunctionComponent = () => {
         }}
         onClick={() => { setShowTalkTree(true); setPost(conversation); }}
       >
-        {conversation.Receivers.map((cr: any) => ((user?.Handle === cr.Handle) ? 'you' : cr.FirstName)).join(', ').replace(/,([^,]*)$/, ' and $1')}
+        {conversation.Receivers.map((cr: any) => ((user?.Handle === cr.Handle) ? 'You' : cr.FirstName)).join(', ').replace(/,([^,]*)$/, ' and $1')}
       </Grid>
     ));
   }
@@ -407,18 +412,29 @@ export const Sharing: FunctionComponent = () => {
               </Grid>
             )}
             <Box m={1}>
-              <TextField
+              <MDEditor
+                textareaProps={{
+                  placeholder: 'Lookit!',
+                }}
+                height={100}
                 value={comment}
-                onInput={(e : any) => setComment(e.target.value)}
-                id="nv-message"
-                label="Message"
-                placeholder="Lookit!"
-                fullWidth
-                multiline
-                rows={3}
+                preview="edit"
+                onChange={(value: string | undefined) => value !== undefined && setComment(value)}
               />
             </Box>
             <Button type="submit" disabled={(conversationIDs.length === 0 && friendHandles.length === 0) || !user?.Registered}> Share </Button>
+            <Box width="100%">
+              {user && !user.Registered && (
+                <Button
+                  type="button"
+                  variant="outlined"
+                  color="primary"
+                  onClick={(e) => { notificationLink(); }}
+                >
+                  Log in to share with friends
+                </Button>
+              )}
+            </Box>
           </form>
           <Grid item container xs={12} direction="column" spacing={1} wrap="nowrap">
             {conversationShares.length > 0 && (
