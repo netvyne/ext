@@ -29,12 +29,14 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: '5px',
+    padding: '5px'
   },
   tooltipContainer: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+    width: 'auto',
   }
 }));
 
@@ -116,34 +118,36 @@ export default function TalkVoteButtons({ initTalk, defUser }: Props) {
         />
       )
         : <IconButton size="small" onClick={() => setShow(true)}><InsertEmoticonIcon /></IconButton>}
-      {uniqueReactions.map((vote: any) => (
-        <div className={classes.emojiIcon}>
-          <BlackTooltip
-            title={(
-              <div className={classes.tooltipContainer}>
+      <div style={{ display: 'flex', overflowX: 'scroll', maxWidth: '275px' }}>
+        {uniqueReactions.map((vote: any) => (
+          <div className={classes.emojiIcon}>
+            <BlackTooltip
+              title={(
+                <div className={classes.tooltipContainer}>
+                  <Emoji
+                    emoji={vote}
+                    set="apple"
+                    size={20}
+                    onClick={postEmoji}
+                  />
+                  {getReactors(vote)}
+                </div>
+            )}
+              arrow
+            >
+              <div style={{ display: 'flex', alignItems: 'center' }}>
                 <Emoji
                   emoji={vote}
                   set="apple"
-                  size={20}
+                  size={16}
                   onClick={postEmoji}
                 />
-                {getReactors(vote)}
+                {getCount(vote)}
               </div>
-            )}
-            arrow
-          >
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <Emoji
-                emoji={vote}
-                set="apple"
-                size={16}
-                onClick={postEmoji}
-              />
-              {getCount(vote)}
-            </div>
-          </BlackTooltip>
-        </div>
-      ))}
+            </BlackTooltip>
+          </div>
+        ))}
+      </div>
     </Grid>
   );
 }

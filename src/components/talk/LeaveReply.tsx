@@ -61,7 +61,7 @@ const LeaveReply = ({ parent, post, initShowForm }: Props) => {
     </>
   );
   const commentForm = (
-    <form onSubmit={postComment} style={{ width: '100%' }}>
+    <form onSubmit={postComment} style={{ width: '100%', marginTop: '35px' }}>
       <MDEditor
         textareaProps={{
           placeholder: 'Leave a reply...',
@@ -78,7 +78,7 @@ const LeaveReply = ({ parent, post, initShowForm }: Props) => {
   const content = showForm ? (
     commentForm
   ) : (
-    <Button size="small" onClick={() => setShowForm(!showForm)}>
+    <Button style={{ float: 'left' }} size="small" onClick={() => setShowForm(!showForm)}>
       Reply
     </Button>
   );
