@@ -86,23 +86,29 @@ const TalkTree = ({
           <Grid
             container
             alignItems="center"
+            style={{ display: 'flex', flexDirection: 'row' }}
           >
-            <Grid item>
-              <TalkVoteButtons
-                initTalk={initTalk}
-                defUser={defUser}
-              />
-            </Grid>
-            <Grid item>
+            <Grid item style={{ width: '100%' }}>
+              <Grid
+                item
+                style={{
+                  display: 'flex', flexDirection: 'row', width: 'fit-content', float: 'left'
+                }}
+              >
+                <TalkVoteButtons
+                  initTalk={initTalk}
+                  defUser={defUser}
+                />
+                {defUser.Handle === initTalk.Author.Handle
+                && (
+                  <DeleteTalk
+                    initTalk={initTalk}
+                    setInitTalk={setInitTalk}
+                  />
+                )}
+              </Grid>
               <LeaveReply parent={initTalk} post={post} />
             </Grid>
-            {defUser.Handle === initTalk.Author.Handle
-              && (
-                <DeleteTalk
-                  initTalk={initTalk}
-                  setInitTalk={setInitTalk}
-                />
-              )}
           </Grid>
         </Grid>
       </Grid>
