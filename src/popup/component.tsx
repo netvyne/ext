@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
 import AppBar from '@material-ui/core/AppBar';
 import Avatar from '@material-ui/core/Avatar';
+import Badge from '@material-ui/core/Badge';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
@@ -18,7 +19,7 @@ import { User } from '../../types/common/types';
 import { getCurrentUser } from '../auth/auth';
 import Chat from '../components/chat/Chat';
 import Discussion from '../components/discussion/Discussion';
-import { Notifications } from '../components/notifications';
+import Notifications from '../components/notifications/Notifications';
 import { queryClient } from '../query';
 import { isValidURL } from '../utils';
 import './styles.scss';
@@ -48,7 +49,7 @@ function TabPanel(props : any) {
     >
       {value === index && (
       <Box>
-        <Typography>{children}</Typography>
+        <Typography component="span">{children}</Typography>
       </Box>
       )}
     </div>
@@ -100,7 +101,7 @@ export const Popup: FunctionComponent = () => {
 
   const route = `/get_user_notifications?host=${url.host}&pathname=${url.pathname}&search=${encodeURIComponent(url.search)}`;
 
-  const { data, status } = useQuery<any, string>(route);
+  const { data, status, refetch } = useQuery<any, string>(route);
 
   useEffect(() => {
     const queryInfo = { active: true };
@@ -175,7 +176,23 @@ export const Popup: FunctionComponent = () => {
               >
                 <Tab icon={<Avatar alt="Conversation" src={value === 0 ? '../images/conversation_selected.png' : '../images/conversation_normal.png'} className="tabIcon" />} label="Discuss" {...a11yProps(0)} />
                 <Tab icon={<Avatar alt="Share" src={value === 1 ? '../images/share_selected.png' : '../images/share_normal.png'} className="tabIcon" />} label="Share" {...a11yProps(1)} />
-                <Tab icon={<Avatar alt="Notification" src={value === 2 ? '../images/notification_selected.png' : '../images/notification_normal.png'} className="tabIcon" />} label="Notifications" {...a11yProps(2)} />
+                <Tab
+                  icon={(
+                    <Badge
+                      anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'right',
+                      }}
+                      color="primary"
+                      variant="dot"
+                      invisible={!data?.ContainsUnread}
+                    >
+                      <Avatar alt="Notification" src={value === 2 ? '../images/notification_selected.png' : '../images/notification_normal.png'} className="tabIcon" />
+                    </Badge>
+)}
+                  label="Notifications"
+                  {...a11yProps(2)}
+                />
                 <Tab className="livechat-tab" label="" {...a11yProps(3)} />
               </Tabs>
               <div className="more-icon">
@@ -204,7 +221,7 @@ export const Popup: FunctionComponent = () => {
             <Sharing />
           </TabPanel>
           <TabPanel value={value} index={2} dir={theme.direction}>
-            <Notifications />
+            <Notifications refetch={refetch} />
           </TabPanel>
           <TabPanel value={value} index={3} dir={theme.direction}>
             <Chat initCurrentUser={user} />

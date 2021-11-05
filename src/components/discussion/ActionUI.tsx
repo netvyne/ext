@@ -7,8 +7,10 @@ import IconButton from '@material-ui/core/IconButton';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
+import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
 import LinkIcon from '@material-ui/icons/Link';
 import PublicIcon from '@material-ui/icons/Public';
+import ShareIcon from '@material-ui/icons/Share';
 import React from 'react';
 import { Website } from '../../../types/common/types';
 import PublishWebsite from './PublishWebsite';
@@ -21,14 +23,15 @@ interface Props {
   onSaveItem: any;
   setShowShare: any;
   showShare: boolean;
+  refetch: any;
 }
 
 const ActionUI = ({
-  website, setWebsite, postVote, saved, onSaveItem, setShowShare, showShare
+  website, setWebsite, postVote, saved, onSaveItem, setShowShare, showShare, refetch
 } : Props) => {
   const actionbox = (
     <Box mx={2} borderTop={1}>
-      <Grid container wrap="nowrap" justify="space-around" alignItems="center">
+      <Grid container wrap="nowrap" justifyContent="space-around" style={{ alignItems: 'center' }}>
         <Grid item component={Box}>
           {website.Public
             ? <Tooltip title="Public"><PublicIcon fontSize="inherit" /></Tooltip>
@@ -49,7 +52,7 @@ const ActionUI = ({
             }
           />
         </Grid>
-        <Grid item alignItems="center">
+        <Grid container item style={{ alignItems: 'center' }}>
           <PublishWebsite
             open={showShare}
             handleClose={() => setShowShare(false)}
@@ -61,6 +64,24 @@ const ActionUI = ({
               ? <Button onClick={() => { setShowShare(true); }}>+Tag</Button>
               : <Button onClick={() => { setShowShare(true); }}>Publish</Button>}
           </Box>
+        </Grid>
+        <Grid
+          item
+          component={Box}
+          display="flex"
+          style={{ justifyContent: 'center', marginRight: '10px' }}
+        >
+          <ChatBubbleOutlineIcon />
+          {website?.ShoutCount}
+        </Grid>
+        <Grid
+          item
+          component={Box}
+          display="flex"
+          style={{ justifyContent: 'center', marginRight: '10px' }}
+        >
+          <ShareIcon />
+          {website?.ShareCount}
         </Grid>
         {!saved
               && (
