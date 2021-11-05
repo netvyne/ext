@@ -9,11 +9,15 @@ interface Props {
   initWebsite: Website;
   url: Url;
   refetch: any;
+  currentTitle: any;
 }
 
-const WebsiteUI = ({ initWebsite, url, refetch } : Props) => {
+const WebsiteUI = ({
+  initWebsite, url, refetch, currentTitle
+} : Props) => {
   let websiteTitle : string = '';
   websiteTitle = (initWebsite.Title && initWebsite.Title !== '') ? initWebsite.Title : url.Title;
+  websiteTitle = (currentTitle !== websiteTitle) ? currentTitle : websiteTitle;
   const website = (
     <Box mx={2} mt={1} borderRadius="borderRadius">
       <Grid container wrap="nowrap">

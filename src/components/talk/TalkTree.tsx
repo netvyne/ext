@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
 import { Typography } from '@material-ui/core';
+import Avatar from '@material-ui/core/Avatar';
 import Box from '@material-ui/core/Box';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
@@ -49,10 +50,23 @@ const TalkTree = ({
         direction="row"
         wrap="nowrap"
       >
+        {initTalk.Author.AvatarURL && (
+          <Avatar
+            alt="Notification"
+            src={initTalk.Author.AvatarURL}
+          />
+        )}
+        {!initTalk.Author.AvatarURL && (
+          <Avatar
+            alt="Notification"
+          >
+            {initTalk.Author.Handle.charAt(0).toUpperCase()}
+          </Avatar>
+        )}
         <Grid
           container
           component={Box}
-          m={1}
+          marginLeft="8px"
         >
           <Grid container alignItems="center">
             <Grid item component={Box}>

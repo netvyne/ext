@@ -263,7 +263,7 @@ export default function FeedItem({
               </Button>
             </Grid>
           )}
-          <Grid item alignItems="center">
+          <Grid item container alignItems="center">
             <FlagWebsite
               open={showFlag}
               handleClose={() => setShowFlag(false)}
