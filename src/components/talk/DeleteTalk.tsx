@@ -26,7 +26,10 @@ const DeleteTalk = ({ initTalk, setInitTalk }: Props) => {
     mutation.mutate({ route: '/update_talk', data: mutateData },
       {
         onSuccess: (response: any) => {
-          setInitTalk(response.Talk);
+          const deletedTalk: any = initTalk;
+          deletedTalk.Comment = response.Talk.Comment;
+          setInitTalk(deletedTalk);
+          // initTalk.Comment = response.Talk.Comment;
           refetch();
         }
       });

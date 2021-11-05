@@ -117,10 +117,14 @@ export const Sharing: FunctionComponent = () => {
     if (chrome.tabs) {
       chrome.tabs.query(queryInfo, (tabs) => {
         const newUrl : any = isValidURL(tabs[0].url);
+        let searchParam = newUrl.search;
+        if (newUrl.host.indexOf('youtube.') > -1) {
+          searchParam = newUrl.search.substr(0, newUrl.search.indexOf('&t='));
+        }
         const formatedUrl = {
           pathname: newUrl.pathname,
           host: newUrl.host,
-          search: newUrl.search,
+          search: searchParam,
           Title: tabs[0].title,
         };
         setUrl(formatedUrl);
@@ -237,7 +241,7 @@ export const Sharing: FunctionComponent = () => {
   };
 
   function notificationLink() {
-    const href = `${process.env.PUBLIC_WEB}/netvynelogin`;
+    const href = `${process.env.PUBLIC_WEB}/auth/signin`;
     window.open(href, '_blank', 'noopener,noreferrer');
     return false;
   }

@@ -108,10 +108,14 @@ export const Popup: FunctionComponent = () => {
     if (chrome.tabs) {
       chrome.tabs.query(queryInfo, (tabs) => {
         const newUrl : any = isValidURL(tabs[0].url);
+        let searchParam = newUrl.search;
+        if (newUrl.host.indexOf('youtube.') > -1) {
+          searchParam = newUrl.search.substr(0, newUrl.search.indexOf('&t='));
+        }
         const formatedUrl = {
           pathname: newUrl.pathname,
           host: newUrl.host,
-          search: newUrl.search,
+          search: searchParam,
           Title: tabs[0].title,
         };
         setUrl(formatedUrl);
@@ -209,7 +213,7 @@ export const Popup: FunctionComponent = () => {
                   <MenuItem onClick={() => handleClose('livechat')}>Live Chat</MenuItem>
                   <MenuItem onClick={() => moreOptionClick('feedback', 'https://forms.gle/LUzvrWqhtWnKwAxX6')}>Feedback</MenuItem>
                   {user && !!user.Registered && (<MenuItem onClick={() => moreOptionClick('logout', 'profile')}>Logout</MenuItem>)}
-                  {user && !user.Registered && (<MenuItem onClick={() => moreOptionClick('login', 'netvynelogin')}>Login</MenuItem>)}
+                  {user && !user.Registered && (<MenuItem onClick={() => moreOptionClick('login', 'auth/signin')}>Login</MenuItem>)}
                 </Menu>
               </div>
             </Grid>

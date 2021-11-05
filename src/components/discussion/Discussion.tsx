@@ -2,11 +2,12 @@
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { Box } from '@material-ui/core';
 import { AxiosError } from 'axios';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import {
   Shout, Url, User, Website
 } from '../../../types/common/types';
+import { isValidURL } from '../../utils';
 import ActionContainer from './ActionContainer';
 import FeedItemPlaceholder from './FeedItemPlaceholder';
 import ReplyUI from './ReplyUI';
@@ -29,7 +30,8 @@ interface SuccessResponse {
 }
 
 const Discussion = ({ initCurrentUser, initUrl } : Props) => {
-  const url : any = initUrl;
+  // const url : any = initUrl;
+  const [url, setUrl] = React.useState<any>({});
   const user : any = initCurrentUser;
   const [showForm, setShowForm] = React.useState(true);
   const [showCaptcha, setShowCaptcha] = React.useState(false);
@@ -37,12 +39,46 @@ const Discussion = ({ initCurrentUser, initUrl } : Props) => {
   const [children, setChildren] = React.useState<Shout[]>([]);
   const captchaRef = React.createRef<HCaptcha>();
   const [comment, setComment] = React.useState('');
+  const [currentTitle, setCurrentTitle] = React.useState<any>('');
 
   const route = `/get_shout_trees?host=${url.host}&pathname=${url.pathname}&search=${encodeURIComponent(url.search)}`;
 
   const { data, status, refetch } = useQuery<GetShoutTreesQuery, string>(
-    route, { onSuccess: (shoutData) => setChildren(shoutData.Roots) }
+    route, {
+      onSuccess: (shoutData) => {
+        setChildren(shoutData.Roots);
+      }
+    }
   );
+  const [intervalCount, setIntervalCount] = React.useState(0);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const newCount = intervalCount + 1;
+      setIntervalCount(newCount);
+      const queryInfo = { active: true };
+      if (chrome.tabs) {
+        chrome.tabs.query(queryInfo, (tabs) => {
+          if (currentTitle !== tabs[0].title) {
+            setCurrentTitle(tabs[0].title);
+            const newUrl : any = isValidURL(tabs[0].url);
+            let searchParam = newUrl.search;
+            if (newUrl.host.indexOf('youtube.') > -1) {
+              searchParam = newUrl.search.substr(0, newUrl.search.indexOf('&t='));
+            }
+            const formatedUrl = {
+              pathname: newUrl.pathname,
+              host: newUrl.host,
+              search: searchParam,
+              Title: tabs[0].title,
+            };
+            setUrl(formatedUrl);
+            refetch();
+          }
+        });
+      }
+    }, 1000);
+  }, [intervalCount]);
 
   // const replyMutation = useMutation({});
   const replyMutation = useMutation<SuccessResponse, AxiosError>(
@@ -91,6 +127,7 @@ const Discussion = ({ initCurrentUser, initUrl } : Props) => {
     trees = <ShoutPlaceholder />;
     website = <FeedItemPlaceholder />;
   } else if (status === 'success' && user) {
+    console.log(children);
     if (children) {
       trees = children.map((treeRoot) => (
         <ShoutTree
@@ -104,7 +141,7 @@ const Discussion = ({ initCurrentUser, initUrl } : Props) => {
     }
     website = (
       <>
-        <WebsiteUI initWebsite={data!.Website} url={url} refetch={refetch} />
+        <WebsiteUI initWebsite={data!.Website} url={url} refetch={refetch} currentTitle={currentTitle} />
       </>
     );
     actionBox = (
