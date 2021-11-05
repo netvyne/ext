@@ -118,7 +118,7 @@ export const Sharing: FunctionComponent = () => {
       chrome.tabs.query(queryInfo, (tabs) => {
         const newUrl : any = isValidURL(tabs[0].url);
         let searchParam = newUrl.search;
-        if (newUrl.host.indexOf('youtube.') > -1) {
+        if (newUrl.host.indexOf('youtube.') > -1 && newUrl.search.indexOf('&t=') > -1) {
           searchParam = newUrl.search.substr(0, newUrl.search.indexOf('&t='));
         }
         const formatedUrl = {

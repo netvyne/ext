@@ -63,7 +63,7 @@ const Discussion = ({ initCurrentUser, initUrl } : Props) => {
             setCurrentTitle(tabs[0].title);
             const newUrl : any = isValidURL(tabs[0].url);
             let searchParam = newUrl.search;
-            if (newUrl.host.indexOf('youtube.') > -1) {
+            if (newUrl.host.indexOf('youtube.') > -1 && newUrl.search.indexOf('&t=') > -1) {
               searchParam = newUrl.search.substr(0, newUrl.search.indexOf('&t='));
             }
             const formatedUrl = {
@@ -127,7 +127,6 @@ const Discussion = ({ initCurrentUser, initUrl } : Props) => {
     trees = <ShoutPlaceholder />;
     website = <FeedItemPlaceholder />;
   } else if (status === 'success' && user) {
-    console.log(children);
     if (children) {
       trees = children.map((treeRoot) => (
         <ShoutTree
