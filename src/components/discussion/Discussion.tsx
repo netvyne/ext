@@ -62,14 +62,10 @@ const Discussion = ({ initCurrentUser, initUrl } : Props) => {
           if (currentTitle !== tabs[0].title) {
             setCurrentTitle(tabs[0].title);
             const newUrl : any = isValidURL(tabs[0].url);
-            let searchParam = newUrl.search;
-            if (newUrl.host.indexOf('youtube.') > -1 && newUrl.search.indexOf('&t=') > -1) {
-              searchParam = newUrl.search.substr(0, newUrl.search.indexOf('&t='));
-            }
             const formatedUrl = {
               pathname: newUrl.pathname,
               host: newUrl.host,
-              search: searchParam,
+              search: newUrl.search,
               Title: tabs[0].title,
             };
             setUrl(formatedUrl);
