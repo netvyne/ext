@@ -24,9 +24,9 @@ const WebsiteUI = ({
         <Grid container direction="column" style={{ alignItems: 'center' }} justifyContent="center">
           <Box>
             <Typography variant="h5">
-              {(websiteTitle && websiteTitle.length < 32)
-                ? websiteTitle
-                : websiteTitle.substring(0, 32).concat('...')}
+              {(websiteTitle && websiteTitle.length > 32)
+                ? websiteTitle.substring(0, 32).concat('...')
+                : (websiteTitle) || 'Title of the webpage'}
             </Typography>
           </Box>
           {/* <Grid container direction="row" justifyContent="center" spacing={1}>
