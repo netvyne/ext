@@ -1,4 +1,4 @@
-import { IconButton } from '@material-ui/core';
+import { Button, IconButton } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
@@ -77,7 +77,7 @@ export default function TalkVoteButtons({ initTalk, defUser }: Props) {
     const reactionString = talk.VoteStatus
       .filter((t: any) => t.Status === emoji)
       .map((t: any) => ((defUser.Handle === t.User.Handle) ? 'you' : t.User.FirstName)).join(', ');
-    return `${reactionString.replace(/,([^,]*)$/, ' and $1')} reacted with :${emoji}:`;
+    return `${reactionString.replace(/,([^,]*)$/, ' and $1')} reacted with ${emoji}`;
   }
 
   const voteMutation = useMutation({});
@@ -86,7 +86,7 @@ export default function TalkVoteButtons({ initTalk, defUser }: Props) {
     // console.log(emoji);
     setShow(false);
     const mutateData = {
-      Status: emoji.id,
+      Status: (emoji.native) ? emoji.native : emoji,
       TalkID: talk.ID,
     };
     const res: any = voteMutation.mutate(
@@ -136,13 +136,9 @@ export default function TalkVoteButtons({ initTalk, defUser }: Props) {
               arrow
             >
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                <Emoji
-                  emoji={vote}
-                  set="apple"
-                  size={16}
-                  onClick={postEmoji}
-                />
-                {getCount(vote)}
+                <Button onClick={() => postEmoji(vote)}>
+                  {`${vote} ${getCount(vote)}`}
+                </Button>
               </div>
             </BlackTooltip>
           </div>

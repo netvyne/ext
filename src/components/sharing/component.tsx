@@ -74,6 +74,7 @@ export const Sharing: FunctionComponent = () => {
   const [friendsPosts, setFriendsPosts] = React.useState<Post[]>([]);
   const [post, setPost] = React.useState<any>([]);
   const [conversationsPosts, setConversationsPosts] = React.useState<Post[]>([]);
+  const [isUserRegistered, setIsUserRegistered] = React.useState<any>(false);
 
   const toggleMoreOptions = () => {
     setMoreOptions(!moreOptions);
@@ -111,6 +112,12 @@ export const Sharing: FunctionComponent = () => {
       }
     }
   );
+
+  const profileQuery = useQuery<any>('/profile', {
+    onSuccess: (statusResponse) => {
+      setIsUserRegistered(statusResponse.CurrentUser.Registered);
+    }
+  });
 
   useEffect(() => {
     const queryInfo = { active: true };
@@ -424,7 +431,7 @@ export const Sharing: FunctionComponent = () => {
             </Box>
             <Button type="submit" disabled={(conversationIDs.length === 0 && friendHandles.length === 0) || !user?.Registered}> Share </Button>
             <Box width="100%">
-              {user && !user.Registered && (
+              {!isUserRegistered && (
                 <Button
                   type="button"
                   variant="outlined"
