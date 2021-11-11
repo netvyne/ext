@@ -8,12 +8,14 @@ import Typography from '@material-ui/core/Typography';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import ImageIcon from '@material-ui/icons/Image';
 import LinkIcon from '@material-ui/icons/Link';
+import LocalOfferIcon from '@material-ui/icons/LocalOffer';
 import PublicIcon from '@material-ui/icons/Public';
 import { DateTime } from 'luxon';
 import React from 'react';
 import ReactPlayer from 'react-player';
 import { useMutation, useQueryClient } from 'react-query';
 import { Post, User, Website } from '../../../types/common/types';
+import TagsList from '../common/TagsList';
 import FlagWebsite from './FlagWebsite';
 import PublishWebsite from './PublishWebsite';
 import WebVoteButtons from './WebVoteButtons';
@@ -39,6 +41,7 @@ export default function FeedItem({
   const [clickedSensitive, setClickedSensitive] = React.useState(false);
   const [isSaved, setIsSaved] = React.useState(website.Saved);
   const saveItemMutation = useMutation({});
+  const [showTagsList, setShowTagsList] = React.useState(false);
   const onSaveItem = async (event: any, save: boolean) => {
     event.preventDefault();
     const mutateData = {
@@ -215,12 +218,33 @@ export default function FeedItem({
           {website.Public
             && (
               <Grid item component={Box}>
-                {(website.TagLabelNames)?.length > 0
+                {((website.TagLabelNames)?.length > 0)
+                  ? (
+                    <Box style={{ display: 'flex', alignItems: 'center' }}>
+                      <LocalOfferIcon style={{ fill: 'grey' }} fontSize="inherit" />
+                      <Button size="small" href={`/v/${website.TagLabelNames[0]}`}>
+                        {website.TagLabelNames[0]}
+                      </Button>
+                      <TagsList
+                        open={showTagsList}
+                        handleClose={() => setShowTagsList(false)}
+                        tags={website.TagLabelNames}
+                      />
+                      {((website.TagLabelNames)?.length > 1) && (
+                        <Button size="small" onClick={() => { setShowTagsList(true); }}>
+                          +
+                          {(website.TagLabelNames)?.length - 1}
+                          {' more'}
+                        </Button>
+                      )}
+                    </Box>
+                  ) : <Button size="small">Processing</Button>}
+                {/* {(website.TagLabelNames)?.length > 0
                   ? website.TagLabelNames?.map((t) => (
                     <Button size="small" href={`/v/${t}`}>
                       {t}
                     </Button>
-                  )) : <Button size="small">Processing</Button>}
+                  )) : <Button size="small">Processing</Button>} */}
               </Grid>
             )}
           <Grid item component={Box}>

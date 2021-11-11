@@ -83,6 +83,7 @@ export const Popup: FunctionComponent = () => {
   const [shareCount, setShareCount] = useState(0);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [isUserRegistered, setIsUserRegistered] = React.useState<any>(false);
 
   // Sends the `popupMounted` event
   React.useEffect(() => {
@@ -143,10 +144,18 @@ export const Popup: FunctionComponent = () => {
 
   const handleClose = (action: string) => {
     if (action === 'livechat') {
-      setValue(3);
+      setValue(4);
     }
     setAnchorEl(null);
   };
+
+  const profileQuery = useQuery<any>('/profile', {
+    onSuccess: (statusResponse) => {
+      setIsUserRegistered(statusResponse.CurrentUser.Registered);
+      setUser(statusResponse.CurrentUser);
+      // getCurrentUser().then((currentUser:User|any) => setUser(currentUser));
+    }
+  });
 
   // Renders the component tree
   return (
@@ -193,8 +202,25 @@ export const Popup: FunctionComponent = () => {
                   label="Notifications"
                   {...a11yProps(2)}
                 />
-                <Tab className="livechat-tab" label="" {...a11yProps(3)} />
+                {/* <Tab className="livechat-tab" label="" {...a11yProps(4)} /> */}
               </Tabs>
+              <Button onClick={() => moreOptionClick('logout', 'profile')}>
+                {(isUserRegistered && user.AvatarURL) && (
+                <Avatar
+                  style={{ width: 40, height: 40 }}
+                  alt="Avatar"
+                  src={user.AvatarURL}
+                />
+                )}
+                {!isUserRegistered && user && user.Handle && (
+                <Avatar
+                  alt="Handle initial"
+                  style={{ width: 40, height: 40, fontSize: '1.5rem' }}
+                >
+                  {user.Handle.charAt(0).toUpperCase()}
+                </Avatar>
+                )}
+              </Button>
               <div className="more-icon">
                 <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
                   <img src={value === 3 ? '../images/three_dots_selected.png' : '../images/three_dots_normal.png'} alt="more icon" />
@@ -208,8 +234,8 @@ export const Popup: FunctionComponent = () => {
                 >
                   <MenuItem onClick={() => handleClose('livechat')}>Live Chat</MenuItem>
                   <MenuItem onClick={() => moreOptionClick('feedback', 'https://forms.gle/LUzvrWqhtWnKwAxX6')}>Feedback</MenuItem>
-                  {user && !!user.Registered && (<MenuItem onClick={() => moreOptionClick('logout', 'profile')}>Logout</MenuItem>)}
-                  {user && !user.Registered && (<MenuItem onClick={() => moreOptionClick('login', 'auth/signin')}>Login</MenuItem>)}
+                  {isUserRegistered && (<MenuItem onClick={() => moreOptionClick('logout', 'profile')}>Logout</MenuItem>)}
+                  {!isUserRegistered && (<MenuItem onClick={() => moreOptionClick('login', 'auth/signin')}>Login</MenuItem>)}
                 </Menu>
               </div>
             </Grid>
