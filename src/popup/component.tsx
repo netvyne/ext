@@ -105,7 +105,7 @@ export const Popup: FunctionComponent = () => {
   const { data, status, refetch } = useQuery<any, string>(route);
 
   useEffect(() => {
-    const queryInfo = { active: true };
+    const queryInfo = { active: true, lastFocusedWindow: true };
     if (chrome.tabs) {
       chrome.tabs.query(queryInfo, (tabs) => {
         const newUrl : any = isValidURL(tabs[0].url);

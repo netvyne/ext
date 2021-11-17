@@ -120,7 +120,7 @@ export const Sharing: FunctionComponent = () => {
   });
 
   useEffect(() => {
-    const queryInfo = { active: true };
+    const queryInfo = { active: true, lastFocusedWindow: true };
     if (chrome.tabs) {
       chrome.tabs.query(queryInfo, (tabs) => {
         const newUrl : any = isValidURL(tabs[0].url);

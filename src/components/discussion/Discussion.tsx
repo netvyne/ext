@@ -56,7 +56,7 @@ const Discussion = ({ initCurrentUser, initUrl } : Props) => {
     const timer = setTimeout(() => {
       const newCount = intervalCount + 1;
       setIntervalCount(newCount);
-      const queryInfo = { active: true };
+      const queryInfo = { active: true, lastFocusedWindow: true };
       if (chrome.tabs) {
         chrome.tabs.query(queryInfo, (tabs) => {
           if (currentTitle !== tabs[0].title) {
