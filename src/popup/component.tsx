@@ -84,9 +84,14 @@ export const Popup: FunctionComponent = () => {
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [isUserRegistered, setIsUserRegistered] = React.useState<any>(false);
+  const [currentUser, setCurrentUser] = React.useState<any>(null);
+  const [autoFetch, setAutoFetch] = React.useState<any>(false);
 
   // Sends the `popupMounted` event
   React.useEffect(() => {
+    chrome.storage.sync.set({
+      isExtClosed: true,
+    });
     browser.runtime.sendMessage({ popupMounted: true });
   }, []);
 
@@ -102,7 +107,16 @@ export const Popup: FunctionComponent = () => {
 
   const route = `/get_user_notifications?host=${url.host}&pathname=${url.pathname}&search=${encodeURIComponent(url.search)}`;
 
-  const { data, status, refetch } = useQuery<any, string>(route);
+  const { data, status, refetch } = useQuery<any, string>(route, { enabled: autoFetch });
+  const [intervalCount, setIntervalCount] = React.useState(0);
+
+  const profileQuery = useQuery<any>('/profile', {
+    onSuccess: (statusResponse) => {
+      setIsUserRegistered(statusResponse.CurrentUser.Registered);
+      setCurrentUser(statusResponse.CurrentUser);
+      // getCurrentUser().then((currentUser:User|any) => setUser(currentUser));
+    }
+  });
 
   useEffect(() => {
     const queryInfo = { active: true, lastFocusedWindow: true };
@@ -128,7 +142,21 @@ export const Popup: FunctionComponent = () => {
         chrome.browserAction.setBadgeText({ text: '' });
       }
     }
-  }, [data]);
+    const timer = setTimeout(() => {
+      const newCount = intervalCount + 1;
+      setIntervalCount(newCount);
+      // console.log('local storage ::::::', localStorage.getItem('netvyneBadge'));
+      setAutoFetch(false);
+      if (localStorage.getItem('netvyneBadge') === 'true' || localStorage.getItem('netvyneBadge') === 'null') {
+        setAutoFetch(true);
+      }
+      chrome.storage.sync.get(['isExtClosed'], (result) => {
+        if (result.isExtClosed === false) {
+          setAutoFetch(true);
+        }
+      });
+    }, 1000);
+  }, [data, intervalCount]);
 
   const classes = useStyles();
   // const classes = useStyles();
@@ -144,18 +172,10 @@ export const Popup: FunctionComponent = () => {
 
   const handleClose = (action: string) => {
     if (action === 'livechat') {
-      setValue(4);
+      setValue(3);
     }
     setAnchorEl(null);
   };
-
-  const profileQuery = useQuery<any>('/profile', {
-    onSuccess: (statusResponse) => {
-      setIsUserRegistered(statusResponse.CurrentUser.Registered);
-      setUser(statusResponse.CurrentUser);
-      // getCurrentUser().then((currentUser:User|any) => setUser(currentUser));
-    }
-  });
 
   // Renders the component tree
   return (
@@ -202,22 +222,30 @@ export const Popup: FunctionComponent = () => {
                   label="Notifications"
                   {...a11yProps(2)}
                 />
-                {/* <Tab className="livechat-tab" label="" {...a11yProps(4)} /> */}
+                <Tab className="livechat-tab" label="" {...a11yProps(3)} />
               </Tabs>
               <Button onClick={() => moreOptionClick('logout', 'profile')}>
                 {(isUserRegistered && user.AvatarURL) && (
-                <Avatar
-                  style={{ width: 40, height: 40 }}
-                  alt="Avatar"
-                  src={user.AvatarURL}
-                />
+                  <Avatar
+                    style={{ width: 40, height: 40 }}
+                    alt="Avatar"
+                    src={user.AvatarURL}
+                  />
                 )}
-                {!isUserRegistered && user && user.Handle && (
+                {(isUserRegistered && !user.AvatarURL) && (
+                  <Avatar
+                    alt="Handle initial"
+                    style={{ width: 40, height: 40, fontSize: '1.5rem' }}
+                  >
+                    {`${currentUser.UserName.charAt(0).toUpperCase()}`}
+                  </Avatar>
+                )}
+                {!isUserRegistered && currentUser && (
                 <Avatar
                   alt="Handle initial"
                   style={{ width: 40, height: 40, fontSize: '1.5rem' }}
                 >
-                  {user.Handle.charAt(0).toUpperCase()}
+                  {`${currentUser.UserName.charAt(0).toUpperCase()}`}
                 </Avatar>
                 )}
               </Button>
@@ -241,7 +269,7 @@ export const Popup: FunctionComponent = () => {
             </Grid>
           </AppBar>
           <TabPanel value={value} index={0} dir={theme.direction} className={classes.tab}>
-            <Discussion initCurrentUser={user} initUrl={url} />
+            <Discussion initCurrentUser={user} initUrl={url} autoFetch={autoFetch} />
           </TabPanel>
           <TabPanel value={value} index={1} dir={theme.direction}>
             <Sharing />
