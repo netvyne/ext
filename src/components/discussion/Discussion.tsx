@@ -18,6 +18,7 @@ import WebsiteUI from './WebsiteUI';
 interface Props {
   initCurrentUser: User[];
   initUrl: Url;
+  autoFetch: boolean;
 }
 
 interface GetShoutTreesQuery {
@@ -29,7 +30,7 @@ interface SuccessResponse {
   Shout: Shout;
 }
 
-const Discussion = ({ initCurrentUser, initUrl } : Props) => {
+const Discussion = ({ initCurrentUser, initUrl, autoFetch } : Props) => {
   // const url : any = initUrl;
   const [url, setUrl] = React.useState<any>({});
   const user : any = initCurrentUser;
@@ -40,11 +41,12 @@ const Discussion = ({ initCurrentUser, initUrl } : Props) => {
   const captchaRef = React.createRef<HCaptcha>();
   const [comment, setComment] = React.useState('');
   const [currentTitle, setCurrentTitle] = React.useState<any>('');
+  // const [autoFetch, setAutoFetch] = React.useState<any>(false);
 
   const route = `/get_shout_trees?host=${url.host}&pathname=${url.pathname}&search=${encodeURIComponent(url.search)}`;
-
   const { data, status, refetch } = useQuery<GetShoutTreesQuery, string>(
     route, {
+      enabled: autoFetch,
       onSuccess: (shoutData) => {
         setChildren(shoutData.Roots);
       }
@@ -69,7 +71,9 @@ const Discussion = ({ initCurrentUser, initUrl } : Props) => {
               Title: tabs[0].title,
             };
             setUrl(formatedUrl);
-            refetch();
+            if (autoFetch) {
+              refetch();
+            }
           }
         });
       }

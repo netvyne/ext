@@ -12,8 +12,8 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 import GroupIcon from '@material-ui/icons/Group';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import KeyboardBackspace from '@material-ui/icons/KeyboardBackspace';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import PersonIcon from '@material-ui/icons/Person';
+import SettingsIcon from '@material-ui/icons/Settings';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import MDEditor from '@uiw/react-md-editor';
 import React, {
@@ -32,15 +32,6 @@ function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    width: '100%',
-    '& > * + *': {
-      marginTop: theme.spacing(2),
-    },
-  },
-}));
-
 interface GetWebsitePostsQuery {
   FriendsPosts: Post[];
   ConversationsPosts: Post[];
@@ -50,10 +41,10 @@ export const Sharing: FunctionComponent = () => {
 //   const queryClient = new QueryClient();
 
   const [shareSeparately, setShareSeparately] = React.useState(false);
+  const [markSensitive, setMarkSensitive] = React.useState(false);
   const [url, setUrl] = useState<any>({});
   const [comment, setComment] = React.useState('Check this out!');
-  const [conversationIDs, setConversationIDs] = React.useState([]);
-  const classes = useStyles();
+  const [conversationID, setConversationID] = React.useState(0);
   const [open, setOpen] = React.useState(false);
 
   const [dataURL, setDataURL] = React.useState('');
@@ -76,14 +67,43 @@ export const Sharing: FunctionComponent = () => {
   const [conversationsPosts, setConversationsPosts] = React.useState<Post[]>([]);
   const [isUserRegistered, setIsUserRegistered] = React.useState<any>(false);
 
+  const useStyles = makeStyles((theme: Theme) => ({
+    root: {
+      width: '100%',
+      '& > * + *': {
+        marginTop: theme.spacing(2),
+      },
+    },
+    snackbar: {
+      zIndex: 10000,
+    },
+    button: {
+      color: 'black',
+      '&:hover': {
+        color: '#757ce8',
+      },
+    },
+    settingsButton: {
+      color: moreOptions ? '#757ce8' : 'black',
+      '&:hover': {
+        color: '#757ce8',
+      },
+    },
+  }));
+  const classes = useStyles();
+
   const toggleMoreOptions = () => {
     setMoreOptions(!moreOptions);
   };
   const toggleDropdown = () => {
-    setConversationIDs([]);
+    setConversationID(0);
+    setFriendHandles([]);
     setFriendHandles([]);
     setDropdownRefetch(Date());
     setDropdown(!dropdown);
+    setShareSeparately(false);
+    setMarkSensitive(false);
+    setCreateConv(false);
   };
 
   getCurrentUser().then((currentUser: User | null) => setUser(currentUser));
@@ -193,7 +213,8 @@ export const Sharing: FunctionComponent = () => {
       Separate: shareSeparately,
       ReceiverHandles: friendHandles,
       CreateConv: createConv,
-      ConversationIDs: conversationIDs,
+      ConversationID: conversationID,
+      MarkSensitive: markSensitive,
     };
     const res = shareMutation.mutate(
       // @ts-ignore
@@ -206,8 +227,11 @@ export const Sharing: FunctionComponent = () => {
           // setUrl('');
           setComment('Check this out!');
           setDropdownRefetch(Date());
-          setConversationIDs([]);
+          setConversationID(0);
           setFriendHandles([]);
+          setShareSeparately(false);
+          setMarkSensitive(false);
+          setCreateConv(false);
           setCreateConv(false);
           uploadImage(response.Post.ID);
           setDataURL('');
@@ -217,23 +241,6 @@ export const Sharing: FunctionComponent = () => {
       },
     );
     return res;
-  };
-
-  const handleClickOpenAlert = (event : any) => {
-    event.preventDefault();
-    let i = 0;
-    const commonConvs : any = [];
-    for (i = 0; i < conversationIDs.length; i += 1) {
-      if (sharedConvs.indexOf(conversationIDs[i]) > -1) {
-        commonConvs.push(`${sharedConTitles[sharedConvs.indexOf(conversationIDs[i])]}`);
-      }
-    }
-    if (commonConvs.length > 0) {
-      setAlertText(commonConvs.map((email : any, e: number) => <li>{email}</li>));
-      setOpenAlert(true);
-    } else {
-      postShare(event);
-    }
   };
 
   const handleCloseAlert = (event : any, option: string) => {
@@ -330,31 +337,36 @@ export const Sharing: FunctionComponent = () => {
             </Alert>
           </Snackbar>
           <form onSubmit={postShare}>
-            {!dropdown && (
+            {dropdown && (
               <Grid item container xs={12} direction="row" spacing={1} alignItems="center" wrap="nowrap">
-                <Grid item xs={11}>
-                  <Dropdown dropdownRefetch={dropdownRefetch} setConversationIDs={setConversationIDs} mode="conv" />
+                <Grid item xs={10}>
+                  <Dropdown dropdownRefetch={dropdownRefetch} setConversationID={setConversationID} mode="conv" />
                 </Grid>
                 <Grid item xs={1}>
-                  <IconButton onClick={toggleDropdown}>
+                  <IconButton className={classes.button} onClick={toggleDropdown}>
                     <PersonIcon />
+                  </IconButton>
+                </Grid>
+                <Grid item xs={1}>
+                  <IconButton className={classes.settingsButton} onClick={toggleMoreOptions}>
+                    <SettingsIcon />
                   </IconButton>
                 </Grid>
               </Grid>
             )}
-            {dropdown && (
+            {!dropdown && (
               <Grid item container xs={12} direction="row" spacing={1} alignItems="center" wrap="nowrap">
                 <Grid item xs={10}>
                   <Dropdown dropdownRefetch={dropdownRefetch} setFriendHandles={setFriendHandles} mode="friends" />
                 </Grid>
                 <Grid item xs={1}>
-                  <IconButton onClick={toggleDropdown}>
+                  <IconButton className={classes.button} onClick={toggleDropdown}>
                     <GroupIcon />
                   </IconButton>
                 </Grid>
                 <Grid item xs={1}>
-                  <IconButton onClick={toggleMoreOptions}>
-                    <MoreVertIcon />
+                  <IconButton className={classes.settingsButton} onClick={toggleMoreOptions}>
+                    <SettingsIcon />
                   </IconButton>
                 </Grid>
               </Grid>
@@ -380,43 +392,102 @@ export const Sharing: FunctionComponent = () => {
                 Clear
               </Button>
             </Box>
-            {dropdown && (
-              <Grid item container xs={12} direction="column" spacing={1} wrap="nowrap">
-                <Grid item xs={12}>
-                  <FormControlLabel
-                    control={(
-                      <Checkbox
-                        checked={createConv}
-                        onChange={(e: any) => setCreateConv(e.target.checked)}
-                      />
-                    )}
-                    label="Create Group Conversation"
-                  />
-                  <Tooltip title="This creates a group conversation out of the friend(s) you selected.">
-                    <span>
-                      <IconButton disabled><HelpOutlineIcon /></IconButton>
-                    </span>
-                  </Tooltip>
-                </Grid>
-                {moreOptions && (
-                  <Grid item xs={12}>
-                    <FormControlLabel
-                      control={(
-                        <Checkbox
-                          checked={shareSeparately}
-                          onChange={(e: any) => setShareSeparately(e.target.checked)}
-                        />
-                      )}
-                      label="Share Separately"
+            {!dropdown && moreOptions && (
+            <div>
+              <>
+                <FormControlLabel
+                  control={(
+                    <Checkbox
+                      style={{
+                        color: '#757ce8',
+                      }}
+                      checked={createConv}
+                      onChange={(e: any) => setCreateConv(e.target.checked)}
                     />
-                    <Tooltip title="This creates a separate comment thread for each friend you selected.">
-                      <span>
-                        <IconButton disabled><HelpOutlineIcon /></IconButton>
-                      </span>
-                    </Tooltip>
-                  </Grid>
-                )}
-              </Grid>
+                  )}
+                  label="Create Group"
+                />
+                <Tooltip title="This creates a group out of the friend(s) you selected for future ease of sharing.">
+                  <span>
+                    <IconButton disabled><HelpOutlineIcon /></IconButton>
+                  </span>
+                </Tooltip>
+                <FormControlLabel
+                  control={(
+                    <Checkbox
+                      style={{
+                        color: '#757ce8',
+                      }}
+                      checked={shareSeparately}
+                      onChange={(e: any) => setShareSeparately(e.target.checked)}
+                    />
+                  )}
+                  label="Share Separately"
+                />
+                <Tooltip title="This creates a separate comment thread for each friend you selected (instead of the default single thread). This will not work when creating a group.">
+                  <span>
+                    <IconButton disabled><HelpOutlineIcon /></IconButton>
+                  </span>
+                </Tooltip>
+                <FormControlLabel
+                  control={(
+                    <Checkbox
+                      style={{
+                        color: '#757ce8',
+                      }}
+                      checked={markSensitive}
+                      onChange={(e: any) => setMarkSensitive(e.target.checked)}
+                    />
+                  )}
+                  label="Mark as Sensitive"
+                />
+                <Tooltip title="This marks your post as sensitive and provides recipients with a warning before they view it.">
+                  <span>
+                    <IconButton disabled><HelpOutlineIcon /></IconButton>
+                  </span>
+                </Tooltip>
+              </>
+            </div>
+            )}
+            {dropdown && moreOptions && (
+            <div>
+              <>
+                <FormControlLabel
+                  control={(
+                    <Checkbox
+                      style={{
+                        color: '#757ce8',
+                      }}
+                      checked={shareSeparately}
+                      onChange={(e: any) => setShareSeparately(e.target.checked)}
+                    />
+                  )}
+                  label="Share Separately"
+                />
+                <Tooltip title="This creates a separate comment thread for each user in the group you selected (instead of the default single thread). You will not be able to filter for this post by group.">
+                  <span>
+                    <IconButton disabled><HelpOutlineIcon /></IconButton>
+                  </span>
+                </Tooltip>
+                <FormControlLabel
+                  control={(
+                    <Checkbox
+                      style={{
+                        color: '#757ce8',
+                      }}
+                      checked={markSensitive}
+                      onChange={(e: any) => setMarkSensitive(e.target.checked)}
+                    />
+                  )}
+                  label="Mark as Sensitive"
+                />
+                <Tooltip title="This marks your post as sensitive and provides recipients with a warning before they view it.">
+                  <span>
+                    <IconButton disabled><HelpOutlineIcon /></IconButton>
+                  </span>
+                </Tooltip>
+              </>
+            </div>
             )}
             <Box m={1}>
               <MDEditor
@@ -429,7 +500,7 @@ export const Sharing: FunctionComponent = () => {
                 onChange={(value: string | undefined) => value !== undefined && setComment(value)}
               />
             </Box>
-            <Button type="submit" disabled={(conversationIDs.length === 0 && friendHandles.length === 0) || !user?.Registered}> Share </Button>
+            <Button type="submit" disabled={(conversationID === 0 && friendHandles.length === 0) || !user?.Registered}> Share </Button>
             <Box width="100%">
               {!isUserRegistered && (
                 <Button
