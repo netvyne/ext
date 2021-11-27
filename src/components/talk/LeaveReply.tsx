@@ -1,5 +1,7 @@
-import Button from '@material-ui/core/Button';
-import SendIcon from '@material-ui/icons/Send';
+import SendIcon from '@mui/icons-material/Send';
+import {
+  Button
+} from '@mui/material';
 import MDEditor from '@uiw/react-md-editor';
 import React from 'react';
 import { useMutation, useQuery } from 'react-query';

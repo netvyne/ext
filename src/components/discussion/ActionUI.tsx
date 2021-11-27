@@ -1,16 +1,15 @@
-import { Tooltip, Typography } from '@material-ui/core';
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
-import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
-import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
-import LinkIcon from '@material-ui/icons/Link';
-import PublicIcon from '@material-ui/icons/Public';
-import ShareIcon from '@material-ui/icons/Share';
+// import { Tooltip, Typography } from '@material-ui/core';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import LinkIcon from '@mui/icons-material/Link';
+import PublicIcon from '@mui/icons-material/Public';
+import ShareIcon from '@mui/icons-material/Share';
+import {
+  Box, Button, CssBaseline,
+  Grid, IconButton, Tooltip, Typography
+} from '@mui/material';
 import React from 'react';
 import { Website } from '../../../types/common/types';
 import PublishWebsite from './PublishWebsite';
@@ -39,17 +38,13 @@ const ActionUI = ({
         </Grid>
         <Grid item component={IconButton} value="1" onClick={postVote}>
           <ArrowUpwardIcon
-            color={
-              website.VoteStatus === 1 ? 'primary' : 'secondary'
-            }
+            style={{ color: website.VoteStatus === 1 ? 'green' : 'grey' }}
           />
         </Grid>
         <Typography>{website.VoteStatus + website.Karma}</Typography>
         <Grid item component={IconButton} value="-1" onClick={postVote}>
           <ArrowDownwardIcon
-            color={
-              website.VoteStatus === -1 ? 'primary' : 'secondary'
-            }
+            style={{ color: website.VoteStatus === -1 ? 'red' : 'grey' }}
           />
         </Grid>
         <Grid container item style={{ alignItems: 'center' }}>
@@ -61,8 +56,8 @@ const ActionUI = ({
           />
           <Box>
             {website.Public
-              ? <Button onClick={() => { setShowShare(true); }}>+Tag</Button>
-              : <Button onClick={() => { setShowShare(true); }}>Publish</Button>}
+              ? <Button onClick={() => { setShowShare(true); }} sx={{ color: 'black' }}>+Tag</Button>
+              : <Button onClick={() => { setShowShare(true); }} sx={{ color: 'black' }}>Publish</Button>}
           </Box>
         </Grid>
         <Grid
@@ -89,6 +84,7 @@ const ActionUI = ({
                 onClick={(e) => {
                   onSaveItem(e, !saved);
                 }}
+                sx={{ color: 'black' }}
               >
                 SAVE
                 <BookmarkBorderIcon />
@@ -100,6 +96,7 @@ const ActionUI = ({
               onClick={(e) => {
                 onSaveItem(e, !saved);
               }}
+              sx={{ color: 'black' }}
             >
               UNDO
               <BookmarkBorderIcon />

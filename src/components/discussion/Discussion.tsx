@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
 import HCaptcha from '@hcaptcha/react-hcaptcha';
-import { Box } from '@material-ui/core';
+import { Box } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { AxiosError } from 'axios';
 import React, { useEffect } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
@@ -29,6 +30,17 @@ interface GetShoutTreesQuery {
 interface SuccessResponse {
   Shout: Shout;
 }
+
+const PREFIX = 'DISCUSSION';
+const classes = {
+  root: `${PREFIX}-root`,
+};
+
+const Root = styled('div')(() => ({
+  [`&.${classes.root}`]: {
+    padding: '10px !important',
+  },
+}));
 
 const Discussion = ({ initCurrentUser, initUrl, autoFetch } : Props) => {
   // const url : any = initUrl;
@@ -162,14 +174,16 @@ const Discussion = ({ initCurrentUser, initUrl, autoFetch } : Props) => {
     />
   );
   return (
-    <Box>
-      <div>
-        {website}
-        {actionBox}
-        {reply}
-        {trees}
-      </div>
-    </Box>
+    <Root className={classes.root}>
+      <Box>
+        <div>
+          {website}
+          {actionBox}
+          {reply}
+          {trees}
+        </div>
+      </Box>
+    </Root>
   );
 };
 export default Discussion;

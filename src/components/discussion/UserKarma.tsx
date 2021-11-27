@@ -1,7 +1,7 @@
 import {
   Box,
   Button, Dialog, DialogActions, DialogContent, DialogTitle
-} from '@material-ui/core';
+} from '@mui/material';
 import { DateTime } from 'luxon';
 import React from 'react';
 import { useMutation, useQuery } from 'react-query';

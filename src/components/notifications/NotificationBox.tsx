@@ -1,9 +1,9 @@
-import Box from '@material-ui/core/Box';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Grid from '@material-ui/core/Grid';
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import ErrorIcon from '@material-ui/icons/Error';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import ErrorIcon from '@mui/icons-material/Error';
+import {
+  Box, CssBaseline, Grid
+} from '@mui/material';
 import { DateTime } from 'luxon';
 import React from 'react';
 import { useMutation } from 'react-query';

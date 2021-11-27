@@ -1,7 +1,6 @@
-import { Typography } from '@material-ui/core';
-import Box from '@material-ui/core/Box';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Grid from '@material-ui/core/Grid';
+import {
+  Box, CssBaseline, Grid, Typography
+} from '@material-ui/core';
 import React from 'react';
 import { Url, Website } from '../../../types/common/types';
 

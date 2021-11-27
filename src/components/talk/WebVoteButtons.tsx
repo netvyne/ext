@@ -1,9 +1,8 @@
-import { Typography } from '@material-ui/core';
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import {
+  Box, Button, Grid, Typography
+} from '@mui/material';
 import React from 'react';
 import { useMutation } from 'react-query';
 import { Website } from '../../../types/common/types';

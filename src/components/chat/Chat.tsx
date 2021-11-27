@@ -1,15 +1,12 @@
 /* eslint-disable max-len */
-import { IconButton } from '@material-ui/core';
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
-import CancelIcon from '@material-ui/icons/Cancel';
-import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
-import ReplyIcon from '@material-ui/icons/Reply';
+import CancelIcon from '@mui/icons-material/Cancel';
+import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
+import ReplyIcon from '@mui/icons-material/Reply';
+import {
+  Box, Button, Grid, IconButton, Paper,
+  TextField, Typography
+} from '@mui/material';
 import { Picker } from 'emoji-mart';
 import 'emoji-mart/css/emoji-mart.css';
 import React, {
@@ -300,7 +297,7 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
               )
                 : <IconButton onClick={() => setShow(true)}><InsertEmoticonIcon /></IconButton> }
             </Grid>
-            <Grid item xs={12} container justify="flex-end">
+            <Grid item xs={12} container>
               <Button type="submit" size="small" color="primary" className={classes.messageSendButton}>
                 {' '}
                 Chat

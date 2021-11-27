@@ -1,15 +1,11 @@
-import { Tooltip } from '@material-ui/core';
-import Avatar from '@material-ui/core/Avatar';
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-import Link from '@material-ui/core/Link';
-import Typography from '@material-ui/core/Typography';
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
-import ImageIcon from '@material-ui/icons/Image';
-import LinkIcon from '@material-ui/icons/Link';
-import LocalOfferIcon from '@material-ui/icons/LocalOffer';
-import PublicIcon from '@material-ui/icons/Public';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import ImageIcon from '@mui/icons-material/Image';
+import LinkIcon from '@mui/icons-material/Link';
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import PublicIcon from '@mui/icons-material/Public';
+import {
+  Avatar, Box, Button, Grid, Link, Tooltip, Typography
+} from '@mui/material';
 import { DateTime } from 'luxon';
 import React from 'react';
 import ReactPlayer from 'react-player';
@@ -195,7 +191,6 @@ export default function FeedItem({
           container
           direction="row"
           alignItems="center"
-          justify="center"
         >
           <Grid item component={Box} width="100%">
             {ReactPlayer.canPlay(website.URL) ? (
