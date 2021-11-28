@@ -1,10 +1,9 @@
 import {
   Box,
   Button,
-  DialogContent
-} from '@material-ui/core';
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
+  Dialog, DialogContent,
+  DialogTitle
+} from '@mui/material';
 import React from 'react';
 
 interface Props {

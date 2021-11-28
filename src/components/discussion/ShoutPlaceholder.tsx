@@ -1,7 +1,7 @@
-import Skeleton from '@material-ui/lab/Skeleton';
 import {
   Box, Button, Grid
 } from '@mui/material';
+import Skeleton from '@mui/material/Skeleton';
 import * as React from 'react';
 
 export default function ShoutPlaceholder() {

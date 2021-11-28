@@ -1,5 +1,4 @@
 /* eslint-disable max-len */
-import { makeStyles } from '@material-ui/core/styles';
 import CancelIcon from '@mui/icons-material/Cancel';
 import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
 import ReplyIcon from '@mui/icons-material/Reply';
@@ -7,6 +6,7 @@ import {
   Box, Button, Grid, IconButton, Paper,
   TextField, Typography
 } from '@mui/material';
+import { createTheme, styled, ThemeProvider } from '@mui/material/styles';
 import { Picker } from 'emoji-mart';
 import 'emoji-mart/css/emoji-mart.css';
 import React, {
@@ -18,60 +18,82 @@ import { getCurrentUser } from '../../auth/auth';
 import { isValidURL } from '../../utils';
 import './styles.scss';
 
-  interface GetUserQuery {
-    initCurrentUser: User[];
-  }
+interface GetUserQuery {
+  initCurrentUser: User[];
+}
 
-const useStyles = makeStyles((theme) => ({
-  root: {
+const chatFormTheme = createTheme({
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          width: '30%',
+          color: '#ffffff',
+          backgroundColor: '#9F00CF',
+          height: '40px',
+          marginTop: '10px',
+          float: 'right',
+          '&:hover': {
+            background: '#33DA00',
+          },
+        },
+      },
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          width: '88%',
+        },
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          borderColor: 'transparent',
+        },
+        input: {
+          borderColor: 'transparent',
+        },
+        notchedOutline: {
+          borderColor: 'transparent',
+        },
+      },
+    }
+  },
+});
+
+const parentChatTheme = createTheme({
+  components: {
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          padding: '20px',
+          marginTop: '5px',
+          maxWidth: 500,
+        },
+      },
+    },
+  },
+});
+
+const PREFIX = 'CHAT';
+const classes = {
+  root: `${PREFIX}-root`,
+};
+
+const ChatForm = styled('form')(() => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-end',
+  marginLeft: '20px',
+  marginBottom: '10px',
+  marginRight: '20px',
+}));
+
+const Root = styled('div')(({ theme }) => ({
+  [`&.${classes.root}`]: {
     flexGrow: 1,
   },
-  paper: {
-    padding: theme.spacing(2),
-    marginTop: '5px',
-    maxWidth: 500,
-  },
-  image: {
-    width: 128,
-    height: 128,
-  },
-  img: {
-    margin: 'auto',
-    display: 'block',
-    maxWidth: '100%',
-    maxHeight: '100%',
-  },
-  chatBubble: {
-    maxWidth: 400,
-    margin: `${theme.spacing(1)}px auto`,
-    padding: theme.spacing(2),
-  },
-  messageContainer: {
-    position: 'fixed',
-    bottom: '0',
-  },
-  chatForm: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-end',
-    marginLeft: '20px',
-    marginBottom: '10px',
-    marginRight: '20px',
-  },
-  messageTextField: {
-    width: '88%',
-  },
-  messageSendButton: {
-    width: '30%',
-    color: '#ffffff',
-    backgroundColor: '#9F00CF',
-    height: '40px',
-    marginTop: '10px',
-    float: 'right',
-    '&:hover': {
-      background: '#33DA00',
-    },
-  }
 }));
 
 const Chat = ({ initCurrentUser } : GetUserQuery) => {
@@ -87,8 +109,6 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
   const divRef : any = useRef(null);
   const messagesEndRef: any = useRef(null);
   getCurrentUser().then((currentUser:User|any) => setUser(initCurrentUser));
-
-  const classes = useStyles();
 
   const scrollToBottom = () => {
     messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -179,7 +199,7 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
   };
 
   const msgs = messages.map((message : any) => (
-    <div
+    <Root
       className={classes.root}
     >
       <Grid
@@ -221,37 +241,39 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
           )}
         </Grid>
       </Grid>
-    </div>
+    </Root>
   ));
 
   if (parentChat?.ID) {
     parentChatTitle = (
-      <div className={classes.root}>
-        <Paper className={classes.paper}>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm container>
-              <Grid item xs container direction="column" spacing={2}>
-                <Grid item xs>
-                  <Typography gutterBottom variant="subtitle1">
-                    Replying to @
-                    {parentChat.Author.UserName}
-                  </Typography>
-                  <Typography variant="body2" gutterBottom>
-                    {parentChat.Author.UserName}
-                    {' '}
-                    :
-                    {' '}
-                    {parentChat.Comment}
-                  </Typography>
+      <Root className={classes.root}>
+        <ThemeProvider theme={parentChatTheme}>
+          <Paper>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm container>
+                <Grid item xs container direction="column" spacing={2}>
+                  <Grid item xs>
+                    <Typography gutterBottom variant="subtitle1">
+                      Replying to @
+                      {parentChat.Author.UserName}
+                    </Typography>
+                    <Typography variant="body2" gutterBottom>
+                      {parentChat.Author.UserName}
+                      {' '}
+                      :
+                      {' '}
+                      {parentChat.Comment}
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid item>
+                  <Button type="button" size="small" color="primary" endIcon={<CancelIcon />} onClick={() => { setParentChat(null); }} />
                 </Grid>
               </Grid>
-              <Grid item>
-                <Button type="button" size="small" color="primary" endIcon={<CancelIcon />} onClick={() => { setParentChat(null); }} />
-              </Grid>
             </Grid>
-          </Grid>
-        </Paper>
-      </div>
+          </Paper>
+        </ThemeProvider>
+      </Root>
     );
   }
   return (
@@ -261,50 +283,52 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
         {msgs}
         <div ref={messagesEndRef} />
       </div>
-      <Grid item xs container className={classes.messageContainer}>
+      <Grid item xs container sx={{ position: 'fixed', bottom: 0 }}>
         <Grid item xs={12}>
           {parentChatTitle}
         </Grid>
         <Grid item xs={12}>
-          <form onSubmit={postChat} className={classes.chatForm}>
-            <Grid item xs={12} container className="livechat-textfield">
-              <TextField
-                value={comment}
-                onInput={(e : any) => setComment(e.target.value)}
-                placeholder="Send a message"
-                className={classes.messageTextField}
-                inputProps={{
-                  underline: {
-                    '&&&:before': {
-                      borderBottom: 'none'
-                    },
-                    '&&:after': {
-                      borderBottom: 'none'
+          <ThemeProvider theme={chatFormTheme}>
+            <ChatForm onSubmit={postChat}>
+              <Grid item xs={12} container className="livechat-textfield">
+                <TextField
+                  value={comment}
+                  onInput={(e : any) => setComment(e.target.value)}
+                  placeholder="Send a message"
+                  inputProps={{
+                    underline: {
+                      '&&&:before': {
+                        borderBottom: 'none'
+                      },
+                      '&&:after': {
+                        borderBottom: 'none'
+                      }
                     }
-                  }
-                }}
-              />
-              {show ? (
-                <Picker
-                  set="apple"
-                  title=""
-                  emoji="point_up"
-                  style={{
-                    position: 'fixed', zIndex: 10, bottom: '20px', right: '20px'
                   }}
-                  onSelect={addEmoji}
                 />
-              )
-                : <IconButton onClick={() => setShow(true)}><InsertEmoticonIcon /></IconButton> }
-            </Grid>
-            <Grid item xs={12} container>
-              <Button type="submit" size="small" color="primary" className={classes.messageSendButton}>
-                {' '}
-                Chat
-                {' '}
-              </Button>
-            </Grid>
-          </form>
+                {show ? (
+                  <Picker
+                    set="apple"
+                    title=""
+                    emoji="point_up"
+                    style={{
+                      position: 'fixed', zIndex: 10, bottom: '20px', right: '20px'
+                    }}
+                    onSelect={addEmoji}
+                  />
+                )
+                  : <IconButton onClick={() => setShow(true)}><InsertEmoticonIcon /></IconButton> }
+              </Grid>
+              <Grid item xs={12} container>
+                <Button type="submit" size="small" color="primary">
+
+                  {' '}
+                  Chat
+                  {' '}
+                </Button>
+              </Grid>
+            </ChatForm>
+          </ThemeProvider>
         </Grid>
       </Grid>
     </Box>

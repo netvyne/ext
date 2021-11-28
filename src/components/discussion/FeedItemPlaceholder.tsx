@@ -1,7 +1,7 @@
-import Skeleton from '@material-ui/lab/Skeleton';
 import {
   Avatar, Box, Button, Grid
 } from '@mui/material';
+import Skeleton from '@mui/material/Skeleton';
 import * as React from 'react';
 
 export default function FeedItemPlaceholder() {
@@ -17,12 +17,12 @@ export default function FeedItemPlaceholder() {
       wrap="nowrap"
     >
       <Grid container direction="row" alignItems="flex-start" spacing={2}>
-        <Skeleton variant="text">
+        <Skeleton>
           <Grid item component={Box}>
             Placeholder.com
           </Grid>
         </Skeleton>
-        <Skeleton variant="text">
+        <Skeleton>
           <Grid item component={Box}>
             Hellloooo
           </Grid>
