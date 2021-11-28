@@ -1,6 +1,7 @@
-import CircularProgress from '@material-ui/core/CircularProgress';
-import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import Autocomplete from '@mui/lab/Autocomplete';
+import {
+  CircularProgress, TextField
+} from '@mui/material';
 import * as React from 'react';
 import { useQuery } from 'react-query';
 import { Conversation, ConversationMember, User } from '../../../types/common/types';

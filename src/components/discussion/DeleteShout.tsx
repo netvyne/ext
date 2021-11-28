@@ -1,5 +1,6 @@
-import { IconButton } from '@material-ui/core';
-import DeleteIcon from '@material-ui/icons/Delete';
+// import { IconButton } from '@material-ui/core';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { IconButton } from '@mui/material';
 import React from 'react';
 import { useMutation, useQuery } from 'react-query';
 import { Shout } from '../../../types/common/types';

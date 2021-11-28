@@ -1,16 +1,9 @@
 /* eslint-disable max-len */
-import AppBar from '@material-ui/core/AppBar';
-import Avatar from '@material-ui/core/Avatar';
-import Badge from '@material-ui/core/Badge';
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
-import Typography from '@material-ui/core/Typography';
+import {
+  AppBar, Avatar, Badge, Box, Button, Grid,
+  Menu, MenuItem, Tab, Tabs, ThemeProvider, Typography
+} from '@mui/material/';
+import { createTheme, styled } from '@mui/material/styles';
 import { Sharing } from '@src/components/sharing';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { QueryClientProvider, useQuery } from 'react-query';
@@ -62,19 +55,27 @@ function a11yProps(index : any) {
     'aria-controls': `full-width-tabpanel-${index}`,
   };
 }
+const PREFIX = 'POPUP';
+const classes = {
+  root: `${PREFIX}-root`,
+};
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    backgroundColor: theme.palette.background.paper,
-    width: 'auto',
-  },
-  tab: {
-    padding: '10px',
-    '& .MuiBox-root-10': {
-      padding: '10px',
-    },
+const Root = styled('div')(() => ({
+  [`&.${classes.root}`]: {
+    display: 'flex',
+    alignItems: 'center'
   },
 }));
+
+const theme = createTheme({
+  components: {
+    MuiMenu: {
+      styleOverrides: {
+        list: { display: 'flex', flexDirection: 'column', padding: '10px' },
+      },
+    },
+  },
+});
 
 export const Popup: FunctionComponent = () => {
   const [user, setUser] = React.useState<User|any>();
@@ -158,9 +159,6 @@ export const Popup: FunctionComponent = () => {
     }, 1000);
   }, [data, intervalCount]);
 
-  const classes = useStyles();
-  // const classes = useStyles();
-  const theme = useTheme();
   const [value, setValue] = React.useState(0);
   const handleChange = (event : any, newValue : any) => {
     setValue(newValue);
@@ -180,108 +178,112 @@ export const Popup: FunctionComponent = () => {
   // Renders the component tree
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="popup-container">
-        <div className="container mx-1 my-1">
-          <AppBar position="static" color="default" elevation={1}>
-            <Grid className="topbar">
-              <Grid className="logo">
-                <Button onClick={() => moreOptionClick('profile', 'profile')}>
-                  <img src="../icon-48.png" alt="logo" />
-                </Button>
-              </Grid>
-              <Tabs
-                className="tabs"
-                value={value}
-                onChange={handleChange}
-                indicatorColor="primary"
-                textColor="primary"
-                variant="fullWidth"
-                aria-label="icon label tabs example"
-                TabIndicatorProps={{
-                  style: {
-                    backgroundColor: '#9F00CF',
-                  },
-                }}
-              >
-                <Tab icon={<Avatar alt="Conversation" src={value === 0 ? '../images/conversation_selected.png' : '../images/conversation_normal.png'} className="tabIcon" />} label="Discuss" {...a11yProps(0)} />
-                <Tab icon={<Avatar alt="Share" src={value === 1 ? '../images/share_selected.png' : '../images/share_normal.png'} className="tabIcon" />} label="Share" {...a11yProps(1)} />
-                <Tab
-                  icon={(
-                    <Badge
-                      anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'right',
-                      }}
-                      color="primary"
-                      variant="dot"
-                      invisible={!data?.ContainsUnread}
-                    >
-                      <Avatar alt="Notification" src={value === 2 ? '../images/notification_selected.png' : '../images/notification_normal.png'} className="tabIcon" />
-                    </Badge>
+      <Root className={classes.root}>
+        <div className="popup-container">
+          <div className="container mx-1 my-1">
+            <AppBar position="static" color="default" elevation={1}>
+              <Grid className="topbar">
+                <Grid className="logo">
+                  <Button onClick={() => moreOptionClick('profile', 'profile')}>
+                    <img src="../icon-48.png" alt="logo" />
+                  </Button>
+                </Grid>
+                <Tabs
+                  className="tabs"
+                  value={value}
+                  onChange={handleChange}
+                  indicatorColor="primary"
+                  textColor="primary"
+                  variant="fullWidth"
+                  aria-label="icon label tabs example"
+                  TabIndicatorProps={{
+                    style: {
+                      backgroundColor: '#9F00CF',
+                    },
+                  }}
+                >
+                  <Tab icon={<Avatar alt="Conversation" src={value === 0 ? '../images/conversation_selected.png' : '../images/conversation_normal.png'} className="tabIcon" />} label="Discuss" {...a11yProps(0)} />
+                  <Tab icon={<Avatar alt="Share" src={value === 1 ? '../images/share_selected.png' : '../images/share_normal.png'} className="tabIcon" />} label="Share" {...a11yProps(1)} />
+                  <Tab
+                    icon={(
+                      <Badge
+                        anchorOrigin={{
+                          vertical: 'bottom',
+                          horizontal: 'right',
+                        }}
+                        color="primary"
+                        variant="dot"
+                        invisible={!data?.ContainsUnread}
+                      >
+                        <Avatar alt="Notification" src={value === 2 ? '../images/notification_selected.png' : '../images/notification_normal.png'} className="tabIcon" />
+                      </Badge>
 )}
-                  label="Notifications"
-                  {...a11yProps(2)}
-                />
-                <Tab className="livechat-tab" label="" {...a11yProps(3)} />
-              </Tabs>
-              <Button onClick={() => moreOptionClick('logout', 'profile')}>
-                {(isUserRegistered && user.AvatarURL) && (
+                    label="Notifications"
+                    {...a11yProps(2)}
+                  />
+                  <Tab className="livechat-tab" label="" {...a11yProps(3)} />
+                </Tabs>
+                <Button onClick={() => moreOptionClick('logout', 'profile')}>
+                  {(isUserRegistered && user.AvatarURL) && (
                   <Avatar
                     style={{ width: 40, height: 40 }}
                     alt="Avatar"
                     src={user.AvatarURL}
                   />
-                )}
-                {(isUserRegistered && !user.AvatarURL) && (
+                  )}
+                  {(isUserRegistered && !user.AvatarURL) && (
                   <Avatar
                     alt="Handle initial"
                     style={{ width: 40, height: 40, fontSize: '1.5rem' }}
                   >
                     {`${currentUser.UserName.charAt(0).toUpperCase()}`}
                   </Avatar>
-                )}
-                {!isUserRegistered && currentUser && (
-                <Avatar
-                  alt="Handle initial"
-                  style={{ width: 40, height: 40, fontSize: '1.5rem' }}
-                >
-                  {`${currentUser.UserName.charAt(0).toUpperCase()}`}
-                </Avatar>
-                )}
-              </Button>
-              <div className="more-icon">
-                <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-                  <img src={value === 3 ? '../images/three_dots_selected.png' : '../images/three_dots_normal.png'} alt="more icon" />
+                  )}
+                  {!isUserRegistered && currentUser && (
+                  <Avatar
+                    alt="Handle initial"
+                    style={{ width: 40, height: 40, fontSize: '1.5rem' }}
+                  >
+                    {`${currentUser.UserName.charAt(0).toUpperCase()}`}
+                  </Avatar>
+                  )}
                 </Button>
-                <Menu
-                  id="simple-menu"
-                  anchorEl={anchorEl}
-                  keepMounted
-                  open={Boolean(anchorEl)}
-                  onClose={() => handleClose('close')}
-                >
-                  <MenuItem onClick={() => handleClose('livechat')}>Live Chat</MenuItem>
-                  <MenuItem onClick={() => moreOptionClick('feedback', 'https://forms.gle/LUzvrWqhtWnKwAxX6')}>Feedback</MenuItem>
-                  {isUserRegistered && (<MenuItem onClick={() => moreOptionClick('logout', 'profile')}>Logout</MenuItem>)}
-                  {!isUserRegistered && (<MenuItem onClick={() => moreOptionClick('login', 'auth/signin')}>Login</MenuItem>)}
-                </Menu>
-              </div>
-            </Grid>
-          </AppBar>
-          <TabPanel value={value} index={0} dir={theme.direction} className={classes.tab}>
-            <Discussion initCurrentUser={user} initUrl={url} autoFetch={autoFetch} />
-          </TabPanel>
-          <TabPanel value={value} index={1} dir={theme.direction}>
-            <Sharing />
-          </TabPanel>
-          <TabPanel value={value} index={2} dir={theme.direction}>
-            <Notifications refetch={refetch} />
-          </TabPanel>
-          <TabPanel value={value} index={3} dir={theme.direction}>
-            <Chat initCurrentUser={user} />
-          </TabPanel>
+                <div className="more-icon">
+                  <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+                    <img src={value === 3 ? '../images/three_dots_selected.png' : '../images/three_dots_normal.png'} alt="more icon" />
+                  </Button>
+                  <ThemeProvider theme={theme}>
+                    <Menu
+                      id="simple-menu"
+                      anchorEl={anchorEl}
+                      keepMounted
+                      open={Boolean(anchorEl)}
+                      onClose={() => handleClose('close')}
+                    >
+                      <MenuItem onClick={() => handleClose('livechat')}>Live Chat</MenuItem>
+                      <MenuItem onClick={() => moreOptionClick('feedback', 'https://forms.gle/LUzvrWqhtWnKwAxX6')}>Feedback</MenuItem>
+                      {isUserRegistered && (<MenuItem onClick={() => moreOptionClick('logout', 'profile')}>Logout</MenuItem>)}
+                      {!isUserRegistered && (<MenuItem onClick={() => moreOptionClick('login', 'auth/signin')}>Login</MenuItem>)}
+                    </Menu>
+                  </ThemeProvider>
+                </div>
+              </Grid>
+            </AppBar>
+            <TabPanel value={value} index={0}>
+              <Discussion initCurrentUser={user} initUrl={url} autoFetch={autoFetch} />
+            </TabPanel>
+            <TabPanel value={value} index={1}>
+              <Sharing />
+            </TabPanel>
+            <TabPanel value={value} index={2}>
+              <Notifications refetch={refetch} />
+            </TabPanel>
+            <TabPanel value={value} index={3}>
+              <Chat initCurrentUser={user} />
+            </TabPanel>
+          </div>
         </div>
-      </div>
+      </Root>
     </QueryClientProvider>
   );
 };

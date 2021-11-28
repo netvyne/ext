@@ -1,9 +1,10 @@
 /* eslint-disable linebreak-style */
 import HCaptcha from '@hcaptcha/react-hcaptcha';
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
-import ReplyIcon from '@material-ui/icons/Reply';
-import SendIcon from '@material-ui/icons/Send';
+import ReplyIcon from '@mui/icons-material/Reply';
+import SendIcon from '@mui/icons-material/Send';
+import {
+  Box, Button
+} from '@mui/material';
 import MDEditor from '@uiw/react-md-editor';
 import React from 'react';
 

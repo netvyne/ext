@@ -1,9 +1,7 @@
-import { Button, IconButton } from '@material-ui/core';
-import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import Tooltip from '@material-ui/core/Tooltip';
-import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
+import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
+import { Button, IconButton } from '@mui/material';
+import { createTheme, styled, ThemeProvider } from '@mui/material/styles';
+import Tooltip from '@mui/material/Tooltip';
 import { Emoji, Picker } from 'emoji-mart';
 import 'emoji-mart/css/emoji-mart.css';
 import React from 'react';
@@ -15,32 +13,89 @@ interface Props {
   defUser: User;
 }
 
-const useStyles = makeStyles(() => ({
-  emojisContainer: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  emojiIcon: {
-    border: 'solid 1px #000000',
-    borderRadius: '10px',
-    width: '40px',
-    height: '22px',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: '5px',
-    padding: '5px'
-  },
-  tooltipContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 'auto',
-  }
-}));
+// const PREFIX = 'TALKVOTE';
+// const classes = {
+//   emojisContainer: `${PREFIX}-emojisContainer`,
+//   emojiIcon: `${PREFIX}-emojiIcon`,
+//   tooltipContainer: `${PREFIX}-tooltipContainer`,
+// };
 
-const BlackTooltip = withStyles({
+// const Root = styled('div')(() => ({
+//   [`&.${classes.emojisContainer}`]: {
+//     display: 'flex',
+//     alignItems: 'center',
+//   },
+//   [`&.${classes.emojiIcon}`]: {
+//     border: 'solid 1px #000000',
+//     borderRadius: '10px',
+//     width: '40px',
+//     height: '22px',
+//     display: 'flex',
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     marginRight: '5px',
+//     padding: '5px'
+//   },
+//   [`&.${classes.tooltipContainer}`]: {
+//     display: 'flex',
+//     flexDirection: 'column',
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     width: 'auto',
+//   },
+// }));
+const EmojisContainer = styled('div')(() => ({
+  display: 'flex',
+  alignItems: 'center',
+}));
+const EmojiIcon = styled('div')(() => ({
+  border: 'solid 1px #000000',
+  borderRadius: '10px',
+  width: '40px',
+  height: '22px',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginRight: '5px',
+  padding: '5px'
+}));
+const TooltipContainer = styled('div')(() => ({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: 'auto',
+}));
+// const defaultTheme = createTheme();
+const theme = createTheme({
+  components: {
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: {
+          backgroundColor: 'black',
+          borderRadius: '5px',
+          color: 'white',
+          padding: '4px 8px',
+          fontSize: '14px',
+          maxWidth: 150,
+          wordWrap: 'break-word',
+          fontWeight: 'normal',
+        },
+        arrow: {
+          color: 'black',
+        },
+      }
+    }
+  }
+});
+// const BlueOnGreenTooltip = styled(({ className, ...props }) => (
+//   <Tooltip {...props} componentsProps={{ tooltip: { className } }} />
+// ))(`
+//     color: lightblue;
+//     background-color: green;
+//     font-size: 1.5em;
+// `);
+const BlackTooltip = styled(Tooltip)(() => ({
   tooltip: {
     backgroundColor: 'black',
     borderRadius: '5px',
@@ -54,9 +109,24 @@ const BlackTooltip = withStyles({
   arrow: {
     color: 'black',
   },
-})(Tooltip);
+}));
+// const BlackTooltip = withStyles({
+//   tooltip: {
+//     backgroundColor: 'black',
+//     borderRadius: '5px',
+//     color: 'white',
+//     padding: '4px 8px',
+//     fontSize: '14px',
+//     maxWidth: 150,
+//     wordWrap: 'break-word',
+//     fontWeight: 'normal',
+//   },
+//   arrow: {
+//     color: 'black',
+//   },
+// })(Tooltip);
+const defaultTheme = createTheme();
 export default function TalkVoteButtons({ initTalk, defUser }: Props) {
-  const classes = useStyles();
   const [talk, setTalk] = React.useState(initTalk);
   const [show, setShow] = React.useState(false);
 
@@ -106,44 +176,50 @@ export default function TalkVoteButtons({ initTalk, defUser }: Props) {
 
   return (
     // @ts-ignore
-    <Grid component={Box} container direction="row" className={classes.emojisContainer}>
-      {show ? (
-        <Picker
-          set="apple"
-          onSelect={postEmoji}
-          title=""
-          style={{
-            position: 'absolute', zIndex: 10
-          }}
-        />
-      )
-        : <IconButton size="small" onClick={() => setShow(true)}><InsertEmoticonIcon /></IconButton>}
-      <div style={{ display: 'flex', overflowX: 'scroll', maxWidth: '275px' }}>
-        {uniqueReactions.map((vote: any) => (
-          <div className={classes.emojiIcon}>
-            <BlackTooltip
-              title={(
-                <div className={classes.tooltipContainer}>
-                  <Emoji
-                    emoji={vote}
-                    set="apple"
-                    size={20}
-                    onClick={postEmoji}
-                  />
-                  {getReactors(vote)}
-                </div>
+    // <Grid component={Box} container direction="row" className={classes.emojisContainer}>
+    <ThemeProvider theme={theme}>
+      <EmojisContainer>
+        {show ? (
+          <Picker
+            set="apple"
+            onSelect={postEmoji}
+            title=""
+            style={{
+              position: 'absolute', zIndex: 10
+            }}
+          />
+        )
+          : <IconButton size="small" onClick={() => setShow(true)}><InsertEmoticonIcon /></IconButton>}
+        <div style={{
+          display: 'flex', overflowX: 'scroll', overflowY: 'hidden', maxWidth: '272px'
+        }}
+        >
+          {uniqueReactions.map((vote: any) => (
+            <EmojiIcon>
+              <BlackTooltip
+                title={(
+                  <TooltipContainer>
+                    <Emoji
+                      emoji={vote}
+                      set="apple"
+                      size={20}
+                      onClick={postEmoji}
+                    />
+                    {getReactors(vote)}
+                  </TooltipContainer>
             )}
-              arrow
-            >
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <Button onClick={() => postEmoji(vote)}>
-                  {`${vote} ${getCount(vote)}`}
-                </Button>
-              </div>
-            </BlackTooltip>
-          </div>
-        ))}
-      </div>
-    </Grid>
+                arrow
+              >
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <Button onClick={() => postEmoji(vote)}>
+                    {`${vote} ${getCount(vote)}`}
+                  </Button>
+                </div>
+              </BlackTooltip>
+            </EmojiIcon>
+          ))}
+        </div>
+      </EmojisContainer>
+    </ThemeProvider>
   );
 }

@@ -1,11 +1,9 @@
 /* eslint-disable max-len */
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
-import GavelIcon from '@material-ui/icons/Gavel';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import GavelIcon from '@mui/icons-material/Gavel';
+import {
+  Box, Button, CssBaseline, Grid, Typography
+} from '@mui/material';
 import { DateTime } from 'luxon';
 import React from 'react';
 import ReactMarkdown from 'react-markdown';

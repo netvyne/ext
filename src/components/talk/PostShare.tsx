@@ -1,18 +1,13 @@
 /* eslint-disable max-len */
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
-import Snackbar from '@material-ui/core/Snackbar';
-import { makeStyles } from '@material-ui/core/styles';
-import Tooltip from '@material-ui/core/Tooltip';
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-import DeleteIcon from '@material-ui/icons/Delete';
-import Alert from '@material-ui/lab/Alert';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import DeleteIcon from '@mui/icons-material/Delete';
+import Alert from '@mui/lab/Alert';
+import {
+  Box, Button, Dialog, DialogActions, DialogContent,
+  DialogTitle, Grid, IconButton, Snackbar, Tooltip
+} from '@mui/material';
+// import { makeStyles } from '@material-ui/core/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DateTime } from 'luxon';
 import React from 'react';
 import { useMutation, useQuery } from 'react-query';
@@ -34,14 +29,24 @@ interface GetTalkTreeQuery {
   Roots: Talk[];
 }
 
+const theme = createTheme({
+  components: {
+    MuiSnackbar: {
+      styleOverrides: {
+        root: { ZIndex: '10000' },
+      },
+    },
+  },
+});
+
 export default function PostShare({
   post, defUser, setShowTalkTree, refetch
 }: Props) {
-  const useStyles = makeStyles(() => ({
-    snackbar: {
-      zIndex: 10000,
-    },
-  }));
+  // const useStyles = makeStyles(() => ({
+  //   snackbar: {
+  //     zIndex: 10000,
+  //   },
+  // }));
   const [openShareMore, setOpenShareMore] = React.useState(false);
   const [dropdownRefetch, setDropdownRefetch] = React.useState(Date());
   const [friendHandles, setFriendHandles] = React.useState([]);
@@ -52,7 +57,6 @@ export default function PostShare({
   const toggleSbar = () => {
     setSbarOpen(!sbarOpen);
   };
-  const classes = useStyles();
 
   const { data, status } = useQuery<GetTalkTreeQuery, string>(
     `/get_talk_trees?post_id=${post.ID}`
@@ -205,11 +209,13 @@ export default function PostShare({
           </Button>
         </DialogActions>
       </Dialog>
-      <Snackbar className={classes.snackbar} anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={sbarOpen} autoHideDuration={3000} onClose={toggleSbar}>
-        <Alert onClose={toggleSbar} severity="success">
-          Success!
-        </Alert>
-      </Snackbar>
+      <ThemeProvider theme={theme}>
+        <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={sbarOpen} autoHideDuration={3000} onClose={toggleSbar}>
+          <Alert onClose={toggleSbar} severity="success">
+            Success!
+          </Alert>
+        </Snackbar>
+      </ThemeProvider>
     </>
   );
 }
