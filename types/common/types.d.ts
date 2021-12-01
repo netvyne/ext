@@ -45,6 +45,7 @@ interface Website {
     Host: string;
     Pathname: string;
     Search: string;
+    ApprovalRate: number;
     Karma: number;
     Upvotes: number;
     Downvotes: number;
