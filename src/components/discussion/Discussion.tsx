@@ -1,7 +1,8 @@
 /* eslint-disable max-len */
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { Box } from '@mui/material';
-import { styled } from '@mui/material/styles';
+// import { styled } from '@mui/material/styles';
+import { createTheme, styled, ThemeProvider } from '@mui/material/styles';
 import { AxiosError } from 'axios';
 import React, { useEffect } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
@@ -42,6 +43,36 @@ const Root = styled('div')(() => ({
   },
 }));
 
+const discussionTheme = createTheme({
+  components: {
+    MuiLink: {
+      styleOverrides: {
+        root: {
+          color: '#3f51b5',
+          textDecoration: 'none',
+          '@media (max-width: 768px)': {
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            width: '145px',
+            display: 'inline-block',
+          },
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          color: '#3f51b5',
+        },
+        outlinedPrimary: {
+          color: '#3f51b5',
+          border: 'solid 1px #3f51b5',
+        }
+      },
+    }
+  }
+});
 const Discussion = ({ initCurrentUser, initUrl, autoFetch } : Props) => {
   // const url : any = initUrl;
   const [url, setUrl] = React.useState<any>({});
@@ -175,14 +206,16 @@ const Discussion = ({ initCurrentUser, initUrl, autoFetch } : Props) => {
   );
   return (
     <Root className={classes.root}>
-      <Box>
-        <div>
-          {website}
-          {actionBox}
-          {reply}
-          {trees}
-        </div>
-      </Box>
+      <ThemeProvider theme={discussionTheme}>
+        <Box>
+          <div>
+            {website}
+            {actionBox}
+            {reply}
+            {trees}
+          </div>
+        </Box>
+      </ThemeProvider>
     </Root>
   );
 };

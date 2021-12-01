@@ -1,5 +1,5 @@
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import {
   Box, Button, Grid
 } from '@mui/material';
@@ -40,20 +40,16 @@ export default function ShoutVoteButtons({ initShout }: Props) {
     // @ts-ignore
     <Grid component={Box} container alignItems="center" direction="row">
       <Button value="1" onClick={onPostVote} className="vote-buttons">
-        <KeyboardArrowUpIcon
+        <ArrowUpwardIcon
           key={shout.VoteStatus}
-          color={
-            shout.VoteStatus === 1 ? 'primary' : 'secondary'
-          }
+          style={{ color: shout.VoteStatus === 1 ? 'green' : 'grey' }}
         />
       </Button>
       <Box>{shout.Karma}</Box>
       <Button value="-1" onClick={onPostVote} className="vote-buttons">
-        <KeyboardArrowDownIcon
+        <ArrowDownwardIcon
           key={shout.VoteStatus}
-          color={
-            shout.VoteStatus === -1 ? 'primary' : 'secondary'
-          }
+          style={{ color: shout.VoteStatus === -1 ? 'red' : 'grey' }}
         />
       </Button>
     </Grid>

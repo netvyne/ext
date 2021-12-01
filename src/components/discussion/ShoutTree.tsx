@@ -119,13 +119,13 @@ const ShoutTree = ({
         m={1}
         borderRadius="borderRadius"
         direction="column"
-        style={{ marginBottom: '5px' }}
+        style={{ margin: '0px' }}
       >
         <Grid item container direction="row" wrap="nowrap">
           {/* @ts-ignore */}
 
           <Grid item container component={Box} m={1}>
-            <Grid item container component={Box} m={1} wrap="nowrap" spacing={1}>
+            <Grid item container component={Box} wrap="nowrap" spacing={1}>
               <Grid item component={Box} onClick={toggleUserKarmaOpen}>
                 <Typography variant="body2" color={root.Author.UserName === user?.UserName ? 'primary' : 'textPrimary'}>
                   {root.Author.UserName}
@@ -156,9 +156,9 @@ const ShoutTree = ({
                 : <ReactMarkdown>{root.Comment}</ReactMarkdown>}
             </Grid>
 
-            <Grid item container component={Box} m={1} wrap="nowrap" spacing={1} className="reply-actions-box">
+            <Grid item container component={Box} wrap="nowrap" spacing={1} style={{ display: 'flex', flexDirection: 'column' }}>
               <LeaveReply website={website} parent={root} setChildren={setChildren} />
-              <Grid item className="reply-actions">
+              <Grid item style={{ display: 'flex', flexDirection: 'row' }}>
                 <Box>
                   <ShoutVoteButtons
                     initShout={root}
@@ -173,6 +173,7 @@ const ShoutTree = ({
                         onSaveItem(e, true);
                         setClicked(true);
                       }}
+                      style={{ color: '#000000' }}
                     >
                       SAVE
                       <BookmarkBorderIcon />
@@ -188,6 +189,7 @@ const ShoutTree = ({
                         onSaveItem(e, false);
                         setClicked(true);
                       }}
+                      style={{ color: '#000000' }}
                     >
                       UNDO
                       <BookmarkBorderIcon />
@@ -196,7 +198,7 @@ const ShoutTree = ({
                 )}
                 {(user?.Role === 'mod' || user?.Role === 'admin')
                   && (
-                    <Button href={`${process.env.REACT_APP_MOD_URL}/shout/${root.ID}`} target="_blank">
+                    <Button href={`${process.env.REACT_APP_MOD_URL}/shout/${root.ID}`} target="_blank" style={{ color: '#000000' }}>
                       MOD
                       {' '}
                       <GavelIcon />
