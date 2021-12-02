@@ -1,4 +1,5 @@
 /* eslint-disable max-len */
+import CloseIcon from '@mui/icons-material/Close';
 import GroupIcon from '@mui/icons-material/Group';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import KeyboardBackspace from '@mui/icons-material/KeyboardBackspace';
@@ -187,13 +188,26 @@ export const Sharing: FunctionComponent = () => {
     formData.append('Image', file, file.name);
     formData.append('Type', 'screenshot');
     formData.append('ID', postId);
-    mutation.mutate(
+    // mutation.mutate(
+    //   // @ts-ignore
+    //   {
+    //     route: '/upload_image',
+    //     data: formData,
+    //   },
+    // );
+    const res = mutation.mutate(
       // @ts-ignore
       {
         route: '/upload_image',
         data: formData,
       },
+      {
+        onSuccess: (response : any) => {
+          setDataURL('');
+        },
+      },
     );
+    return res;
   };
 
   function createTestDiv() {
@@ -226,7 +240,6 @@ export const Sharing: FunctionComponent = () => {
       },
       {
         onSuccess: (response : any) => {
-          // setUrl('');
           setComment('Check this out!');
           setDropdownRefetch(Date());
           setConversationID(0);
@@ -235,8 +248,11 @@ export const Sharing: FunctionComponent = () => {
           setMarkSensitive(false);
           setCreateConv(false);
           setCreateConv(false);
-          uploadImage(response.Post.ID);
-          setDataURL('');
+          if (dataURL !== '') {
+            // console.log('Inside if condition');
+            uploadImage(response.Post.ID);
+            // setDataURL('');
+          }
           setOpen(true);
           refetch();
         },
@@ -329,16 +345,36 @@ export const Sharing: FunctionComponent = () => {
     ));
   }
 
+  const action = (
+    <>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </>
+  );
+
   return (
     <ThemeProvider theme={sharingTheme}>
       <Box m={1}>
         {!showTalkTree && (
         <Box m={1}>
-          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+          {/* <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
             <Alert onClose={handleClose} severity="success">
               Post has been shared successfully!
             </Alert>
-          </Snackbar>
+          </Snackbar> */}
+          <Snackbar
+            open={open}
+            autoHideDuration={6000}
+            onClose={handleClose}
+            message="Post has been shared successfully!"
+            action={action}
+          />
           <form onSubmit={postShare}>
             {dropdown && (
             <Grid item container xs={12} direction="row" spacing={1} alignItems="center" wrap="nowrap">
