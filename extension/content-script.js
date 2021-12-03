@@ -11,8 +11,16 @@ iframe.src = chrome.extension.getURL('popup.html');
 document.body.appendChild(iframe);
 function toggle() {
   if (iframe.style.width === '0px') {
+    localStorage.setItem('isExtClosed', 'false');
+    chrome.storage.sync.set({
+      isExtClosed: false,
+    });
     iframe.style.width = '500px';
   } else {
+    chrome.storage.sync.set({
+      isExtClosed: true,
+    });
+    localStorage.setItem('isExtClosed', 'true');
     iframe.style.width = '0px';
   }
 }

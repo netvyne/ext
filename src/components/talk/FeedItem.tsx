@@ -1,19 +1,19 @@
-import { Tooltip } from '@material-ui/core';
-import Avatar from '@material-ui/core/Avatar';
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-import Link from '@material-ui/core/Link';
-import Typography from '@material-ui/core/Typography';
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
-import ImageIcon from '@material-ui/icons/Image';
-import LinkIcon from '@material-ui/icons/Link';
-import PublicIcon from '@material-ui/icons/Public';
+import { SentimentSatisfiedAlt } from '@mui/icons-material';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import ImageIcon from '@mui/icons-material/Image';
+import LinkIcon from '@mui/icons-material/Link';
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import PublicIcon from '@mui/icons-material/Public';
+import {
+  Avatar, Box, Button, Grid, Link, Tooltip, Typography
+} from '@mui/material';
+// import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DateTime } from 'luxon';
 import React from 'react';
 import ReactPlayer from 'react-player';
 import { useMutation, useQueryClient } from 'react-query';
 import { Post, User, Website } from '../../../types/common/types';
+import TagsList from '../common/TagsList';
 import FlagWebsite from './FlagWebsite';
 import PublishWebsite from './PublishWebsite';
 import WebVoteButtons from './WebVoteButtons';
@@ -25,6 +25,37 @@ interface Props {
   initPost?: Post;
   defUser: User;
 }
+
+// const nonHiddenTheme = createTheme({
+//   components: {
+//     MuiLink: {
+//       styleOverrides: {
+//         root: {
+//           color: '#3f51b5',
+//           textDecoration: 'none',
+//           '@media (max-width: 768px)': {
+//             textOverflow: 'ellipsis',
+//             whiteSpace: 'nowrap',
+//             overflow: 'hidden',
+//             width: '145px',
+//             display: 'inline-block',
+//           },
+//         },
+//       },
+//     },
+//     MuiButton: {
+//       styleOverrides: {
+//         root: {
+//           color: '#3f51b5',
+//         },
+//         outlinedPrimary: {
+//           color: '#3f51b5',
+//           border: 'solid 1px #3f51b5',
+//         }
+//       },
+//     }
+//   }
+// });
 
 export default function FeedItem({
   initWebsite, reg, initPost, defUser
@@ -39,6 +70,7 @@ export default function FeedItem({
   const [clickedSensitive, setClickedSensitive] = React.useState(false);
   const [isSaved, setIsSaved] = React.useState(website.Saved);
   const saveItemMutation = useMutation({});
+  const [showTagsList, setShowTagsList] = React.useState(false);
   const onSaveItem = async (event: any, save: boolean) => {
     event.preventDefault();
     const mutateData = {
@@ -91,6 +123,7 @@ export default function FeedItem({
     </Grid>
   );
   const nonHidden = (
+    // <ThemeProvider theme={nonHiddenTheme}>
     <Grid
       container
       component={Box}
@@ -186,22 +219,21 @@ export default function FeedItem({
       </Grid>
 
       {showMedia && (
-        <Grid
-          item
-          onClick={() => setShowMedia(!showMedia)}
-          container
-          direction="row"
-          alignItems="center"
-          justify="center"
-        >
-          <Grid item component={Box} width="100%">
-            {ReactPlayer.canPlay(website.URL) ? (
-              <ReactPlayer width="100%" url={website.URL} controls />
-            ) : (
-              <img src={(initPost?.Image) ? initPost?.Image : website.Image} alt="website" width="100%" />
-            )}
-          </Grid>
+      <Grid
+        item
+        onClick={() => setShowMedia(!showMedia)}
+        container
+        direction="row"
+        alignItems="center"
+      >
+        <Grid item component={Box} width="100%">
+          {ReactPlayer.canPlay(website.URL) ? (
+            <ReactPlayer width="100%" url={website.URL} controls />
+          ) : (
+            <img src={(initPost?.Image) ? initPost?.Image : website.Image} alt="website" width="100%" />
+          )}
         </Grid>
+      </Grid>
       )}
 
       <Grid item>
@@ -212,17 +244,46 @@ export default function FeedItem({
               website={website}
             />
           </Grid>
+          <Box alignItems="center" mr={1}>
+            <Tooltip title="Approval Rate" placement="top">
+              <Button disableRipple size="small" startIcon={<SentimentSatisfiedAlt style={{ fill: 'grey' }} />}>
+                {website.ApprovalRate}
+                %
+              </Button>
+            </Tooltip>
+          </Box>
           {website.Public
-            && (
-              <Grid item component={Box}>
-                {(website.TagLabelNames)?.length > 0
-                  ? website.TagLabelNames?.map((t) => (
-                    <Button size="small" href={`/v/${t}`}>
-                      {t}
-                    </Button>
-                  )) : <Button size="small">Processing</Button>}
-              </Grid>
-            )}
+              && (
+                <Grid item component={Box}>
+                  {((website.TagLabelNames)?.length > 0)
+                    ? (
+                      <Box style={{ display: 'flex', alignItems: 'center' }}>
+                        <LocalOfferIcon style={{ fill: 'grey' }} fontSize="inherit" />
+                        <Button size="small" href={`/v/${website.TagLabelNames[0]}`}>
+                          {website.TagLabelNames[0]}
+                        </Button>
+                        <TagsList
+                          open={showTagsList}
+                          handleClose={() => setShowTagsList(false)}
+                          tags={website.TagLabelNames}
+                        />
+                        {((website.TagLabelNames)?.length > 1) && (
+                          <Button size="small" onClick={() => { setShowTagsList(true); }}>
+                            +
+                            {(website.TagLabelNames)?.length - 1}
+                            {' more'}
+                          </Button>
+                        )}
+                      </Box>
+                    ) : <Button size="small">Processing</Button>}
+                  {/* {(website.TagLabelNames)?.length > 0
+                    ? website.TagLabelNames?.map((t) => (
+                      <Button size="small" href={`/v/${t}`}>
+                        {t}
+                      </Button>
+                    )) : <Button size="small">Processing</Button>} */}
+                </Grid>
+              )}
           <Grid item component={Box}>
             <Button size="small" href={`/w/${website.ID}`}>
               {website.ShoutCount}
@@ -231,39 +292,39 @@ export default function FeedItem({
             </Button>
           </Grid>
           {reg && (
-            <Grid item component={Box}>
-              <Button size="small" href="">Share</Button>
-            </Grid>
+          <Grid item component={Box}>
+            <Button size="small" href="">Share</Button>
+          </Grid>
           )}
           {!isSaved && reg && (
-            <Grid item component={Box}>
-              <Button
-                disabled={clickedSave}
-                size="small"
-                onClick={(e) => {
-                  onSaveItem(e, true);
-                  setClickedSave(true);
-                }}
-              >
-                Save
-              </Button>
-            </Grid>
+          <Grid item component={Box}>
+            <Button
+              disabled={clickedSave}
+              size="small"
+              onClick={(e) => {
+                onSaveItem(e, true);
+                setClickedSave(true);
+              }}
+            >
+              Save
+            </Button>
+          </Grid>
           )}
           {isSaved && reg && (
-            <Grid item component={Box}>
-              <Button
-                size="small"
-                disabled={clickedSave}
-                onClick={(e) => {
-                  onSaveItem(e, false);
-                  setClickedSave(true);
-                }}
-              >
-                Undo
-              </Button>
-            </Grid>
+          <Grid item component={Box}>
+            <Button
+              size="small"
+              disabled={clickedSave}
+              onClick={(e) => {
+                onSaveItem(e, false);
+                setClickedSave(true);
+              }}
+            >
+              Undo
+            </Button>
+          </Grid>
           )}
-          <Grid item alignItems="center">
+          <Grid item container alignItems="center">
             <FlagWebsite
               open={showFlag}
               handleClose={() => setShowFlag(false)}
@@ -274,15 +335,16 @@ export default function FeedItem({
             </Box>
           </Grid>
           {(user?.Role === 'mod' || user?.Role === 'admin')
-            && (
-              <Button size="small" onClick={() => clickMod()}>
-                Mod
-                {' '}
-              </Button>
-            )}
+              && (
+                <Button size="small" onClick={() => clickMod()}>
+                  Mod
+                  {' '}
+                </Button>
+              )}
         </Grid>
       </Grid>
     </Grid>
+    // </ThemeProvider>
   );
   return (
     <>

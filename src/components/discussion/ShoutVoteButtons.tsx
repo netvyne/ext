@@ -1,8 +1,8 @@
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import {
+  Box, Button, Grid
+} from '@mui/material';
 import React from 'react';
 import { useMutation } from 'react-query';
 import { Shout } from '../../../types/common/types';
@@ -40,20 +40,16 @@ export default function ShoutVoteButtons({ initShout }: Props) {
     // @ts-ignore
     <Grid component={Box} container alignItems="center" direction="row">
       <Button value="1" onClick={onPostVote} className="vote-buttons">
-        <KeyboardArrowUpIcon
+        <ArrowUpwardIcon
           key={shout.VoteStatus}
-          color={
-            shout.VoteStatus === 1 ? 'primary' : 'secondary'
-          }
+          style={{ color: shout.VoteStatus === 1 ? 'green' : 'grey' }}
         />
       </Button>
       <Box>{shout.Karma}</Box>
       <Button value="-1" onClick={onPostVote} className="vote-buttons">
-        <KeyboardArrowDownIcon
+        <ArrowDownwardIcon
           key={shout.VoteStatus}
-          color={
-            shout.VoteStatus === -1 ? 'primary' : 'secondary'
-          }
+          style={{ color: shout.VoteStatus === -1 ? 'red' : 'grey' }}
         />
       </Button>
     </Grid>

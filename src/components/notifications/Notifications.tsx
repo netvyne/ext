@@ -1,5 +1,4 @@
-import { Button } from '@material-ui/core';
-import Box from '@material-ui/core/Box';
+import { Box, Button } from '@mui/material';
 import React from 'react';
 import { useMutation, useQuery } from 'react-query';
 import NotificationBox from './NotificationBox';

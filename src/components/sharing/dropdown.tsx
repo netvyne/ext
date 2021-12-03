@@ -1,6 +1,7 @@
-import CircularProgress from '@material-ui/core/CircularProgress';
-import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import Autocomplete from '@mui/lab/Autocomplete';
+import {
+  CircularProgress, TextField
+} from '@mui/material';
 import * as React from 'react';
 import { useQuery } from 'react-query';
 import { Conversation, ConversationMember, User } from '../../../types/common/types';
@@ -12,20 +13,20 @@ interface GetFriendQuery {
 interface Props {
   dropdownRefetch: string;
   disabled?: boolean;
-  setConversationIDs?: any;
+  setConversationID?: any;
   setFriendHandles?: any;
   convMembers?: ConversationMember[];
   mode: string;
 }
 
 export default function Dropdown({
-  dropdownRefetch, mode, setFriendHandles, setConversationIDs, convMembers, disabled
+  dropdownRefetch, mode, setFriendHandles, setConversationID, convMembers, disabled
 }: Props) {
   const { isLoading, isSuccess, data } = useQuery<any>('/get_conversation_list', { enabled: mode === 'conv' });
   const friendQuery = useQuery<GetFriendQuery>('/get_user_friends', { enabled: mode === 'friends' });
   const changed = (event: any, value: any) => {
     if (mode === 'conv') {
-      setConversationIDs(value.map((conversation: Conversation) => conversation.ID));
+      setConversationID(value.ID);
     } else if (mode === 'friends') {
       setFriendHandles(value.map((user: User) => user.Handle));
     }
@@ -41,7 +42,6 @@ export default function Dropdown({
     return (
       <Autocomplete
         key={dropdownRefetch}
-        multiple
         onChange={changed}
         id="tags-standard"
         style={{ width: 'auto' }}
@@ -53,7 +53,7 @@ export default function Dropdown({
         renderInput={(params) => (
           <TextField
             {...params}
-            label="Select conversation(s)..."
+            label="Select group..."
             variant="outlined"
             InputProps={{
               ...params.InputProps,
@@ -127,5 +127,5 @@ Dropdown.defaultProps = {
   disabled: false,
   convMembers: [],
   setFriendHandles: () => {},
-  setConversationIDs: () => {},
+  setConversationID: () => {},
 };

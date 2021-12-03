@@ -1,12 +1,15 @@
 /* eslint-disable max-len */
 import HCaptcha from '@hcaptcha/react-hcaptcha';
-import { Box } from '@material-ui/core';
+import { Box } from '@mui/material';
+// import { styled } from '@mui/material/styles';
+import { createTheme, styled, ThemeProvider } from '@mui/material/styles';
 import { AxiosError } from 'axios';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import {
   Shout, Url, User, Website
 } from '../../../types/common/types';
+import { isValidURL } from '../../utils';
 import ActionContainer from './ActionContainer';
 import FeedItemPlaceholder from './FeedItemPlaceholder';
 import ReplyUI from './ReplyUI';
@@ -17,6 +20,7 @@ import WebsiteUI from './WebsiteUI';
 interface Props {
   initCurrentUser: User[];
   initUrl: Url;
+  autoFetch: boolean;
 }
 
 interface GetShoutTreesQuery {
@@ -28,8 +32,50 @@ interface SuccessResponse {
   Shout: Shout;
 }
 
-const Discussion = ({ initCurrentUser, initUrl } : Props) => {
-  const url : any = initUrl;
+const PREFIX = 'DISCUSSION';
+const classes = {
+  root: `${PREFIX}-root`,
+};
+
+const Root = styled('div')(() => ({
+  [`&.${classes.root}`]: {
+    padding: '10px !important',
+  },
+}));
+
+const discussionTheme = createTheme({
+  components: {
+    MuiLink: {
+      styleOverrides: {
+        root: {
+          color: '#3f51b5',
+          textDecoration: 'none',
+          '@media (max-width: 768px)': {
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            width: '145px',
+            display: 'inline-block',
+          },
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          color: '#3f51b5',
+        },
+        outlinedPrimary: {
+          color: '#3f51b5',
+          border: 'solid 1px #3f51b5',
+        }
+      },
+    }
+  }
+});
+const Discussion = ({ initCurrentUser, initUrl, autoFetch } : Props) => {
+  // const url : any = initUrl;
+  const [url, setUrl] = React.useState<any>({});
   const user : any = initCurrentUser;
   const [showForm, setShowForm] = React.useState(true);
   const [showCaptcha, setShowCaptcha] = React.useState(false);
@@ -37,12 +83,45 @@ const Discussion = ({ initCurrentUser, initUrl } : Props) => {
   const [children, setChildren] = React.useState<Shout[]>([]);
   const captchaRef = React.createRef<HCaptcha>();
   const [comment, setComment] = React.useState('');
+  const [currentTitle, setCurrentTitle] = React.useState<any>('');
+  // const [autoFetch, setAutoFetch] = React.useState<any>(false);
 
   const route = `/get_shout_trees?host=${url.host}&pathname=${url.pathname}&search=${encodeURIComponent(url.search)}`;
-
   const { data, status, refetch } = useQuery<GetShoutTreesQuery, string>(
-    route, { onSuccess: (shoutData) => setChildren(shoutData.Roots) }
+    route, {
+      enabled: autoFetch,
+      onSuccess: (shoutData) => {
+        setChildren(shoutData.Roots);
+      }
+    }
   );
+  const [intervalCount, setIntervalCount] = React.useState(0);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const newCount = intervalCount + 1;
+      setIntervalCount(newCount);
+      const queryInfo = { active: true, lastFocusedWindow: true };
+      if (chrome.tabs) {
+        chrome.tabs.query(queryInfo, (tabs) => {
+          if (currentTitle !== tabs[0].title) {
+            setCurrentTitle(tabs[0].title);
+            const newUrl : any = isValidURL(tabs[0].url);
+            const formatedUrl = {
+              pathname: newUrl.pathname,
+              host: newUrl.host,
+              search: newUrl.search,
+              Title: tabs[0].title,
+            };
+            setUrl(formatedUrl);
+            if (autoFetch) {
+              refetch();
+            }
+          }
+        });
+      }
+    }, 1000);
+  }, [intervalCount]);
 
   // const replyMutation = useMutation({});
   const replyMutation = useMutation<SuccessResponse, AxiosError>(
@@ -104,7 +183,7 @@ const Discussion = ({ initCurrentUser, initUrl } : Props) => {
     }
     website = (
       <>
-        <WebsiteUI initWebsite={data!.Website} url={url} refetch={refetch} />
+        <WebsiteUI initWebsite={data!.Website} url={url} refetch={refetch} currentTitle={currentTitle} />
       </>
     );
     actionBox = (
@@ -126,14 +205,18 @@ const Discussion = ({ initCurrentUser, initUrl } : Props) => {
     />
   );
   return (
-    <Box>
-      <div>
-        {website}
-        {actionBox}
-        {reply}
-        {trees}
-      </div>
-    </Box>
+    <Root className={classes.root}>
+      <ThemeProvider theme={discussionTheme}>
+        <Box>
+          <div>
+            {website}
+            {actionBox}
+            {reply}
+            {trees}
+          </div>
+        </Box>
+      </ThemeProvider>
+    </Root>
   );
 };
 export default Discussion;
