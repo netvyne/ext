@@ -100,7 +100,7 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
   const [comment, setComment] = React.useState('');
   const [parentChat, setParentChat] = useState<ChatMessage | null>();
   const webSocket = useRef<WebSocket | null>(null);
-  const [messages, setMessages] = React.useState<any>([]);
+  const [messages, setMessages] = React.useState<ChatMessage[]>([]);
   const [url, setUrl] = useState<any>({});
   const [user, setUser] = React.useState<User|any>();
   const [showAction, setShowAction] = React.useState(false);
@@ -117,7 +117,7 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
   function createSocket(currentUrl : any) {
     const publicApiUrl : any = process.env.REACT_APP_PUBLIC_API;
     const socketUrl = publicApiUrl.replace('http', 'ws');
-    const socket = new WebSocket(`${socketUrl}/get_chat_socket?website_id=0&host=${currentUrl.host}&pathname=${currentUrl.pathname}&search=${encodeURIComponent(currentUrl.search)}`);
+    const socket = new WebSocket(`${socketUrl}/get_chat_socket?host=${currentUrl.host}&pathname=${currentUrl.pathname}&search=${encodeURIComponent(currentUrl.search)}`);
     console.log('Socket created', socket);
     if (!socket) {
       const intervalID = setInterval(alert, 30000);
