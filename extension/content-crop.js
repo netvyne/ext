@@ -10,53 +10,6 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable camelcase */
 
-// function isScriptAlreadyIncluded(src) {
-//   let scripts = document.getElementsByTagName('script');
-//   for (let i = 0; i < scripts.length; i++) if (scripts[i].getAttribute('src') === src) return true;
-//   return false;
-// }
-
-// function isLinkAlreadyIncluded(href) {
-//   let links = document.getElementsByTagName('link');
-//   for (let i = 0; i < links.length; i++) if (links[i].getAttribute('href') === href) return true;
-//   return false;
-// }
-
-// script = document.createElement('script');
-
-// // if (!isScriptAlreadyIncluded('https://code.jquery.com/jquery-3.2.1.slim.min.js')) {
-// //   script.src = 'https://code.jquery.com/jquery-3.2.1.slim.min.js';
-// //   script.crossorigin = 'anonymous';
-// //   script.type = 'text/javascript';
-// //   script.setAttribute('async', 'async');
-// //   document.head.appendChild(script);
-// // }
-
-// // if (!isScriptAlreadyIncluded('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js')) {
-// //   script = document.createElement('script');
-// //   script.src = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js';
-// //   script.crossorigin = 'anonymous';
-// //   script.type = 'text/javascript';
-// //   script.setAttribute('async', 'async');
-// //   document.head.appendChild(script);
-// // }
-
-// // if (!isScriptAlreadyIncluded('https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js')) {
-// //   script = document.createElement('script');
-// //   script.src = 'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js';
-// //   script.crossorigin = 'anonymous';
-// //   script.type = 'text/javascript';
-// //   script.setAttribute('async', 'async');
-// //   document.head.appendChild(script);
-// // }
-
-// link = document.createElement('link');
-// // if (!isLinkAlreadyIncluded('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css')) {
-// //   link.rel = 'stylesheet';
-// //   link.href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css';
-// //   document.head.prepend(link);
-// // }
-
 button = document.createElement('button');
 button.setAttribute('class', 'trigger_popup_fricc');
 button.setAttribute('id', 'cropDialogue');
@@ -66,7 +19,6 @@ document.body.prepend(button);
 
 setTimeout(() => {
   chrome.storage.local.get({ screenshot: null }, (data) => {
-    // document.getElementById('cropDialogue').style.visibility = 'hidden';
     const div = document.createElement('div');
     div.setAttribute('class', 'bootstrap-iso"');
     div.setAttribute('id', 'mainExampleModalLong');
@@ -87,10 +39,8 @@ setTimeout(() => {
             </div>
         </div>
     </div>`;
-    // div.innerText(innerHTML);
     document.body.prepend(div);
     document.getElementById('mainExampleModalLong').innerHTML = innerHTML;
-    // document.getElementById('croppedImage').src = data.screenshot;
     (function () {
       let resize_canvas = null;
       let image_target = document.querySelector('.crop-image-netvyne');

@@ -13,12 +13,6 @@ function saveOptions() {
 }
 
 function loadOptions() {
-//   chrome.storage.local.get({
-//     netvyneBadge: true,
-//   },
-//   (items) => {
-//     badgeCheckbox().checked = items.netvyneBadge;
-//   });
   chrome.storage.sync.get(
     {
       netvyneBadge: true,
@@ -27,8 +21,6 @@ function loadOptions() {
       badgeCheckbox().checked = items.netvyneBadge;
     }
   );
-//   console.log('selected option :::::::: ', localStorage.getItem('netvyneBadge'));
-//   badgeCheckbox().checked = localStorage.getItem('netvyneBadge');
 }
 
 document.addEventListener('DOMContentLoaded', loadOptions);

@@ -78,15 +78,14 @@ const theme = createTheme({
 });
 
 export const Popup: FunctionComponent = () => {
+  const [autoFetch, setAutoFetch] = React.useState<any>(false);
   const [user, setUser] = React.useState<User|any>();
-  getCurrentUser().then((currentUser:User|any) => setUser(currentUser));
   const [url, setUrl] = useState<any>({});
   const [shareCount, setShareCount] = useState(0);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [isUserRegistered, setIsUserRegistered] = React.useState<any>(false);
   const [currentUser, setCurrentUser] = React.useState<any>(null);
-  const [autoFetch, setAutoFetch] = React.useState<any>(false);
 
   // Sends the `popupMounted` event
   React.useEffect(() => {
@@ -112,10 +111,11 @@ export const Popup: FunctionComponent = () => {
   const [intervalCount, setIntervalCount] = React.useState(0);
 
   const profileQuery = useQuery<any>('/profile', {
+    enabled: autoFetch,
     onSuccess: (statusResponse) => {
       setIsUserRegistered(statusResponse.CurrentUser.Registered);
       setCurrentUser(statusResponse.CurrentUser);
-      // getCurrentUser().then((currentUser:User|any) => setUser(currentUser));
+      getCurrentUser().then((curUser:User|any) => setUser(curUser));
     }
   });
 
@@ -146,11 +146,17 @@ export const Popup: FunctionComponent = () => {
     const timer = setTimeout(() => {
       const newCount = intervalCount + 1;
       setIntervalCount(newCount);
-      // console.log('local storage ::::::', localStorage.getItem('netvyneBadge'));
       setAutoFetch(false);
-      if (localStorage.getItem('netvyneBadge') === 'true' || localStorage.getItem('netvyneBadge') === 'null') {
-        setAutoFetch(true);
-      }
+      chrome.storage.sync.get(
+        {
+          netvyneBadge: true,
+        },
+        (items) => {
+          if (items.netvyneBadge === true || items.netvyneBadge === null) {
+            setAutoFetch(true);
+          }
+        }
+      );
       chrome.storage.sync.get(['isExtClosed'], (result) => {
         if (result.isExtClosed === false) {
           setAutoFetch(true);
@@ -224,14 +230,14 @@ export const Popup: FunctionComponent = () => {
                   <Tab className="livechat-tab" label="" {...a11yProps(3)} />
                 </Tabs>
                 <Button onClick={() => moreOptionClick('logout', 'profile')}>
-                  {(isUserRegistered && user.AvatarURL) && (
+                  {(isUserRegistered && user && user.AvatarURL) && (
                   <Avatar
                     style={{ width: 40, height: 40 }}
                     alt="Avatar"
                     src={user.AvatarURL}
                   />
                   )}
-                  {(isUserRegistered && !user.AvatarURL) && (
+                  {(isUserRegistered && user && !user.AvatarURL) && (
                   <Avatar
                     alt="Handle initial"
                     style={{ width: 40, height: 40, fontSize: '1.5rem' }}
