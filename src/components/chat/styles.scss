@@ -86,3 +86,14 @@
 .livechat-textfield .MuiInputBase-input:focus{
     background-color: #ffffff !important;
 }
+
+.chatMessageDiv{
+    cursor: pointer;
+}
+.chatReplyButton{
+    display: none;
+}
+
+.chatMessageDiv:hover + .chatReplyButton{
+    display: block;
+}

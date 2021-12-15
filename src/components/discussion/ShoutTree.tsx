@@ -119,7 +119,7 @@ const ShoutTree = ({
         m={1}
         borderRadius="borderRadius"
         direction="column"
-        style={{ margin: '0px' }}
+        style={{ margin: '0px', marginBottom: '5px' }}
       >
         <Grid item container direction="row" wrap="nowrap">
           {/* @ts-ignore */}
@@ -162,6 +162,7 @@ const ShoutTree = ({
                 <Box>
                   <ShoutVoteButtons
                     initShout={root}
+                    defUser={defUser}
                   />
                 </Box>
                 {!root.Saved && reg && (

@@ -81,6 +81,7 @@ const ActionContainer = ({
       showShare={showShare}
       setShowShare={setShowShare}
       refetch={refetch}
+      url={url}
     />
   );
 };

@@ -5,14 +5,16 @@ import {
 } from '@mui/material';
 import React from 'react';
 import { useMutation } from 'react-query';
-import { Shout } from '../../../types/common/types';
+import { Shout, User } from '../../../types/common/types';
+import VoteTotal from '../common/VoteTotal';
 import './styles.scss';
 
 interface Props {
   initShout: Shout;
+  defUser: User;
 }
 
-export default function ShoutVoteButtons({ initShout }: Props) {
+export default function ShoutVoteButtons({ initShout, defUser }: Props) {
   const [shout, setShout] = React.useState(initShout);
   const voteMutation = useMutation({});
   const onPostVote = async (e: any) => {
@@ -45,7 +47,10 @@ export default function ShoutVoteButtons({ initShout }: Props) {
           style={{ color: shout.VoteStatus === 1 ? 'green' : 'grey' }}
         />
       </Button>
-      <Box>{shout.Karma}</Box>
+      <VoteTotal
+        total={shout.Karma + shout.VoteStatus}
+        hidden={shout.Author.UserName !== defUser.UserName}
+      />
       <Button value="-1" onClick={onPostVote} className="vote-buttons">
         <ArrowDownwardIcon
           key={shout.VoteStatus}

@@ -192,8 +192,6 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
   };
 
   const addEmoji = async (emoji : any) => {
-    console.log('here clicked', emoji);
-    console.log('here clicked', emoji.native);
     setComment(`${comment} ${emoji.native}`);
     setShow(false);
   };
@@ -205,11 +203,11 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
       <Grid
         container
         spacing={2}
-        onMouseOver={() => setShowAction(true)}
-        onMouseLeave={() => setShowAction(false)}
+        // onMouseOver={() => setShowAction(true)}
+        // onMouseLeave={() => setShowAction(false)}
       >
-        <Grid item xs={12} sm container>
-          <Grid item xs container direction="column" spacing={2}>
+        <Grid item xs={12} container sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+          <Grid item xs container direction="column" className="chatMessageDiv">
             <Grid item xs>
               <Typography>
                 <b>
@@ -226,19 +224,19 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
               </Typography>
             </Grid>
           </Grid>
-          {showAction && (
-            <Grid item>
-              <Button
-                type="submit"
-                size="small"
-                color="primary"
-                endIcon={<ReplyIcon />}
-                onClick={() => {
-                  setParentChat(message);
-                }}
-              />
-            </Grid>
-          )}
+          {/* {showAction && ( */}
+          <Grid item className="chatReplyButton">
+            <Button
+              type="submit"
+              size="small"
+              color="primary"
+              endIcon={<ReplyIcon />}
+              onClick={() => {
+                setParentChat(message);
+              }}
+            />
+          </Grid>
+          {/* )} */}
         </Grid>
       </Grid>
     </Root>

@@ -16,7 +16,7 @@ const WebsiteUI = ({
 } : Props) => {
   let websiteTitle : string = '';
   websiteTitle = (initWebsite.Title && initWebsite.Title !== '') ? initWebsite.Title : url.Title;
-  websiteTitle = (currentTitle !== websiteTitle) ? currentTitle : websiteTitle;
+  // websiteTitle = (currentTitle !== websiteTitle) ? currentTitle : websiteTitle;
   const website = (
     <Box mx={2} mt={1} borderRadius="borderRadius">
       <Grid container wrap="nowrap">
@@ -28,47 +28,6 @@ const WebsiteUI = ({
                 : (websiteTitle) || 'Title of the webpage'}
             </Typography>
           </Box>
-          {/* <Grid container direction="row" justifyContent="center" spacing={1}>
-            <Grid
-              item
-              component={Box}
-              display="flex"
-              style={{ justifyContent: 'center' }}
-            >
-              <KeyboardArrowUpIcon />
-              {initWebsite?.Upvotes}
-            </Grid>
-            <Grid
-              item
-              component={Box}
-              display="flex"
-              style={{ justifyContent: 'center' }}
-            >
-              <SentimentSatisfiedSharpIcon />
-              {(initWebsite?.Upvotes + initWebsite?.Downvotes) > 0 ? (
-                initWebsite?.Upvotes / initWebsite?.Upvotes
-                + initWebsite?.Downvotes
-              ).toLocaleString('en', { style: 'percent' }) : '0%'}
-            </Grid>
-            <Grid
-              item
-              component={Box}
-              display="flex"
-              style={{ justifyContent: 'center' }}
-            >
-              <ChatBubbleOutlineIcon />
-              {initWebsite?.ShoutCount}
-            </Grid>
-            <Grid
-              item
-              component={Box}
-              display="flex"
-              style={{ justifyContent: 'center' }}
-            >
-              <ShareIcon />
-              {initWebsite?.ShareCount}
-            </Grid>
-          </Grid> */}
         </Grid>
       </Grid>
     </Box>
