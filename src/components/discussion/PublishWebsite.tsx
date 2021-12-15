@@ -14,6 +14,7 @@ interface Props {
   handleClose: ()=> any;
   website: Website;
   setWebsite: React.Dispatch<React.SetStateAction<Website>>
+  initUrl: any
 }
 
 interface SuccessResponse {
@@ -21,10 +22,10 @@ interface SuccessResponse {
   }
 
 function PublishWebsite({
-  open, handleClose, website, setWebsite
+  open, handleClose, website, setWebsite, initUrl
 } : Props) {
   const [showCaptcha, setShowCaptcha] = React.useState(false);
-  const [url, setUrl] = React.useState<any>(website?.URL);
+  const [url, setUrl] = React.useState<any>((website?.URL) ? website?.URL : (`${initUrl.origin}${initUrl.pathname}${decodeURIComponent(initUrl.search)}`));
   const [tag, setTag] = React.useState('');
   const [captchaToken, setCaptchaToken] = React.useState('');
   const captchaRef = React.createRef<HCaptcha>();
@@ -48,6 +49,7 @@ function PublishWebsite({
   );
   const postSharePublic = async (event: any) => {
     event.preventDefault();
+    console.log('url PublishWebsite ::: ', url);
     const formatedUrl = new URL(url);
     const mutateData = {
       URL: {

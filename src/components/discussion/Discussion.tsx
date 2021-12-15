@@ -98,30 +98,51 @@ const Discussion = ({ initCurrentUser, initUrl, autoFetch } : Props) => {
   const [intervalCount, setIntervalCount] = React.useState(0);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      const newCount = intervalCount + 1;
-      setIntervalCount(newCount);
-      const queryInfo = { active: true, lastFocusedWindow: true };
-      if (chrome.tabs) {
-        chrome.tabs.query(queryInfo, (tabs) => {
-          if (currentTitle !== tabs[0].title) {
-            setCurrentTitle(tabs[0].title);
-            const newUrl : any = isValidURL(tabs[0].url);
-            const formatedUrl = {
-              pathname: newUrl.pathname,
-              host: newUrl.host,
-              search: newUrl.search,
-              Title: tabs[0].title,
-            };
-            setUrl(formatedUrl);
-            if (autoFetch) {
-              refetch();
-            }
-          }
-        });
-      }
-    }, 1000);
-  }, [intervalCount]);
+    const queryInfo = { active: true, lastFocusedWindow: true };
+    if (chrome.tabs) {
+      chrome.tabs.query(queryInfo, (tabs) => {
+        const newUrl : any = isValidURL(tabs[0].url);
+        const formatedUrl = {
+          pathname: newUrl.pathname,
+          host: newUrl.host,
+          search: newUrl.search,
+          Title: tabs[0].title,
+          origin: newUrl.origin,
+        };
+        setUrl(formatedUrl);
+        if (autoFetch) {
+          refetch();
+        }
+      });
+    }
+  }, []);
+
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     const newCount = intervalCount + 1;
+  //     setIntervalCount(newCount);
+  //     const queryInfo = { active: true, lastFocusedWindow: true };
+  //     if (chrome.tabs) {
+  //       chrome.tabs.query(queryInfo, (tabs) => {
+  //         if (currentTitle !== tabs[0].title) {
+  //           setCurrentTitle(tabs[0].title);
+  //           const newUrl : any = isValidURL(tabs[0].url);
+  //           const formatedUrl = {
+  //             pathname: newUrl.pathname,
+  //             host: newUrl.host,
+  //             search: newUrl.search,
+  //             Title: tabs[0].title,
+  //             origin: newUrl.origin,
+  //           };
+  //           setUrl(formatedUrl);
+  //           if (autoFetch) {
+  //             refetch();
+  //           }
+  //         }
+  //       });
+  //     }
+  //   }, 1000);
+  // }, [intervalCount]);
 
   // const replyMutation = useMutation({});
   const replyMutation = useMutation<SuccessResponse, AxiosError>(

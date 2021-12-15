@@ -23,10 +23,11 @@ interface Props {
   setShowShare: any;
   showShare: boolean;
   refetch: any;
+  url: any;
 }
 
 const ActionUI = ({
-  website, setWebsite, postVote, saved, onSaveItem, setShowShare, showShare, refetch
+  website, setWebsite, postVote, saved, onSaveItem, setShowShare, showShare, refetch, url
 } : Props) => {
   const actionbox = (
     <Box mx={2} borderTop={1}>
@@ -53,6 +54,7 @@ const ActionUI = ({
             handleClose={() => setShowShare(false)}
             website={website}
             setWebsite={setWebsite}
+            initUrl={url}
           />
           <Box>
             {website.Public
