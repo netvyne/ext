@@ -98,7 +98,7 @@
     "jss": "^10.8.0",
     "luxon": "^1.26.0",
     "moment": "^2.29.1",
-    "node-sass": "^4.14.1",
+    "node-sass": "^6.0.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-frame-component": "^5.1.0",
