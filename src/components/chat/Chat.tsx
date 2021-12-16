@@ -206,38 +206,34 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
         // onMouseOver={() => setShowAction(true)}
         // onMouseLeave={() => setShowAction(false)}
       >
-        <Grid item xs={12} container sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-          <Grid item xs container direction="column" className="chatMessageDiv">
-            <Grid item xs>
-              <Typography>
-                <b>
-                  {message.Author.UserName}
-                  {' '}
-                  :
-                  {' '}
-                </b>
-                {' '}
-                {message.Comment}
-              </Typography>
-              <Typography color="textSecondary">
-                <b>{(message.ParentChat) ? `in reply to @${message.ParentChat.Author.UserName} : ${message.ParentChat.Comment}` : ''}</b>
-              </Typography>
-            </Grid>
-          </Grid>
-          {/* {showAction && ( */}
-          <Grid item className="chatReplyButton">
-            <Button
-              type="submit"
-              size="small"
-              color="primary"
-              endIcon={<ReplyIcon />}
-              onClick={() => {
-                setParentChat(message);
-              }}
-            />
-          </Grid>
-          {/* )} */}
-        </Grid>
+        <div className="mydivouter">
+          <div className="chatTextMessage">
+            <div>
+              <span style={{ width: '20px', marginRight: '10px', fontWeight: 'bold' }}>{message.Author.UserName}</span>
+              <span>{message.Comment}</span>
+            </div>
+            <div>
+              <b>{(message.ParentChat) ? `in reply to @${message.ParentChat.Author.UserName} : ${message.ParentChat.Comment}` : ''}</b>
+            </div>
+          </div>
+          <button
+            type="button"
+            className="mybuttonoverlap btn"
+            onClick={() => {
+              setParentChat(message);
+            }}
+          >
+            <ReplyIcon />
+
+          </button>
+          {/* <ReplyIcon
+            className="mybuttonoverlap btn btn-info"
+            onClick={() => {
+              setParentChat(message);
+            }}
+          /> */}
+        </div>
+
       </Grid>
     </Root>
   ));
@@ -305,15 +301,39 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
                   }}
                 />
                 {show ? (
-                  <Picker
-                    set="apple"
-                    title=""
-                    emoji="point_up"
-                    style={{
-                      position: 'fixed', zIndex: 10, bottom: '20px', right: '20px'
-                    }}
-                    onSelect={addEmoji}
-                  />
+                  <div>
+                    <CancelIcon
+                      onClick={() => setShow(false)}
+                      sx={{
+                        position: 'fixed',
+                        zIndex: '99',
+                        bottom: '443px',
+                        backgroundColor: '#ffffff',
+                        border: 'solid 1px #d9d9d9',
+                        color: '#858585',
+                        borderRadius: '50%',
+                        width: '25px',
+                        height: '25px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        right: '7px',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      X
+
+                    </CancelIcon>
+                    <Picker
+                      set="apple"
+                      title=""
+                      emoji="point_up"
+                      style={{
+                        position: 'fixed', zIndex: 10, bottom: '20px', right: '20px'
+                      }}
+                      onSelect={addEmoji}
+                    />
+                  </div>
                 )
                   : <IconButton onClick={() => setShow(true)}><InsertEmoticonIcon /></IconButton> }
               </Grid>
