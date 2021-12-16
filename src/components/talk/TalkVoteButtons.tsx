@@ -1,3 +1,4 @@
+import CancelIcon from '@mui/icons-material/Cancel';
 import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
 import { Button, IconButton } from '@mui/material';
 import { createTheme, styled, ThemeProvider } from '@mui/material/styles';
@@ -12,38 +13,6 @@ interface Props {
   initTalk: Talk;
   defUser: User;
 }
-
-// const PREFIX = 'TALKVOTE';
-// const classes = {
-//   emojisContainer: `${PREFIX}-emojisContainer`,
-//   emojiIcon: `${PREFIX}-emojiIcon`,
-//   tooltipContainer: `${PREFIX}-tooltipContainer`,
-// };
-
-// const Root = styled('div')(() => ({
-//   [`&.${classes.emojisContainer}`]: {
-//     display: 'flex',
-//     alignItems: 'center',
-//   },
-//   [`&.${classes.emojiIcon}`]: {
-//     border: 'solid 1px #000000',
-//     borderRadius: '10px',
-//     width: '40px',
-//     height: '22px',
-//     display: 'flex',
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     marginRight: '5px',
-//     padding: '5px'
-//   },
-//   [`&.${classes.tooltipContainer}`]: {
-//     display: 'flex',
-//     flexDirection: 'column',
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     width: 'auto',
-//   },
-// }));
 const EmojisContainer = styled('div')(() => ({
   display: 'flex',
   alignItems: 'center',
@@ -88,13 +57,6 @@ const theme = createTheme({
     }
   }
 });
-// const BlueOnGreenTooltip = styled(({ className, ...props }) => (
-//   <Tooltip {...props} componentsProps={{ tooltip: { className } }} />
-// ))(`
-//     color: lightblue;
-//     background-color: green;
-//     font-size: 1.5em;
-// `);
 const BlackTooltip = styled(Tooltip)(() => ({
   tooltip: {
     backgroundColor: 'black',
@@ -110,21 +72,6 @@ const BlackTooltip = styled(Tooltip)(() => ({
     color: 'black',
   },
 }));
-// const BlackTooltip = withStyles({
-//   tooltip: {
-//     backgroundColor: 'black',
-//     borderRadius: '5px',
-//     color: 'white',
-//     padding: '4px 8px',
-//     fontSize: '14px',
-//     maxWidth: 150,
-//     wordWrap: 'break-word',
-//     fontWeight: 'normal',
-//   },
-//   arrow: {
-//     color: 'black',
-//   },
-// })(Tooltip);
 const defaultTheme = createTheme();
 export default function TalkVoteButtons({ initTalk, defUser }: Props) {
   const [talk, setTalk] = React.useState(initTalk);
@@ -180,14 +127,39 @@ export default function TalkVoteButtons({ initTalk, defUser }: Props) {
     <ThemeProvider theme={theme}>
       <EmojisContainer>
         {show ? (
-          <Picker
-            set="apple"
-            onSelect={postEmoji}
-            title=""
-            style={{
-              position: 'absolute', zIndex: 10
-            }}
-          />
+          <div style={{ display: 'flex', position: 'absolute' }}>
+            <Picker
+              set="apple"
+              onSelect={postEmoji}
+              title=""
+              style={{
+                position: 'relative', zIndex: 10
+              }}
+            />
+            <CancelIcon
+              onClick={() => setShow(false)}
+              sx={{
+                position: 'absolute',
+                zIndex: '99',
+                bottom: '443px',
+                backgroundColor: '#ffffff',
+                border: 'solid 1px #d9d9d9',
+                color: '#858585',
+                borderRadius: '50%',
+                width: '25px',
+                height: '25px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                right: '-13px',
+                cursor: 'pointer',
+                top: '-13px',
+              }}
+            >
+              X
+
+            </CancelIcon>
+          </div>
         )
           : <IconButton size="small" onClick={() => setShow(true)}><InsertEmoticonIcon /></IconButton>}
         <div style={{

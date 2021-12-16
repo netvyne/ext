@@ -91,9 +91,40 @@
     cursor: pointer;
 }
 .chatReplyButton{
-    display: none;
+    display: none !important;
 }
 
 .chatMessageDiv:hover + .chatReplyButton{
-    display: block;
+    display: block !important;
+}
+.chatMessageDiv svg path{
+    width: 20px;
+}
+
+.mydivouter{
+    display: flex;
+position:relative;
+width: 100%;
+margin: 0 auto;
+align-items: center;
+margin-left: 20px;
+}
+.mydivoverlap{
+position: relative;
+z-index: 1;
+}
+.mybuttonoverlap{
+position: absolute;
+z-index: 2;
+display: none;
+right: 0px;
+}
+.mydivouter:hover .mybuttonoverlap{ 
+display:block;
+}
+.chatTextMessage{
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
 }
