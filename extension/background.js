@@ -73,7 +73,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         () => {
           chrome.tabs.captureVisibleTab({ format: 'png' }, (src) => {
             chrome.storage.local.set({ screenshot: src }, () => {
-              console.log('Stored screenshot!');
+              // console.log('Stored screenshot!');
               chrome.tabs.sendMessage(activeTab.id, 'toggle');
               sendResponse({ confirmation: 'Successfully created div' });
             });
@@ -109,10 +109,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   return true;
 });
 
-chrome.runtime.onInstalled.addListener((reason) => {
-  if (reason === chrome.runtime.OnInstalledReason.INSTALL) {
-    chrome.tabs.create({
-      url: 'https://www.netvyne.com/welcome'
-    });
-  }
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.tabs.create({
+    url: 'https://www.netvyne.com/welcome',
+    active: true
+  });
+  return false;
 });

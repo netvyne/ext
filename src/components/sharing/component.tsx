@@ -580,7 +580,7 @@ export const Sharing: FunctionComponent = () => {
                 onChange={(value: string | undefined) => value !== undefined && setComment(value)}
               />
             </Box>
-            <Button type="submit" disabled={(conversationID === 0 && friendHandles.length === 0) || !user?.Registered}> Share </Button>
+            <Button type="submit" disabled={(conversationID === 0 && friendHandles.length === 0) || !isUserRegistered}> Share </Button>
             <Box width="100%">
               {!isUserRegistered && (
               <Button

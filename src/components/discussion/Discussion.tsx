@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
 import HCaptcha from '@hcaptcha/react-hcaptcha';
-import { Box } from '@mui/material';
+import KeyboardBackspace from '@mui/icons-material/KeyboardBackspace';
+import { Box, Button } from '@mui/material';
 // import { styled } from '@mui/material/styles';
 import { createTheme, styled, ThemeProvider } from '@mui/material/styles';
 import { AxiosError } from 'axios';
@@ -10,6 +11,7 @@ import {
   Shout, Url, User, Website
 } from '../../../types/common/types';
 import { isValidURL } from '../../utils';
+import Chat from '../chat/Chat';
 import ActionContainer from './ActionContainer';
 import FeedItemPlaceholder from './FeedItemPlaceholder';
 import ReplyUI from './ReplyUI';
@@ -78,6 +80,7 @@ const Discussion = ({ initCurrentUser, initUrl, autoFetch } : Props) => {
   const [url, setUrl] = React.useState<any>({});
   const user : any = initCurrentUser;
   const [showForm, setShowForm] = React.useState(true);
+  const [showChat, setShowChat] = React.useState(false);
   const [showCaptcha, setShowCaptcha] = React.useState(false);
   const [captchaToken, setCaptchaToken] = React.useState('');
   const [children, setChildren] = React.useState<Shout[]>([]);
@@ -161,6 +164,12 @@ const Discussion = ({ initCurrentUser, initUrl, autoFetch } : Props) => {
       }
     }
   );
+
+  function loginLink() {
+    const href = `${process.env.PUBLIC_WEB}/auth/signin`;
+    window.open(href, '_blank', 'noopener,noreferrer');
+    return false;
+  }
   const queryClient = useQueryClient();
 
   const postComment = async (event : any) => {
@@ -183,10 +192,24 @@ const Discussion = ({ initCurrentUser, initUrl, autoFetch } : Props) => {
   let website : any = '';
   let trees : any = '';
   let actionBox;
+  let reply: any = '';
+  let loginButton: any = '';
 
   if (status === 'error') {
-    trees = <div>Error</div>;
-    website = <div>Error</div>;
+    // trees = <div>Error</div>;
+    // website = <div>Error</div>;
+    loginButton = (
+      <Box width="100%">
+        <Button
+          type="button"
+          variant="outlined"
+          color="primary"
+          onClick={(e) => { loginLink(); }}
+        >
+          Log in to view comments
+        </Button>
+      </Box>
+    );
   } else if (status === 'loading') {
     trees = <ShoutPlaceholder />;
     website = <FeedItemPlaceholder />;
@@ -202,6 +225,18 @@ const Discussion = ({ initCurrentUser, initUrl, autoFetch } : Props) => {
         />
       ));
     }
+    reply = (
+      <ReplyUI
+        postComment={postComment}
+        setComment={setComment}
+        comment={comment}
+        showForm={showForm}
+        setShowForm={setShowForm}
+        showCaptcha={showCaptcha}
+        captchaRef={captchaRef}
+        setCaptchaToken={setCaptchaToken}
+      />
+    );
     website = (
       <>
         <WebsiteUI initWebsite={data!.Website} url={url} refetch={refetch} currentTitle={currentTitle} />
@@ -209,32 +244,39 @@ const Discussion = ({ initCurrentUser, initUrl, autoFetch } : Props) => {
     );
     actionBox = (
       <>
-        <ActionContainer initWebsite={data!.Website} reg={user?.Registered} url={url} refetch={refetch} />
+        <ActionContainer initWebsite={data!.Website} reg={user?.Registered} url={url} refetch={refetch} setShowChat={setShowChat} />
       </>
     );
   }
-  const reply = (
-    <ReplyUI
-      postComment={postComment}
-      setComment={setComment}
-      comment={comment}
-      showForm={showForm}
-      setShowForm={setShowForm}
-      showCaptcha={showCaptcha}
-      captchaRef={captchaRef}
-      setCaptchaToken={setCaptchaToken}
-    />
-  );
+  // const reply = (
+  //   <ReplyUI
+  //     postComment={postComment}
+  //     setComment={setComment}
+  //     comment={comment}
+  //     showForm={showForm}
+  //     setShowForm={setShowForm}
+  //     showCaptcha={showCaptcha}
+  //     captchaRef={captchaRef}
+  //     setCaptchaToken={setCaptchaToken}
+  //   />
+  // );
   return (
     <Root className={classes.root}>
       <ThemeProvider theme={discussionTheme}>
         <Box>
           <div>
+            {loginButton}
             {website}
             {actionBox}
-            {reply}
-            {trees}
+            {(!showChat) ? reply : ''}
+            {(!showChat) ? trees : ''}
           </div>
+          {showChat && (
+            <>
+              <KeyboardBackspace sx={{ cursor: 'pointer' }} onClick={() => setShowChat(false)} />
+              <Chat initCurrentUser={initCurrentUser} />
+            </>
+          )}
         </Box>
       </ThemeProvider>
     </Root>

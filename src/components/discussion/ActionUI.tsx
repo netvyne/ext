@@ -3,6 +3,7 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import ForumIcon from '@mui/icons-material/Forum';
 import LinkIcon from '@mui/icons-material/Link';
 import PublicIcon from '@mui/icons-material/Public';
 import ShareIcon from '@mui/icons-material/Share';
@@ -24,10 +25,12 @@ interface Props {
   showShare: boolean;
   refetch: any;
   url: any;
+  setShowChat: any;
 }
 
 const ActionUI = ({
-  website, setWebsite, postVote, saved, onSaveItem, setShowShare, showShare, refetch, url
+  website, setWebsite, postVote, saved, onSaveItem,
+  setShowShare, showShare, refetch, url, setShowChat
 } : Props) => {
   const actionbox = (
     <Box mx={2} borderTop={1}>
@@ -61,6 +64,16 @@ const ActionUI = ({
               ? <Button onClick={() => { setShowShare(true); }} sx={{ color: 'black' }}>+Tag</Button>
               : <Button onClick={() => { setShowShare(true); }} sx={{ color: 'black' }}>Publish</Button>}
           </Box>
+        </Grid>
+        <Grid
+          item
+          component={Box}
+          display="flex"
+          style={{ justifyContent: 'center', marginRight: '10px', cursor: 'pointer' }}
+        >
+          <Tooltip title="Live Chat">
+            <ForumIcon onClick={() => setShowChat(true)} />
+          </Tooltip>
         </Grid>
         <Grid
           item

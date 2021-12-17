@@ -8,10 +8,11 @@ interface Props {
   reg : boolean;
   url : any;
   refetch: any;
+  setShowChat: any;
 }
 
 const ActionContainer = ({
-  initWebsite, reg, url, refetch
+  initWebsite, reg, url, refetch, setShowChat
 } : Props) => {
   const [website, setWebsite] = React.useState(initWebsite);
   const [saved, setSaved] = React.useState(website.Saved);
@@ -82,6 +83,7 @@ const ActionContainer = ({
       setShowShare={setShowShare}
       refetch={refetch}
       url={url}
+      setShowChat={setShowChat}
     />
   );
 };
