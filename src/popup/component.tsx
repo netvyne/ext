@@ -10,7 +10,6 @@ import { QueryClientProvider, useQuery } from 'react-query';
 import { browser } from 'webextension-polyfill-ts';
 import { User } from '../../types/common/types';
 import { getCurrentUser } from '../auth/auth';
-import Chat from '../components/chat/Chat';
 import Discussion from '../components/discussion/Discussion';
 import Notifications from '../components/notifications/Notifications';
 import { queryClient } from '../query';
@@ -86,6 +85,7 @@ export const Popup: FunctionComponent = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [isUserRegistered, setIsUserRegistered] = React.useState<any>(false);
   const [currentUser, setCurrentUser] = React.useState<any>(null);
+  const [intervalMs, setIntervalMs] = React.useState(5000);
 
   // Sends the `popupMounted` event
   React.useEffect(() => {
@@ -107,11 +107,12 @@ export const Popup: FunctionComponent = () => {
 
   const route = `/get_user_notifications?host=${url.host}&pathname=${url.pathname}&search=${encodeURIComponent(url.search)}`;
 
-  const { data, status, refetch } = useQuery<any, string>(route, { enabled: autoFetch });
+  const { data, status, refetch } = useQuery<any, string>(route, { enabled: autoFetch, refetchInterval: intervalMs });
   const [intervalCount, setIntervalCount] = React.useState(0);
 
   const profileQuery = useQuery<any>('/profile', {
     enabled: autoFetch,
+    refetchInterval: intervalMs,
     onSuccess: (statusResponse) => {
       setIsUserRegistered(statusResponse.CurrentUser.Registered);
       setCurrentUser(statusResponse.CurrentUser);
@@ -162,7 +163,7 @@ export const Popup: FunctionComponent = () => {
           setAutoFetch(true);
         }
       });
-    }, 1000);
+    }, 5000);
   }, [data, intervalCount]);
 
   const [value, setValue] = React.useState(0);
@@ -208,8 +209,8 @@ export const Popup: FunctionComponent = () => {
                     },
                   }}
                 >
-                  <Tab icon={<Avatar alt="Conversation" src={value === 0 ? '../images/conversation_selected.png' : '../images/conversation_normal.png'} className="tabIcon" />} label="Discuss" {...a11yProps(0)} />
-                  <Tab icon={<Avatar alt="Share" src={value === 1 ? '../images/share_selected.png' : '../images/share_normal.png'} className="tabIcon" />} label="Share" {...a11yProps(1)} />
+                  <Tab icon={<Avatar alt="Conversation" src={value === 0 ? '../images/public_selected.png' : '../images/public_normal.png'} className="tabIcon" />} label="Public" {...a11yProps(0)} />
+                  <Tab icon={<Avatar alt="Share" src={value === 1 ? '../images/home_selected.png' : '../images/home_normal.png'} className="tabIcon" />} label="Private" {...a11yProps(1)} />
                   <Tab
                     icon={(
                       <Badge
@@ -266,7 +267,7 @@ export const Popup: FunctionComponent = () => {
                       open={Boolean(anchorEl)}
                       onClose={() => handleClose('close')}
                     >
-                      <MenuItem onClick={() => handleClose('livechat')}>Live Chat</MenuItem>
+                      {/* <MenuItem onClick={() => handleClose('livechat')}>Live Chat</MenuItem> */}
                       <MenuItem onClick={() => moreOptionClick('feedback', 'https://forms.gle/LUzvrWqhtWnKwAxX6')}>Feedback</MenuItem>
                       {isUserRegistered && (<MenuItem onClick={() => moreOptionClick('logout', 'profile')}>Logout</MenuItem>)}
                       {!isUserRegistered && (<MenuItem onClick={() => moreOptionClick('login', 'auth/signin')}>Login</MenuItem>)}
@@ -284,9 +285,9 @@ export const Popup: FunctionComponent = () => {
             <TabPanel value={value} index={2}>
               <Notifications refetch={refetch} />
             </TabPanel>
-            <TabPanel value={value} index={3}>
+            {/* <TabPanel value={value} index={3}>
               <Chat initCurrentUser={user} />
-            </TabPanel>
+            </TabPanel> */}
           </div>
         </div>
       </Root>

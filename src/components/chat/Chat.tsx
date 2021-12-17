@@ -118,7 +118,7 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
     const publicApiUrl : any = process.env.REACT_APP_PUBLIC_API;
     const socketUrl = publicApiUrl.replace('http', 'ws');
     const socket = new WebSocket(`${socketUrl}/get_chat_socket?host=${currentUrl.host}&pathname=${currentUrl.pathname}&search=${encodeURIComponent(currentUrl.search)}`);
-    console.log('Socket created', socket);
+    // console.log('Socket created', socket);
     if (!socket) {
       const intervalID = setInterval(alert, 30000);
       clearInterval(intervalID);
@@ -128,12 +128,12 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
     }
     webSocket.current = socket;
     webSocket.current.onmessage = (message : any) => {
-      console.log('messages :::::', message);
+      // console.log('messages :::::', message);
       const response : any = JSON.parse(message.data);
       messages.push(response);
       setMessages(messages);
     };
-    return () => { console.log('Closing'); webSocket.current?.close(); };
+    return () => { webSocket.current?.close(); };
   }
 
   let parentChatTitle : any = '';

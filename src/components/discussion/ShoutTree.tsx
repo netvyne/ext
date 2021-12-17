@@ -209,6 +209,7 @@ const ShoutTree = ({
                     && (
                       <DeleteShout
                         initShout={root}
+                        setRoot={setRoot}
                       />
                     )}
               </Grid>
