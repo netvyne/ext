@@ -166,7 +166,7 @@ const Discussion = ({ initCurrentUser, initUrl, autoFetch } : Props) => {
   );
 
   function loginLink() {
-    const href = `${process.env.PUBLIC_WEB}/auth/signin`;
+    const href = `${process.env.PUBLIC_WEB}`;
     window.open(href, '_blank', 'noopener,noreferrer');
     return false;
   }
@@ -206,7 +206,7 @@ const Discussion = ({ initCurrentUser, initUrl, autoFetch } : Props) => {
           color="primary"
           onClick={(e) => { loginLink(); }}
         >
-          Log in to view comments
+          Please visit netvyne.com to get started
         </Button>
       </Box>
     );
