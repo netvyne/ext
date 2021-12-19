@@ -35,12 +35,19 @@ const ReplyUI = ({
         preview="edit"
         onChange={(value: string | undefined) => value !== undefined && setComment(value)}
       />
-      <Button type="submit" size="small" color="primary" endIcon={<SendIcon />}>
-        {' '}
-        Submit
-        {' '}
-      </Button>
-      {showCaptcha
+      <Box my={1}>
+        <Button
+          type="submit"
+          size="small"
+          endIcon={<SendIcon />}
+          fullWidth
+          style={{ color: 'white', backgroundColor: '#54dc3c' }}
+        >
+          {' '}
+          Submit
+          {' '}
+        </Button>
+        {showCaptcha
         && (
           <HCaptcha
             sitekey={process.env.REACT_APP_CAPTCHA_SITE_KEY || ''}
@@ -48,6 +55,7 @@ const ReplyUI = ({
             ref={captchaRef}
           />
         )}
+      </Box>
     </form>
   );
 
@@ -59,7 +67,7 @@ const ReplyUI = ({
       <ReplyIcon />
     </Button>
   );
-  return <Box>{content}</Box>;
+  return <Box bgcolor="white">{content}</Box>;
 };
 
 export default ReplyUI;

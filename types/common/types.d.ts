@@ -52,6 +52,7 @@ interface Website {
     VoteStatus: number;
     Saved: boolean;
     ShoutCount: number;
+    LiveCount: number;
     TagLabelNames: string[];
     Public: boolean;
     URL: string;

@@ -52,6 +52,14 @@ const Notifications = ({ refetch } : Props) => {
       <NotificationBox notification={notification} refetch={refetch} />
     ));
   }
+  function moreOptionClick(action : string, link : string) {
+    let href = link;
+    if (action !== 'feedback') {
+      href = `${process.env.PUBLIC_WEB}/${link}`;
+    }
+    window.open(href, '_blank', 'noopener,noreferrer');
+    return false;
+  }
   return (
     <Box m={2}>
 
@@ -73,6 +81,8 @@ const Notifications = ({ refetch } : Props) => {
       {allNotifications.length === 0 && (
         <Box>No new notifications</Box>
       )}
+      <Button onClick={() => moreOptionClick('feedback', 'https://forms.gle/LUzvrWqhtWnKwAxX6')}>Feedback</Button>
+      <Button onClick={() => moreOptionClick('logout', 'profile')}>Profile</Button>
     </Box>
   );
 };

@@ -6,6 +6,7 @@ import {
 } from '@mui/material';
 import { DateTime } from 'luxon';
 import React from 'react';
+import LazyLoad from 'react-lazyload';
 import ReactMarkdown from 'react-markdown';
 import { useMutation, useQuery } from 'react-query';
 import { Shout, User, Website } from '../../../types/common/types';
@@ -224,7 +225,7 @@ const ShoutTree = ({
     );
   }
 
-  return <CssBaseline>{content}</CssBaseline>;
+  return <LazyLoad height={200} offset={100}><CssBaseline>{content}</CssBaseline></LazyLoad>;
 };
 
 export default ShoutTree;

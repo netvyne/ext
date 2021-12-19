@@ -272,7 +272,6 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
   }
   return (
     <Box height="100%">
-      <Typography className="live-chat-title" variant="h5">Live Chat</Typography>
       <div className="chat-messages">
         {msgs}
         <div ref={messagesEndRef} />
