@@ -1,7 +1,8 @@
 /* eslint-disable max-len */
 import HCaptcha from '@hcaptcha/react-hcaptcha';
-import KeyboardBackspace from '@mui/icons-material/KeyboardBackspace';
-import { Box, Button } from '@mui/material';
+import {
+  Box, Button, MenuItem, Select
+} from '@mui/material';
 // import { styled } from '@mui/material/styles';
 import { createTheme, styled, ThemeProvider } from '@mui/material/styles';
 import { AxiosError } from 'axios';
@@ -11,13 +12,12 @@ import {
   Shout, Url, User, Website
 } from '../../../types/common/types';
 import { isValidURL } from '../../utils';
-import Chat from '../chat/Chat';
 import ActionContainer from './ActionContainer';
 import FeedItemPlaceholder from './FeedItemPlaceholder';
 import ReplyUI from './ReplyUI';
 import ShoutPlaceholder from './ShoutPlaceholder';
 import ShoutTree from './ShoutTree';
-import WebsiteUI from './WebsiteUI';
+import './styles.scss';
 
 interface Props {
   initCurrentUser: User[];
@@ -80,6 +80,7 @@ const Discussion = ({ initCurrentUser, initUrl, autoFetch } : Props) => {
   const [url, setUrl] = React.useState<any>({});
   const user : any = initCurrentUser;
   const [showForm, setShowForm] = React.useState(true);
+  const [sort, setSort] = React.useState('best');
   const [showChat, setShowChat] = React.useState(false);
   const [showCaptcha, setShowCaptcha] = React.useState(false);
   const [captchaToken, setCaptchaToken] = React.useState('');
@@ -89,7 +90,7 @@ const Discussion = ({ initCurrentUser, initUrl, autoFetch } : Props) => {
   const [currentTitle, setCurrentTitle] = React.useState<any>('');
   // const [autoFetch, setAutoFetch] = React.useState<any>(false);
 
-  const route = `/get_shout_trees?host=${url.host}&pathname=${url.pathname}&search=${encodeURIComponent(url.search)}`;
+  const route = `/get_shout_trees?host=${url.host}&pathname=${url.pathname}&search=${encodeURIComponent(url.search)}&sort=${sort}`;
   const { data, status, refetch } = useQuery<GetShoutTreesQuery, string>(
     route, {
       enabled: autoFetch,
@@ -237,46 +238,42 @@ const Discussion = ({ initCurrentUser, initUrl, autoFetch } : Props) => {
         setCaptchaToken={setCaptchaToken}
       />
     );
-    website = (
-      <>
-        <WebsiteUI initWebsite={data!.Website} url={url} refetch={refetch} currentTitle={currentTitle} />
-      </>
-    );
+
     actionBox = (
       <>
         <ActionContainer initWebsite={data!.Website} reg={user?.Registered} url={url} refetch={refetch} setShowChat={setShowChat} />
       </>
     );
   }
-  // const reply = (
-  //   <ReplyUI
-  //     postComment={postComment}
-  //     setComment={setComment}
-  //     comment={comment}
-  //     showForm={showForm}
-  //     setShowForm={setShowForm}
-  //     showCaptcha={showCaptcha}
-  //     captchaRef={captchaRef}
-  //     setCaptchaToken={setCaptchaToken}
-  //   />
-  // );
+  const sorter = (
+    <Box
+      m={1}
+      p={1}
+    >
+      Sort:
+      {' '}
+      <Select
+        size="small"
+        value={sort}
+        label="Sort"
+        onChange={(event : any) => setSort(event.target.value)}
+      >
+        <MenuItem value="top">Top</MenuItem>
+        <MenuItem value="best">Best</MenuItem>
+        <MenuItem value="old">Old</MenuItem>
+        <MenuItem value="new">New</MenuItem>
+      </Select>
+    </Box>
+  );
   return (
-    <Root className={classes.root}>
+    <Root>
       <ThemeProvider theme={discussionTheme}>
+        {sorter}
         <Box>
-          <div>
-            {loginButton}
-            {website}
-            {actionBox}
-            {(!showChat) ? reply : ''}
-            {(!showChat) ? trees : ''}
-          </div>
-          {showChat && (
-            <>
-              <KeyboardBackspace sx={{ cursor: 'pointer' }} onClick={() => setShowChat(false)} />
-              <Chat initCurrentUser={initCurrentUser} />
-            </>
-          )}
+          {reply}
+        </Box>
+        <Box style={{ overflowY: 'auto' }}>
+          {trees}
         </Box>
       </ThemeProvider>
     </Root>

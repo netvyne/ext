@@ -1,21 +1,25 @@
 /* eslint-disable max-len */
+import HomeIcon from '@mui/icons-material/Home';
+import PublicIcon from '@mui/icons-material/Public';
 import {
-  AppBar, Avatar, Badge, Box, Button, Grid,
-  Menu, MenuItem, Tab, Tabs, ThemeProvider, Typography
+  AppBar, Avatar, Badge, Box, Grid, Tab, Tabs, Typography
 } from '@mui/material/';
 import { createTheme, styled } from '@mui/material/styles';
+import Public from '@src/components/public/Public';
 import { Sharing } from '@src/components/sharing';
+import { AxiosError } from 'axios';
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import { QueryClientProvider, useQuery } from 'react-query';
+import { QueryClientProvider, useMutation, useQuery } from 'react-query';
 import { browser } from 'webextension-polyfill-ts';
 import { User } from '../../types/common/types';
-import { getCurrentUser } from '../auth/auth';
-import Discussion from '../components/discussion/Discussion';
 import Notifications from '../components/notifications/Notifications';
 import { queryClient } from '../query';
 import { isValidURL } from '../utils';
 import './styles.scss';
 
+interface loginMutation {
+  CurrentUser: User;
+}
 // // // //
 interface TabPanelProps {
   // eslint-disable-next-line react/require-default-props
@@ -82,9 +86,7 @@ export const Popup: FunctionComponent = () => {
   const [url, setUrl] = useState<any>({});
   const [shareCount, setShareCount] = useState(0);
 
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [isUserRegistered, setIsUserRegistered] = React.useState<any>(false);
-  const [currentUser, setCurrentUser] = React.useState<any>(null);
   const [intervalMs, setIntervalMs] = React.useState(5000);
 
   // Sends the `popupMounted` event
@@ -94,31 +96,37 @@ export const Popup: FunctionComponent = () => {
     });
     browser.runtime.sendMessage({ popupMounted: true });
   }, []);
+  const mutation = useMutation<loginMutation, AxiosError>({});
+  const getUser = async () => {
+    const mutateData = {
+      Password: '',
+      Email: '',
+    };
+    const res = mutation.mutate(
+      // @ts-ignore
+      {
+        route: '/login',
+        data: mutateData,
+      },
+      {
+        onSuccess: (retData: { [CurrentUser: string]: User }) => {
+          if (retData && retData.CurrentUser) {
+            setUser(retData.CurrentUser);
+          }
+        },
+      },
+    );
+    return res;
+  };
 
-  function moreOptionClick(action : string, link : string) {
-    let href = link;
-    if (action !== 'feedback') {
-      href = `${process.env.PUBLIC_WEB}/${link}`;
-    }
-    window.open(href, '_blank', 'noopener,noreferrer');
-    setAnchorEl(null);
-    return false;
-  }
+  React.useEffect(() => {
+    getUser();
+  }, []);
 
   const route = `/get_user_notifications?host=${url.host}&pathname=${url.pathname}&search=${encodeURIComponent(url.search)}`;
 
-  const { data, status, refetch } = useQuery<any, string>(route, { enabled: autoFetch, refetchInterval: intervalMs });
+  const { data, status, refetch } = useQuery<any, string>(route, { enabled: autoFetch && !!user, refetchInterval: intervalMs });
   const [intervalCount, setIntervalCount] = React.useState(0);
-
-  const profileQuery = useQuery<any>('/profile', {
-    enabled: autoFetch,
-    refetchInterval: intervalMs,
-    onSuccess: (statusResponse) => {
-      setIsUserRegistered(statusResponse.CurrentUser.Registered);
-      setCurrentUser(statusResponse.CurrentUser);
-      getCurrentUser().then((curUser:User|any) => setUser(curUser));
-    }
-  });
 
   useEffect(() => {
     const queryInfo = { active: true, lastFocusedWindow: true };
@@ -171,17 +179,6 @@ export const Popup: FunctionComponent = () => {
     setValue(newValue);
   };
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = (action: string) => {
-    if (action === 'livechat') {
-      setValue(3);
-    }
-    setAnchorEl(null);
-  };
-
   // Renders the component tree
   return (
     <QueryClientProvider client={queryClient}>
@@ -190,11 +187,6 @@ export const Popup: FunctionComponent = () => {
           <div className="container mx-1 my-1">
             <AppBar position="static" color="default" elevation={1}>
               <Grid className="topbar">
-                <Grid className="logo">
-                  <Button onClick={() => moreOptionClick('profile', 'profile')}>
-                    <img src="../icon-48.png" alt="logo" />
-                  </Button>
-                </Grid>
                 <Tabs
                   className="tabs"
                   value={value}
@@ -209,8 +201,8 @@ export const Popup: FunctionComponent = () => {
                     },
                   }}
                 >
-                  <Tab icon={<Avatar alt="Conversation" src={value === 0 ? '../images/public_selected.png' : '../images/public_normal.png'} className="tabIcon" />} label="Public" {...a11yProps(0)} />
-                  <Tab icon={<Avatar alt="Share" src={value === 1 ? '../images/home_selected.png' : '../images/home_normal.png'} className="tabIcon" />} label="Private" {...a11yProps(1)} />
+                  <Tab icon={<PublicIcon sx={{ color: value === 0 ? '#9F00CF' : 'black' }} />} label="Public" {...a11yProps(0)} />
+                  <Tab icon={<HomeIcon sx={{ color: value === 1 ? '#9F00CF' : 'black' }} />} label="Private" {...a11yProps(1)} />
                   <Tab
                     icon={(
                       <Badge
@@ -222,62 +214,33 @@ export const Popup: FunctionComponent = () => {
                         variant="dot"
                         invisible={!data?.ContainsUnread}
                       >
-                        <Avatar alt="Notification" src={value === 2 ? '../images/notification_selected.png' : '../images/notification_normal.png'} className="tabIcon" />
+                        {user?.AvatarURL ? (
+                          <Avatar
+                            style={{ width: 24, height: 24 }}
+                            alt="Avatar"
+                            src={user.AvatarURL}
+                          />
+                        )
+                          : (
+                            <Avatar
+                              alt="Handle initial"
+                              style={{
+                                width: 24, height: 24, fontSize: '1.5rem', backgroundColor: 'black'
+                              }}
+                            >
+                              {`${user?.UserName?.charAt(0).toUpperCase()}`}
+                            </Avatar>
+                          )}
                       </Badge>
 )}
-                    label="Notifications"
+                    label="Profile"
                     {...a11yProps(2)}
                   />
-                  <Tab className="livechat-tab" label="" {...a11yProps(3)} />
                 </Tabs>
-                <Button onClick={() => moreOptionClick('logout', 'profile')}>
-                  {(isUserRegistered && user && user.AvatarURL) && (
-                  <Avatar
-                    style={{ width: 40, height: 40 }}
-                    alt="Avatar"
-                    src={user.AvatarURL}
-                  />
-                  )}
-                  {(isUserRegistered && user && !user.AvatarURL) && (
-                  <Avatar
-                    alt="Handle initial"
-                    style={{ width: 40, height: 40, fontSize: '1.5rem' }}
-                  >
-                    {`${currentUser.UserName.charAt(0).toUpperCase()}`}
-                  </Avatar>
-                  )}
-                  {!isUserRegistered && currentUser && (
-                  <Avatar
-                    alt="Handle initial"
-                    style={{ width: 40, height: 40, fontSize: '1.5rem' }}
-                  >
-                    {`${currentUser.UserName.charAt(0).toUpperCase()}`}
-                  </Avatar>
-                  )}
-                </Button>
-                <div className="more-icon">
-                  <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-                    <img src={value === 3 ? '../images/three_dots_selected.png' : '../images/three_dots_normal.png'} alt="more icon" />
-                  </Button>
-                  <ThemeProvider theme={theme}>
-                    <Menu
-                      id="simple-menu"
-                      anchorEl={anchorEl}
-                      keepMounted
-                      open={Boolean(anchorEl)}
-                      onClose={() => handleClose('close')}
-                    >
-                      {/* <MenuItem onClick={() => handleClose('livechat')}>Live Chat</MenuItem> */}
-                      <MenuItem onClick={() => moreOptionClick('feedback', 'https://forms.gle/LUzvrWqhtWnKwAxX6')}>Feedback</MenuItem>
-                      {isUserRegistered && (<MenuItem onClick={() => moreOptionClick('logout', 'profile')}>Logout</MenuItem>)}
-                      {!isUserRegistered && (<MenuItem onClick={() => moreOptionClick('login', 'auth/signin')}>Login</MenuItem>)}
-                    </Menu>
-                  </ThemeProvider>
-                </div>
               </Grid>
             </AppBar>
             <TabPanel value={value} index={0}>
-              <Discussion initCurrentUser={user} initUrl={url} autoFetch={autoFetch} />
+              <Public initCurrentUser={user} initUrl={url} autoFetch={autoFetch} />
             </TabPanel>
             <TabPanel value={value} index={1}>
               <Sharing />
@@ -285,9 +248,6 @@ export const Popup: FunctionComponent = () => {
             <TabPanel value={value} index={2}>
               <Notifications refetch={refetch} />
             </TabPanel>
-            {/* <TabPanel value={value} index={3}>
-              <Chat initCurrentUser={user} />
-            </TabPanel> */}
           </div>
         </div>
       </Root>

@@ -4,6 +4,7 @@ import GroupIcon from '@mui/icons-material/Group';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import KeyboardBackspace from '@mui/icons-material/KeyboardBackspace';
 import PersonIcon from '@mui/icons-material/Person';
+import ReplyIcon from '@mui/icons-material/Reply';
 import SettingsIcon from '@mui/icons-material/Settings';
 import {
   Box,
@@ -135,12 +136,6 @@ export const Sharing: FunctionComponent = () => {
       }
     }
   );
-
-  const profileQuery = useQuery<any>('/profile', {
-    onSuccess: (statusResponse) => {
-      setIsUserRegistered(statusResponse.CurrentUser.Registered);
-    }
-  });
 
   useEffect(() => {
     const queryInfo = { active: true, lastFocusedWindow: true };
@@ -580,7 +575,13 @@ export const Sharing: FunctionComponent = () => {
                 onChange={(value: string | undefined) => value !== undefined && setComment(value)}
               />
             </Box>
-            <Button type="submit" disabled={(conversationID === 0 && friendHandles.length === 0) || !isUserRegistered}> Share </Button>
+            <Button type="submit" disabled={(conversationID === 0 && friendHandles.length === 0) || !isUserRegistered}>
+              {' '}
+              Share
+              {' '}
+              <ReplyIcon style={{ transform: 'scaleX(-1)' }} />
+              {' '}
+            </Button>
             <Box width="100%">
               {!isUserRegistered && (
               <Button
