@@ -5,14 +5,12 @@ import ActionUI from './ActionUI';
 
 interface Props {
   initWebsite: Website;
-  reg : boolean;
   url : any;
   refetch: any;
-  setShowChat: any;
 }
 
 const ActionContainer = ({
-  initWebsite, reg, url, refetch, setShowChat
+  initWebsite, url, refetch
 } : Props) => {
   const [website, setWebsite] = React.useState(initWebsite);
   const [saved, setSaved] = React.useState(website.Saved);
@@ -81,9 +79,7 @@ const ActionContainer = ({
       onSaveItem={onSaveItem}
       showShare={showShare}
       setShowShare={setShowShare}
-      refetch={refetch}
       url={url}
-      setShowChat={setShowChat}
     />
   );
 };

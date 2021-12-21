@@ -20,17 +20,15 @@ interface Props {
   onSaveItem: any;
   setShowShare: any;
   showShare: boolean;
-  refetch: any;
   url: any;
-  setShowChat: any;
 }
 
 const ActionUI = ({
   website, setWebsite, postVote, saved, onSaveItem,
-  setShowShare, showShare, refetch, url, setShowChat
+  setShowShare, showShare, url
 } : Props) => {
   const actionbox = (
-    <Box my={1}>
+    <Box my={1} height="40px">
       <Grid container wrap="nowrap" justifyContent="space-around" style={{ alignItems: 'center' }}>
         <Grid item component={IconButton} value="1" onClick={postVote}>
           <ArrowUpwardIcon

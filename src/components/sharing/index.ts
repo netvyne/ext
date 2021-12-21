@@ -1,1 +1,0 @@
-export { Sharing } from './component';

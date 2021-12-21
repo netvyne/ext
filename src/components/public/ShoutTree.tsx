@@ -6,7 +6,6 @@ import {
 } from '@mui/material';
 import { DateTime } from 'luxon';
 import React from 'react';
-import LazyLoad from 'react-lazyload';
 import ReactMarkdown from 'react-markdown';
 import { useMutation, useQuery } from 'react-query';
 import { Shout, User, Website } from '../../../types/common/types';
@@ -19,7 +18,6 @@ import UserKarma from './UserKarma';
 interface Props {
   website: Website;
   treeRoot: Shout;
-  reg: boolean;
   defUser: User;
 }
 
@@ -29,11 +27,11 @@ interface GetShoutTreesQuery {
 }
 
 const ShoutTree = ({
-  treeRoot, reg, website, defUser
+  treeRoot, website, defUser
 }: Props) => {
   const [user] = React.useState<User>(defUser);
   const [root, setRoot] = React.useState<Shout>(treeRoot);
-  const [showFlag, setShowFlag] = React.useState(false);
+  // const [showFlag, setShowFlag] = React.useState(false);
   const [children, setChildren] = React.useState<Shout[]>(root.Children || []);
   const [hide, setHide] = React.useState(root.Warn);
   const [clicked, setClicked] = React.useState(false);
@@ -92,12 +90,17 @@ const ShoutTree = ({
           key={shout.ID}
           website={website}
           treeRoot={shout}
-          reg={reg}
           defUser={user}
-          // refetch={refetch}
         />
       ))}
-      {(root.MoreReplies && root.MoreReplies.length > 0) && <Button variant="outlined" onClick={() => moreRepliesQuery.refetch()}> Load More Comments</Button>}
+      {(root.MoreReplies && root.MoreReplies.length > 0)
+        && (
+        <Button variant="outlined" onClick={() => moreRepliesQuery.refetch()}>
+          {
+            (root.ID === 0 && root.MoreReplies.length > 0) ? 'Load More Comments' : 'Load More Replies'
+          }
+        </Button>
+        )}
     </>
   );
   let content;
@@ -166,7 +169,7 @@ const ShoutTree = ({
                     defUser={defUser}
                   />
                 </Box>
-                {!root.Saved && reg && (
+                {!root.Saved && defUser.Registered && (
                   <Box>
                     <Button
                       disabled={clicked}
@@ -182,7 +185,7 @@ const ShoutTree = ({
                     </Button>
                   </Box>
                 )}
-                {root.Saved && reg && (
+                {root.Saved && defUser.Registered && (
                   <Box>
                     <Button
                       disabled={clicked}
@@ -225,7 +228,7 @@ const ShoutTree = ({
     );
   }
 
-  return <LazyLoad height={200} offset={100}><CssBaseline>{content}</CssBaseline></LazyLoad>;
+  return <CssBaseline>{content}</CssBaseline>;
 };
 
 export default ShoutTree;
