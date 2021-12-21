@@ -1,19 +1,16 @@
 /* eslint-disable max-len */
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 import {
-  Box, Button, MenuItem, Select
+  Box, MenuItem, Select
 } from '@mui/material';
-// import { styled } from '@mui/material/styles';
 import { createTheme, styled, ThemeProvider } from '@mui/material/styles';
 import { AxiosError } from 'axios';
 import React, { useEffect } from 'react';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import {
-  Shout, Url, User, Website
+  Shout, User, Website
 } from '../../../types/common/types';
 import { isValidURL } from '../../utils';
-import ActionContainer from './ActionContainer';
-import FeedItemPlaceholder from './FeedItemPlaceholder';
 import ReplyUI from './ReplyUI';
 import ShoutPlaceholder from './ShoutPlaceholder';
 import ShoutTree from './ShoutTree';
@@ -21,7 +18,6 @@ import './styles.scss';
 
 interface Props {
   initCurrentUser: User[];
-  initUrl: Url;
   autoFetch: boolean;
 }
 
@@ -75,20 +71,16 @@ const discussionTheme = createTheme({
     }
   }
 });
-const Discussion = ({ initCurrentUser, initUrl, autoFetch } : Props) => {
-  // const url : any = initUrl;
+const Discussion = ({ initCurrentUser, autoFetch } : Props) => {
   const [url, setUrl] = React.useState<any>({});
   const user : any = initCurrentUser;
   const [showForm, setShowForm] = React.useState(true);
   const [sort, setSort] = React.useState('best');
-  const [showChat, setShowChat] = React.useState(false);
   const [showCaptcha, setShowCaptcha] = React.useState(false);
   const [captchaToken, setCaptchaToken] = React.useState('');
   const [children, setChildren] = React.useState<Shout[]>([]);
   const captchaRef = React.createRef<HCaptcha>();
   const [comment, setComment] = React.useState('');
-  const [currentTitle, setCurrentTitle] = React.useState<any>('');
-  // const [autoFetch, setAutoFetch] = React.useState<any>(false);
 
   const route = `/get_shout_trees?host=${url.host}&pathname=${url.pathname}&search=${encodeURIComponent(url.search)}&sort=${sort}`;
   const { data, status, refetch } = useQuery<GetShoutTreesQuery, string>(
@@ -99,7 +91,6 @@ const Discussion = ({ initCurrentUser, initUrl, autoFetch } : Props) => {
       }
     }
   );
-  const [intervalCount, setIntervalCount] = React.useState(0);
 
   useEffect(() => {
     const queryInfo = { active: true, lastFocusedWindow: true };
@@ -121,34 +112,6 @@ const Discussion = ({ initCurrentUser, initUrl, autoFetch } : Props) => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     const newCount = intervalCount + 1;
-  //     setIntervalCount(newCount);
-  //     const queryInfo = { active: true, lastFocusedWindow: true };
-  //     if (chrome.tabs) {
-  //       chrome.tabs.query(queryInfo, (tabs) => {
-  //         if (currentTitle !== tabs[0].title) {
-  //           setCurrentTitle(tabs[0].title);
-  //           const newUrl : any = isValidURL(tabs[0].url);
-  //           const formatedUrl = {
-  //             pathname: newUrl.pathname,
-  //             host: newUrl.host,
-  //             search: newUrl.search,
-  //             Title: tabs[0].title,
-  //             origin: newUrl.origin,
-  //           };
-  //           setUrl(formatedUrl);
-  //           if (autoFetch) {
-  //             refetch();
-  //           }
-  //         }
-  //       });
-  //     }
-  //   }, 1000);
-  // }, [intervalCount]);
-
-  // const replyMutation = useMutation({});
   const replyMutation = useMutation<SuccessResponse, AxiosError>(
     {
       onSuccess: (mutationData) => {
@@ -166,13 +129,6 @@ const Discussion = ({ initCurrentUser, initUrl, autoFetch } : Props) => {
     }
   );
 
-  function loginLink() {
-    const href = `${process.env.PUBLIC_WEB}`;
-    window.open(href, '_blank', 'noopener,noreferrer');
-    return false;
-  }
-  const queryClient = useQueryClient();
-
   const postComment = async (event : any) => {
     event.preventDefault();
     const postShoutData = {
@@ -188,32 +144,11 @@ const Discussion = ({ initCurrentUser, initUrl, autoFetch } : Props) => {
     const res = replyMutation.mutate({ route: '/post_shout', data: postShoutData });
     return res;
   };
-
-  const child : any = '';
-  let website : any = '';
   let trees : any = '';
-  let actionBox;
   let reply: any = '';
-  let loginButton: any = '';
 
-  if (status === 'error') {
-    // trees = <div>Error</div>;
-    // website = <div>Error</div>;
-    loginButton = (
-      <Box width="100%">
-        <Button
-          type="button"
-          variant="outlined"
-          color="primary"
-          onClick={(e) => { loginLink(); }}
-        >
-          Please visit netvyne.com to get started
-        </Button>
-      </Box>
-    );
-  } else if (status === 'loading') {
+  if (status === 'loading') {
     trees = <ShoutPlaceholder />;
-    website = <FeedItemPlaceholder />;
   } else if (status === 'success' && user) {
     if (children) {
       trees = children.map((treeRoot) => (
@@ -221,7 +156,6 @@ const Discussion = ({ initCurrentUser, initUrl, autoFetch } : Props) => {
           key={treeRoot.ID}
           website={data!.Website}
           treeRoot={treeRoot}
-          reg={!!user.Registered}
           defUser={user}
         />
       ));
@@ -238,17 +172,12 @@ const Discussion = ({ initCurrentUser, initUrl, autoFetch } : Props) => {
         setCaptchaToken={setCaptchaToken}
       />
     );
-
-    actionBox = (
-      <>
-        <ActionContainer initWebsite={data!.Website} reg={user?.Registered} url={url} refetch={refetch} setShowChat={setShowChat} />
-      </>
-    );
   }
   const sorter = (
     <Box
       m={1}
       p={1}
+      height="55px"
     >
       Sort:
       {' '}
@@ -269,10 +198,14 @@ const Discussion = ({ initCurrentUser, initUrl, autoFetch } : Props) => {
     <Root>
       <ThemeProvider theme={discussionTheme}>
         {sorter}
-        <Box>
+        <Box height="150px">
           {reply}
         </Box>
-        <Box style={{ overflowY: 'auto' }}>
+        <Box style={{
+          height: '500px',
+          overflow: 'auto'
+        }}
+        >
           {trees}
         </Box>
       </ThemeProvider>

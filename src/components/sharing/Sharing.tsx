@@ -11,12 +11,9 @@ import {
   Button, Checkbox, CircularProgress, FormControlLabel, Grid, IconButton,
   Snackbar, Tooltip, Typography
 } from '@mui/material';
-import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import MDEditor from '@uiw/react-md-editor';
-import React, {
-  FunctionComponent, useEffect, useState
-} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   useMutation, useQuery
 } from 'react-query';
@@ -25,10 +22,6 @@ import { getCurrentUser } from '../../auth/auth';
 import { createDiv, isValidURL, screenShot } from '../../utils';
 import PostShare from '../talk/PostShare';
 import Dropdown from './dropdown';
-
-function Alert(props: AlertProps) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
 
 interface GetWebsitePostsQuery {
   FriendsPosts: Post[];
@@ -66,9 +59,10 @@ const sharingTheme = createTheme({
   }
 });
 
-export const Sharing: FunctionComponent = () => {
-//   const queryClient = new QueryClient();
-
+interface Props {
+  defUser: User
+}
+const Sharing = ({ defUser } : Props) => {
   const [shareSeparately, setShareSeparately] = React.useState(false);
   const [markSensitive, setMarkSensitive] = React.useState(false);
   const [url, setUrl] = useState<any>({});
@@ -77,12 +71,6 @@ export const Sharing: FunctionComponent = () => {
   const [open, setOpen] = React.useState(false);
 
   const [dataURL, setDataURL] = React.useState('');
-
-  const [openAlert, setOpenAlert] = React.useState(false);
-  const [alertText, setAlertText] = React.useState('');
-
-  const [sharedConvs, setSharedConvs] = React.useState<any>([]);
-  const [sharedConTitles, setSharedConTitles] = React.useState<any>([]);
   const [user, setUser] = React.useState<User | any>();
 
   const [friendHandles, setFriendHandles] = React.useState([]);
@@ -94,7 +82,6 @@ export const Sharing: FunctionComponent = () => {
   const [friendsPosts, setFriendsPosts] = React.useState<Post[]>([]);
   const [post, setPost] = React.useState<any>([]);
   const [conversationsPosts, setConversationsPosts] = React.useState<Post[]>([]);
-  const [isUserRegistered, setIsUserRegistered] = React.useState<any>(false);
 
   const toggleMoreOptions = () => {
     setMoreOptions(!moreOptions);
@@ -128,7 +115,7 @@ export const Sharing: FunctionComponent = () => {
     }
   };
 
-  const { data, refetch, status } = useQuery<GetWebsitePostsQuery, string>(
+  const { refetch, status } = useQuery<GetWebsitePostsQuery, string>(
     `/get_website_posts?host=${url.host}&pathname=${url.pathname}&search=${encodeURIComponent(url.search)}`, {
       onSuccess: (postData) => {
         setFriendsPosts(postData.FriendsPosts);
@@ -183,13 +170,6 @@ export const Sharing: FunctionComponent = () => {
     formData.append('Image', file, file.name);
     formData.append('Type', 'screenshot');
     formData.append('ID', postId);
-    // mutation.mutate(
-    //   // @ts-ignore
-    //   {
-    //     route: '/upload_image',
-    //     data: formData,
-    //   },
-    // );
     const res = mutation.mutate(
       // @ts-ignore
       {
@@ -197,7 +177,7 @@ export const Sharing: FunctionComponent = () => {
         data: formData,
       },
       {
-        onSuccess: (response : any) => {
+        onSuccess: () => {
           setDataURL('');
         },
       },
@@ -206,7 +186,7 @@ export const Sharing: FunctionComponent = () => {
   };
 
   function createTestDiv() {
-    createDiv('createDiv'); // saves to local storage
+    createDiv(); // saves to local storage
   }
 
   function clearScreenShot() {
@@ -244,9 +224,7 @@ export const Sharing: FunctionComponent = () => {
           setCreateConv(false);
           setCreateConv(false);
           if (dataURL !== '') {
-            // console.log('Inside if condition');
             uploadImage(response.Post.ID);
-            // setDataURL('');
           }
           setOpen(true);
           refetch();
@@ -256,20 +234,12 @@ export const Sharing: FunctionComponent = () => {
     return res;
   };
 
-  const handleCloseAlert = (event : any, option: string) => {
-    if (option === 'agree') {
-      postShare(event);
-    }
-    setOpenAlert(false);
-  };
-
   function notificationLink() {
     const href = `${process.env.PUBLIC_WEB}/auth/signin`;
     window.open(href, '_blank', 'noopener,noreferrer');
     return false;
   }
 
-  // const mutation : any = useMutation(postShare);
   let bottom : any;
   if (mutation.isLoading) {
     bottom = (
@@ -306,6 +276,17 @@ export const Sharing: FunctionComponent = () => {
 
   let friendShares: any = '';
   let conversationShares: any = '';
+  const nothingPlaceHolder = (
+    <Grid
+      item
+      xs={12}
+      style={{
+        padding: '10px', backgroundColor: '#eceff1', marginBottom: '10px', cursor: 'pointer'
+      }}
+    >
+      Nothing yet. Be the first to share!
+    </Grid>
+  );
   if (status === 'error') {
     friendShares = <div>Error</div>;
     conversationShares = <div>Error</div>;
@@ -358,11 +339,6 @@ export const Sharing: FunctionComponent = () => {
       <Box m={1}>
         {!showTalkTree && (
         <Box m={1}>
-          {/* <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-            <Alert onClose={handleClose} severity="success">
-              Post has been shared successfully!
-            </Alert>
-          </Snackbar> */}
           <Snackbar
             open={open}
             autoHideDuration={6000}
@@ -575,7 +551,7 @@ export const Sharing: FunctionComponent = () => {
                 onChange={(value: string | undefined) => value !== undefined && setComment(value)}
               />
             </Box>
-            <Button type="submit" disabled={(conversationID === 0 && friendHandles.length === 0) || !isUserRegistered}>
+            <Button type="submit" disabled={(conversationID === 0 && friendHandles.length === 0) || !defUser.Registered}>
               {' '}
               Share
               {' '}
@@ -583,12 +559,12 @@ export const Sharing: FunctionComponent = () => {
               {' '}
             </Button>
             <Box width="100%">
-              {!isUserRegistered && (
+              {!defUser.Registered && (
               <Button
                 type="button"
                 variant="outlined"
                 color="primary"
-                onClick={(e) => { notificationLink(); }}
+                onClick={() => { notificationLink(); }}
               >
                 Log in to share with friends
               </Button>
@@ -596,22 +572,23 @@ export const Sharing: FunctionComponent = () => {
             </Box>
           </form>
           <Grid item container xs={12} direction="column" spacing={1} wrap="nowrap">
-            {conversationShares.length > 0 && (
+            {/* {conversationShares.length > 0 && ( */}
             <Grid item xs={12}>
               <Typography variant="h6">
                 Shared with conversations
               </Typography>
-              {conversationShares}
+              { (conversationShares.length > 0) ? conversationShares : nothingPlaceHolder }
             </Grid>
-            )}
-            {friendShares.length > 0 && (
+            {/* )} */}
+            {/* {friendShares.length > 0 && ( */}
             <Grid item xs={12}>
               <Typography variant="h6">
                 Shared with friends
               </Typography>
-              {friendShares}
+              { (friendShares.length > 0) ? friendShares : nothingPlaceHolder }
+              {/* {friendShares} */}
             </Grid>
-            )}
+            {/* )} */}
           </Grid>
         </Box>
         )}
@@ -627,3 +604,5 @@ export const Sharing: FunctionComponent = () => {
     </ThemeProvider>
   );
 };
+
+export default Sharing;

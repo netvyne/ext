@@ -25,7 +25,7 @@ function toggle() {
   }
 }
 
-chrome.runtime.onMessage.addListener((msg, sender) => {
+chrome.runtime.onMessage.addListener((msg) => {
   if (msg === 'toggle') {
     toggle();
   }

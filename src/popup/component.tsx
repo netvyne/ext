@@ -4,30 +4,21 @@ import PublicIcon from '@mui/icons-material/Public';
 import {
   AppBar, Avatar, Badge, Box, Grid, Tab, Tabs, Typography
 } from '@mui/material/';
-import { createTheme, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import Public from '@src/components/public/Public';
-import { Sharing } from '@src/components/sharing';
 import { AxiosError } from 'axios';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { QueryClientProvider, useMutation, useQuery } from 'react-query';
 import { browser } from 'webextension-polyfill-ts';
 import { User } from '../../types/common/types';
 import Notifications from '../components/notifications/Notifications';
+import Sharing from '../components/sharing/Sharing';
 import { queryClient } from '../query';
 import { isValidURL } from '../utils';
 import './styles.scss';
 
 interface loginMutation {
   CurrentUser: User;
-}
-// // // //
-interface TabPanelProps {
-  // eslint-disable-next-line react/require-default-props
-  children?: React.ReactNode;
-  index: any;
-  value: any;
-  // eslint-disable-next-line react/require-default-props
-  className?: any;
 }
 
 function TabPanel(props : any) {
@@ -70,24 +61,13 @@ const Root = styled('div')(() => ({
   },
 }));
 
-const theme = createTheme({
-  components: {
-    MuiMenu: {
-      styleOverrides: {
-        list: { display: 'flex', flexDirection: 'column', padding: '10px' },
-      },
-    },
-  },
-});
-
 export const Popup: FunctionComponent = () => {
   const [autoFetch, setAutoFetch] = React.useState<any>(false);
   const [user, setUser] = React.useState<User|any>();
   const [url, setUrl] = useState<any>({});
-  const [shareCount, setShareCount] = useState(0);
-
-  const [isUserRegistered, setIsUserRegistered] = React.useState<any>(false);
-  const [intervalMs, setIntervalMs] = React.useState(5000);
+  const [intervalCount, setIntervalCount] = useState(0);
+  // intervalCount
+  const intervalMs = 5000;
 
   // Sends the `popupMounted` event
   React.useEffect(() => {
@@ -98,6 +78,7 @@ export const Popup: FunctionComponent = () => {
   }, []);
   const mutation = useMutation<loginMutation, AxiosError>({});
   const getUser = async () => {
+    console.log('Here in login ::: ');
     const mutateData = {
       Password: '',
       Email: '',
@@ -120,13 +101,18 @@ export const Popup: FunctionComponent = () => {
   };
 
   React.useEffect(() => {
-    getUser();
-  }, []);
+    // getUser();
+    // eslint-disable-next-line no-unused-vars
+    setTimeout(() => {
+      const newCount = intervalCount + 1;
+      setIntervalCount(newCount);
+      getUser();
+    }, 5000);
+  }, [intervalCount]);
 
   const route = `/get_user_notifications?host=${url.host}&pathname=${url.pathname}&search=${encodeURIComponent(url.search)}`;
 
-  const { data, status, refetch } = useQuery<any, string>(route, { enabled: autoFetch && !!user, refetchInterval: intervalMs });
-  const [intervalCount, setIntervalCount] = React.useState(0);
+  const { data, refetch } = useQuery<any, string>(route, { enabled: autoFetch && !!user, refetchInterval: intervalMs });
 
   useEffect(() => {
     const queryInfo = { active: true, lastFocusedWindow: true };
@@ -143,16 +129,13 @@ export const Popup: FunctionComponent = () => {
       });
     }
     if (data) {
-      if (data.WebsitePostShareCount > 0) {
-        setShareCount(data.WebsitePostShareCount);
-      }
       if (data.WebsiteShoutCount > 0) {
         chrome.browserAction.setBadgeText({ text: `${data.WebsiteShoutCount}` });
       } else {
         chrome.browserAction.setBadgeText({ text: '' });
       }
     }
-    const timer = setTimeout(() => {
+    setTimeout(() => {
       const newCount = intervalCount + 1;
       setIntervalCount(newCount);
       setAutoFetch(false);
@@ -185,7 +168,7 @@ export const Popup: FunctionComponent = () => {
       <Root className={classes.root}>
         <div className="popup-container">
           <div className="container mx-1 my-1">
-            <AppBar position="static" color="default" elevation={1}>
+            <AppBar position="fixed" sx={{ top: '0px' }} color="default" elevation={1}>
               <Grid className="topbar">
                 <Tabs
                   className="tabs"
@@ -239,15 +222,17 @@ export const Popup: FunctionComponent = () => {
                 </Tabs>
               </Grid>
             </AppBar>
-            <TabPanel value={value} index={0}>
-              <Public initCurrentUser={user} initUrl={url} autoFetch={autoFetch} />
-            </TabPanel>
-            <TabPanel value={value} index={1}>
-              <Sharing />
-            </TabPanel>
-            <TabPanel value={value} index={2}>
-              <Notifications refetch={refetch} />
-            </TabPanel>
+            <Box sx={{ marginTop: '65px', padding: '8px' }}>
+              <TabPanel value={value} index={0}>
+                <Public initCurrentUser={user} autoFetch={autoFetch} />
+              </TabPanel>
+              <TabPanel value={value} index={1}>
+                <Sharing defUser={user} />
+              </TabPanel>
+              <TabPanel value={value} index={2}>
+                <Notifications refetch={refetch} />
+              </TabPanel>
+            </Box>
           </div>
         </div>
       </Root>

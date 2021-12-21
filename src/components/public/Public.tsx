@@ -1,34 +1,29 @@
 /* eslint-disable max-len */
 import {
-  Box, Button, ToggleButton, ToggleButtonGroup
+  Box,
+  ToggleButton, ToggleButtonGroup
 } from '@mui/material';
-// import { styled } from '@mui/material/styles';
 import { createTheme, styled, ThemeProvider } from '@mui/material/styles';
-import { AxiosError } from 'axios';
 import React, { useEffect } from 'react';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useQuery } from 'react-query';
 import {
-  Shout, Url, User, Website
+  Shout, User, Website
 } from '../../../types/common/types';
 import { isValidURL } from '../../utils';
 import ActionContainer from './ActionContainer';
 import Chat from './Chat';
 import Discussion from './Discussion';
+import WebsitePlaceholder from './WebsitePlaceholder';
 import WebsiteUI from './WebsiteUI';
 
 interface Props {
   initCurrentUser: User[];
-  initUrl: Url;
   autoFetch: boolean;
 }
 
 interface GetShoutTreesQuery {
   Roots: Shout[];
   Website: Website;
-}
-
-interface SuccessResponse {
-  Shout: Shout;
 }
 
 const PREFIX = 'DISCUSSION';
@@ -72,7 +67,7 @@ const discussionTheme = createTheme({
     }
   }
 });
-const Public = ({ initCurrentUser, initUrl, autoFetch } : Props) => {
+const Public = ({ initCurrentUser, autoFetch } : Props) => {
   // const url : any = initUrl;
   const [url, setUrl] = React.useState<any>({});
   const user : any = initCurrentUser;
@@ -80,24 +75,13 @@ const Public = ({ initCurrentUser, initUrl, autoFetch } : Props) => {
   const handleMode = (event : any, newMode : string) => {
     setMode(newMode);
   };
-  const [showForm, setShowForm] = React.useState(true);
-  const [showChat, setShowChat] = React.useState(false);
-  const [showCaptcha, setShowCaptcha] = React.useState(false);
-  const [captchaToken, setCaptchaToken] = React.useState('');
-  const [children, setChildren] = React.useState<Shout[]>([]);
-  const [comment, setComment] = React.useState('');
-  const [currentTitle, setCurrentTitle] = React.useState<any>('');
 
   const route = `/get_shout_trees?host=${url.host}&pathname=${url.pathname}&search=${encodeURIComponent(url.search)}`;
   const { data, status, refetch } = useQuery<GetShoutTreesQuery, string>(
     route, {
-      enabled: autoFetch,
-      onSuccess: (shoutData) => {
-        setChildren(shoutData.Roots);
-      }
+      enabled: autoFetch
     }
   );
-  const [intervalCount, setIntervalCount] = React.useState(0);
 
   useEffect(() => {
     const queryInfo = { active: true, lastFocusedWindow: true };
@@ -118,85 +102,31 @@ const Public = ({ initCurrentUser, initUrl, autoFetch } : Props) => {
       });
     }
   }, []);
-
-  const replyMutation = useMutation<SuccessResponse, AxiosError>(
-    {
-      onSuccess: (mutationData) => {
-        setComment('');
-        setShowCaptcha(false);
-        setCaptchaToken('');
-        setChildren((c) => ((c && c.length > 0) ? [mutationData.Shout, ...c] : [mutationData.Shout]));
-        refetch();
-      },
-      onError: (err: AxiosError) => {
-        if (err.response?.status === 402) {
-          setShowCaptcha(true);
-        }
-      }
-    }
-  );
-
-  function loginLink() {
-    const href = `${process.env.PUBLIC_WEB}`;
-    window.open(href, '_blank', 'noopener,noreferrer');
-    return false;
-  }
-  const queryClient = useQueryClient();
-
-  const postComment = async (event : any) => {
-    event.preventDefault();
-    const postShoutData = {
-      Comment: comment,
-      URL: {
-        Host: url.host,
-        Pathname: url.pathname,
-        Search: url.search,
-      },
-      CaptchaToken: captchaToken
-    };
-    // @ts-ignore
-    const res = replyMutation.mutate({ route: '/post_shout', data: postShoutData });
-    return res;
-  };
-
-  const child : any = '';
   let website : any = '';
   let actionBox;
-  let loginButton: any = '';
 
-  if (status === 'error') {
-    // trees = <div>Error</div>;
-    // website = <div>Error</div>;
-    loginButton = (
-      <Box width="100%">
-        <Button
-          type="button"
-          variant="outlined"
-          color="primary"
-          onClick={(e) => { loginLink(); }}
-        >
-          Please visit netvyne.com to get started
-        </Button>
-      </Box>
-    );
-  } else if (status === 'success' && user) {
+  if (status === 'success' && user) {
     website = (
       <>
-        <WebsiteUI initWebsite={data!.Website} url={url} refetch={refetch} currentTitle={currentTitle} />
+        <WebsiteUI initWebsite={data!.Website} url={url} />
       </>
     );
     actionBox = (
       <>
-        <ActionContainer initWebsite={data!.Website} reg={user?.Registered} url={url} refetch={refetch} setShowChat={setShowChat} />
+        <ActionContainer initWebsite={data!.Website} url={url} refetch={refetch} />
       </>
     );
   }
+
   return (
     <Root>
+      {!data?.Website && (
+        <WebsitePlaceholder />
+      )}
       <ThemeProvider theme={discussionTheme}>
         {website}
         {actionBox}
-        <Box my={1}>
+        <Box my={1} height="40px">
           <ToggleButtonGroup
             size="small"
             value={mode}
@@ -220,8 +150,8 @@ const Public = ({ initCurrentUser, initUrl, autoFetch } : Props) => {
         </Box>
         <Box>
           {mode === 'discussion'
-            ? <Discussion initCurrentUser={initCurrentUser} initUrl={initUrl} autoFetch={autoFetch} />
-            : <Chat initCurrentUser={initCurrentUser} />}
+            ? <Discussion initCurrentUser={initCurrentUser} autoFetch={autoFetch} />
+            : <Chat />}
         </Box>
       </ThemeProvider>
     </Root>

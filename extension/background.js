@@ -22,7 +22,7 @@ chrome.runtime.onMessage.addListener(
   },
 );
 
-chrome.browserAction.onClicked.addListener((tab) => {
+chrome.browserAction.onClicked.addListener(() => {
   // Send a message to the active tab
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const activeTab = tabs[0];

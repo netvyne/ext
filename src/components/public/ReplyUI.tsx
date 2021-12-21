@@ -49,11 +49,13 @@ const ReplyUI = ({
         </Button>
         {showCaptcha
         && (
-          <HCaptcha
-            sitekey={process.env.REACT_APP_CAPTCHA_SITE_KEY || ''}
-            onVerify={(token) => setCaptchaToken(token)}
-            ref={captchaRef}
-          />
+          <div style={{ position: 'absolute' }}>
+            <HCaptcha
+              sitekey={process.env.REACT_APP_CAPTCHA_SITE_KEY || ''}
+              onVerify={(token) => setCaptchaToken(token)}
+              ref={captchaRef}
+            />
+          </div>
         )}
       </Box>
     </form>

@@ -81,8 +81,15 @@ const Notifications = ({ refetch } : Props) => {
       {allNotifications.length === 0 && (
         <Box>No new notifications</Box>
       )}
-      <Button onClick={() => moreOptionClick('feedback', 'https://forms.gle/LUzvrWqhtWnKwAxX6')}>Feedback</Button>
-      <Button onClick={() => moreOptionClick('logout', 'profile')}>Profile</Button>
+      <Box sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-start'
+      }}
+      >
+        <Button onClick={() => moreOptionClick('feedback', 'https://forms.gle/LUzvrWqhtWnKwAxX6')}>Feedback</Button>
+        <Button onClick={() => moreOptionClick('logout', 'profile')}>Profile</Button>
+      </Box>
     </Box>
   );
 };

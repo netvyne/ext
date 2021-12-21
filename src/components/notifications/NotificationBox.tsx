@@ -54,7 +54,7 @@ const NotificationBox = ({ notification, refetch } : Props) => {
       padding={1}
       className="notificationBox"
       width="100%"
-      onClick={(link) => {
+      onClick={() => {
         notificationLink(notification.Link);
       }}
     >

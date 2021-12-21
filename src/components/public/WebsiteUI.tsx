@@ -12,18 +12,16 @@ import { Url, Website } from '../../../types/common/types';
 interface Props {
   initWebsite: Website;
   url: Url;
-  refetch: any;
-  currentTitle: any;
 }
 
 const WebsiteUI = ({
-  initWebsite, url, refetch, currentTitle
+  initWebsite, url
 } : Props) => {
   let websiteTitle : string = '';
   websiteTitle = (initWebsite.Title && initWebsite.Title !== '') ? initWebsite.Title : url.Title;
   // websiteTitle = (currentTitle !== websiteTitle) ? currentTitle : websiteTitle;
   const website = (
-    <Box mx={3} borderRadius="borderRadius">
+    <Box mx={3} borderRadius="borderRadius" height="70px">
       <Grid container wrap="nowrap">
         <Grid
           container
