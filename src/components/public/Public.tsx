@@ -151,7 +151,7 @@ const Public = ({ initCurrentUser, autoFetch } : Props) => {
         <Box>
           {mode === 'discussion'
             ? <Discussion initCurrentUser={initCurrentUser} autoFetch={autoFetch} />
-            : <Chat initCurrentUser={initCurrentUser} />}
+            : <Chat />}
         </Box>
       </ThemeProvider>
     </Root>

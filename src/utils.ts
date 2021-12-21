@@ -59,14 +59,14 @@ export function isValidURL(url : any) {
   }
 }
 
-export function createDiv(action : any) {
+export function createDiv() {
   // action is either clear or take
-  return new Promise((resolve, reject) => {
+  return new Promise(() => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs : any) => {
       chrome.runtime.sendMessage({ screenshot: 'createDiv' }, (response) => {
         if (response.confirmation) {
           chrome.tabs.sendMessage(tabs[0].id, 'toggle');
-          chrome.tabs.executeScript(tabs[0].id, { file: 'content-crop.js' }, (res: any) => {
+          chrome.tabs.executeScript(tabs[0].id, { file: 'content-crop.js' }, () => {
             if (chrome.runtime.lastError) {
               console.log(`Script injection failed: ${chrome.runtime.lastError.message}`);
             }

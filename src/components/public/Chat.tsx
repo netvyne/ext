@@ -13,14 +13,15 @@ import React, {
   useEffect, useRef, useState
 } from 'react';
 import { useMutation } from 'react-query';
-import { ChatMessage, User } from '../../../types/common/types';
-import { getCurrentUser } from '../../auth/auth';
+import { ChatMessage } from '../../../types/common/types';
+// import { ChatMessage, User } from '../../../types/common/types';
+// import { getCurrentUser } from '../../auth/auth';
 import { isValidURL } from '../../utils';
 import './styles.scss';
 
-interface GetUserQuery {
-  initCurrentUser: User[];
-}
+// interface GetUserQuery {
+//   initCurrentUser: User[];
+// }
 
 const chatFormTheme = createTheme({
   components: {
@@ -90,25 +91,25 @@ const ChatForm = styled('form')(() => ({
   marginRight: '20px',
 }));
 
-const Root = styled('div')(({ theme }) => ({
+const Root = styled('div')(() => ({
   [`&.${classes.root}`]: {
     flexGrow: 1,
   },
 }));
 
-const Chat = ({ initCurrentUser } : GetUserQuery) => {
+const Chat = () => {
   const [comment, setComment] = React.useState('');
   const [parentChat, setParentChat] = useState<ChatMessage | null>();
   const webSocket = useRef<WebSocket | null>(null);
   const [messages, setMessages] = React.useState<ChatMessage[]>([]);
   const [url, setUrl] = useState<any>({});
-  const [user, setUser] = React.useState<User|any>();
-  const [showAction, setShowAction] = React.useState(false);
+  // const [user, setUser] = React.useState<User|any>();
+  // const [showAction, setShowAction] = React.useState(false);
   const [show, setShow] = React.useState(false);
-  const [websiteId, setWebsiteId] = React.useState<any>(null);
-  const divRef : any = useRef(null);
+  // const [websiteId, setWebsiteId] = React.useState<any>(null);
+  // const divRef : any = useRef(null);
   const messagesEndRef: any = useRef(null);
-  getCurrentUser().then((currentUser:User|any) => setUser(initCurrentUser));
+  // getCurrentUser().then((currentUser:User|any) => setUser(initCurrentUser));
 
   const scrollToBottom = () => {
     messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -180,7 +181,7 @@ const Chat = ({ initCurrentUser } : GetUserQuery) => {
         data,
       },
       {
-        onSuccess: (response : any) => {
+        onSuccess: () => {
           setComment('');
           setParentChat(null);
           scrollToBottom();

@@ -72,7 +72,6 @@ const BlackTooltip = styled(Tooltip)(() => ({
     color: 'black',
   },
 }));
-const defaultTheme = createTheme();
 export default function TalkVoteButtons({ initTalk, defUser }: Props) {
   const [talk, setTalk] = React.useState(initTalk);
   const [show, setShow] = React.useState(false);

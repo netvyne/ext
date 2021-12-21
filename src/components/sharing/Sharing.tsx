@@ -186,7 +186,7 @@ const Sharing = ({ defUser } : Props) => {
   };
 
   function createTestDiv() {
-    createDiv('createDiv'); // saves to local storage
+    createDiv(); // saves to local storage
   }
 
   function clearScreenShot() {
