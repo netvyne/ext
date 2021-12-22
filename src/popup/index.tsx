@@ -14,7 +14,7 @@ const theme = createTheme();
 Sentry.init({
   dsn: 'https://53854b70b3ef4bcfbbca31001b73fcc1@o746986.ingest.sentry.io/5796177',
   integrations: [new Integrations.BrowserTracing()],
-  tracesSampleRate: 0.8,
+  tracesSampleRate: 0.05,
   release: process.env.VERSION,
   environment: process.env.NODE_ENV,
 });
