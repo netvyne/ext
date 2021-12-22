@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { DateTime } from 'luxon';
 
@@ -13,7 +14,7 @@ interface User {
     VerifiedEmail: boolean;
     Bio: string;
     Status: string;
-    AvatarURL: string;
+    AvatarPath: string;
     Birthday: DateTime;
     ProfileNonce: number;
     LastRequest: DateTime;
@@ -40,7 +41,7 @@ interface Website {
     CreatedAt: DateTime;
     Title: string;
     Description: string;
-    Image: string;
+    ImagePath: string;
     PreviewProcessed: boolean;
     Host: string;
     Pathname: string;
@@ -84,7 +85,7 @@ interface Post {
     CreatedAt: DateTime;
     ID: number;
     Author: User;
-    Image: string;
+    ImagePath: string;
     Comment: string;
     WebsiteID: number;
     Website: Website;
@@ -197,7 +198,7 @@ interface PostShare {
 interface Conversation {
     ID: number;
     Title: string;
-    AvatarURL: string;
+    AvatarPath: string;
     // LeaderID: number;
     Leader: User;
     DefaultURL: boolean;

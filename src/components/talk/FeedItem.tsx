@@ -13,6 +13,7 @@ import React from 'react';
 import ReactPlayer from 'react-player';
 import { useMutation, useQueryClient } from 'react-query';
 import { Post, User, Website } from '../../../types/common/types';
+import { formatImageURL } from '../../utils';
 import TagsList from '../common/TagsList';
 import FlagWebsite from './FlagWebsite';
 import PublishWebsite from './PublishWebsite';
@@ -187,7 +188,11 @@ export default function FeedItem({
           >
             <Avatar
               variant="square"
-              src={(initPost?.Image) ? initPost?.Image : website.Image}
+              src={
+                (initPost?.ImagePath)
+                  ? formatImageURL(initPost?.ImagePath)
+                  : formatImageURL(website.ImagePath)
+              }
               onClick={() => setShowMedia(!showMedia)}
               alt="website"
               style={{ width: '100%' }}
@@ -230,7 +235,7 @@ export default function FeedItem({
           {ReactPlayer.canPlay(website.URL) ? (
             <ReactPlayer width="100%" url={website.URL} controls />
           ) : (
-            <img src={(initPost?.Image) ? initPost?.Image : website.Image} alt="website" width="100%" />
+            <img src={(initPost?.ImagePath) ? formatImageURL(initPost?.ImagePath) : formatImageURL(website.ImagePath)} alt="website" width="100%" />
           )}
         </Grid>
       </Grid>

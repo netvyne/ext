@@ -14,7 +14,7 @@ import { User } from '../../types/common/types';
 import Notifications from '../components/notifications/Notifications';
 import Sharing from '../components/sharing/Sharing';
 import { queryClient } from '../query';
-import { isValidURL } from '../utils';
+import { formatImageURL, isValidURL } from '../utils';
 import './styles.scss';
 
 interface loginMutation {
@@ -197,11 +197,11 @@ export const Popup: FunctionComponent = () => {
                         variant="dot"
                         invisible={!data?.ContainsUnread}
                       >
-                        {user?.AvatarURL ? (
+                        {user?.AvatarPath ? (
                           <Avatar
                             style={{ width: 24, height: 24 }}
                             alt="Avatar"
-                            src={user.AvatarURL}
+                            src={formatImageURL(user.AvatarPath)}
                           />
                         )
                           : (

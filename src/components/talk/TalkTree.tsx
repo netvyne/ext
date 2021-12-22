@@ -6,6 +6,7 @@ import { DateTime } from 'luxon';
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Post, Talk, User } from '../../../types/common/types';
+import { formatImageURL } from '../../utils';
 import DeleteTalk from './DeleteTalk';
 import LeaveReply from './LeaveReply';
 import TalkVoteButtons from './TalkVoteButtons';
@@ -48,13 +49,13 @@ const TalkTree = ({
         direction="row"
         wrap="nowrap"
       >
-        {initTalk.Author.AvatarURL && (
+        {initTalk.Author.AvatarPath && (
           <Avatar
             alt="Notification"
-            src={initTalk.Author.AvatarURL}
+            src={formatImageURL(initTalk.Author.AvatarPath)}
           />
         )}
-        {!initTalk.Author.AvatarURL && (
+        {!initTalk.Author.AvatarPath && (
           <Avatar
             alt="Notification"
           >

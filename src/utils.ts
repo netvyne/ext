@@ -76,3 +76,8 @@ export function createDiv() {
     });
   });
 }
+
+export function formatImageURL(source: any) {
+  // console.log(url);
+  return `${process.env.REACT_APP_IMG_URL}/nosignature/size:300:300/plain${source}`;
+}
