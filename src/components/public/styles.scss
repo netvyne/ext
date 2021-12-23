@@ -53,8 +53,8 @@
     width: 100%;
     position: fixed;
     overflow: scroll;
-    height: 70% !important;
-    padding: 10px 5px 10px 20px;
+    height: calc(100% - 365px);
+    padding: 10px 5px 0px 20px;
 }
 
 .livechat-textfield{
