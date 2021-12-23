@@ -78,7 +78,6 @@ export const Popup: FunctionComponent = () => {
   }, []);
   const mutation = useMutation<loginMutation, AxiosError>({});
   const getUser = async () => {
-    console.log('Here in login ::: ');
     const mutateData = {
       Password: '',
       Email: '',
