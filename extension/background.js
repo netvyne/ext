@@ -116,3 +116,16 @@ chrome.runtime.onInstalled.addListener(() => {
   });
   return false;
 });
+
+chrome.tabs.onUpdated.addListener(
+  (tabId, changeInfo, tab) => {
+    console.log(tab);
+    // read changeInfo data and do something with it
+    if (changeInfo.url) {
+      chrome.tabs.sendMessage(tabId, {
+        message: 'urlupdated',
+        url: changeInfo.url
+      });
+    }
+  }
+);

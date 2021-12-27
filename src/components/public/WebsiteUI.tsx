@@ -31,7 +31,7 @@ const WebsiteUI = ({
             <Typography variant="subtitle1" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
               {(websiteTitle && websiteTitle.length > 32)
                 ? websiteTitle.substring(0, 32).concat('...')
-                : (websiteTitle) || 'Title of the webpage'}
+                : (websiteTitle)}
             </Typography>
           </Grid>
           <Grid item component={Box} mx={10} borderTop={1} borderBottom={1}>

@@ -51,7 +51,6 @@ export function clearNotificationBadge() {
 }
 
 export function isValidURL(url : any) {
-  console.log(url);
   try {
     return new URL(url);
   } catch (err) {

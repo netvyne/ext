@@ -551,7 +551,7 @@ const Sharing = ({ defUser } : Props) => {
                 onChange={(value: string | undefined) => value !== undefined && setComment(value)}
               />
             </Box>
-            <Button type="submit" disabled={(conversationID === 0 && friendHandles.length === 0) || !defUser.Registered}>
+            <Button type="submit" disabled={(conversationID === 0 && friendHandles.length === 0) || !defUser?.Registered}>
               {' '}
               Share
               {' '}
@@ -559,7 +559,7 @@ const Sharing = ({ defUser } : Props) => {
               {' '}
             </Button>
             <Box width="100%">
-              {!defUser.Registered && (
+              {!defUser?.Registered && (
               <Button
                 type="button"
                 variant="outlined"

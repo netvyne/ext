@@ -69,22 +69,53 @@ const discussionTheme = createTheme({
 });
 const Public = ({ initCurrentUser, autoFetch } : Props) => {
   // const url : any = initUrl;
-  const [url, setUrl] = React.useState<any>({});
+  const [url, setUrl] = React.useState<any>();
   const user : any = initCurrentUser;
   const [mode, setMode] = React.useState('discussion');
+  // const [timer, setTimer] = React.useState(0);
   const handleMode = (event : any, newMode : string) => {
     setMode(newMode);
   };
+  // const [oldTitle, setOldTitle] = React.useState<any>('');
 
-  const route = `/get_shout_trees?host=${url.host}&pathname=${url.pathname}&search=${encodeURIComponent(url.search)}`;
+  const route = `/get_shout_trees?host=${url?.host}&pathname=${url?.pathname}&search=${encodeURIComponent(url?.search)}`;
   const { data, status, refetch } = useQuery<GetShoutTreesQuery, string>(
     route, {
       enabled: autoFetch
     }
   );
 
+  const queryInfo = { active: true, lastFocusedWindow: true };
+
   useEffect(() => {
-    const queryInfo = { active: true, lastFocusedWindow: true };
+    chrome.runtime.onMessage.addListener(
+      (request) => {
+        // listen for messages sent from background.js
+        if (request.message === 'urlupdated') {
+          setTimeout(() => {
+            if (chrome.tabs) {
+              chrome.tabs.query(queryInfo, (tabs) => {
+                const newUrl : any = isValidURL(request.url);
+                const formatedUrl = {
+                  pathname: newUrl.pathname,
+                  host: newUrl.host,
+                  search: newUrl.search,
+                  Title: tabs[0].title,
+                  origin: newUrl.origin,
+                };
+                setUrl(formatedUrl);
+                if (autoFetch) {
+                  refetch();
+                }
+              });
+            }
+          }, 2000);
+        }
+      }
+    );
+  }, []);
+
+  useEffect(() => {
     if (chrome.tabs) {
       chrome.tabs.query(queryInfo, (tabs) => {
         const newUrl : any = isValidURL(tabs[0].url);
@@ -150,7 +181,7 @@ const Public = ({ initCurrentUser, autoFetch } : Props) => {
         </Box>
         <Box>
           {mode === 'discussion'
-            ? <Discussion initCurrentUser={initCurrentUser} autoFetch={autoFetch} />
+            ? <Discussion initCurrentUser={initCurrentUser} autoFetch={autoFetch} initURL={url} />
             : <Chat />}
         </Box>
       </ThemeProvider>
