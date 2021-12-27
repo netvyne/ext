@@ -5,12 +5,13 @@ import {
 } from '@mui/material';
 import { createTheme, styled, ThemeProvider } from '@mui/material/styles';
 import { AxiosError } from 'axios';
-import React, { useEffect } from 'react';
+import React from 'react';
+// import React, { useEffect } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import {
   Shout, User, Website
 } from '../../../types/common/types';
-import { isValidURL } from '../../utils';
+// import { isValidURL } from '../../utils';
 import ReplyUI from './ReplyUI';
 import ShoutPlaceholder from './ShoutPlaceholder';
 import ShoutTree from './ShoutTree';
@@ -19,6 +20,7 @@ import './styles.scss';
 interface Props {
   initCurrentUser: User[];
   autoFetch: boolean;
+  initURL: any;
 }
 
 interface GetShoutTreesQuery {
@@ -71,8 +73,8 @@ const discussionTheme = createTheme({
     }
   }
 });
-const Discussion = ({ initCurrentUser, autoFetch } : Props) => {
-  const [url, setUrl] = React.useState<any>({});
+const Discussion = ({ initCurrentUser, autoFetch, initURL } : Props) => {
+  // const [url, setUrl] = React.useState<any>({});
   const user : any = initCurrentUser;
   const [showForm, setShowForm] = React.useState(true);
   const [sort, setSort] = React.useState('best');
@@ -82,7 +84,7 @@ const Discussion = ({ initCurrentUser, autoFetch } : Props) => {
   const captchaRef = React.createRef<HCaptcha>();
   const [comment, setComment] = React.useState('');
 
-  const route = `/get_shout_trees?host=${url.host}&pathname=${url.pathname}&search=${encodeURIComponent(url.search)}&sort=${sort}`;
+  const route = `/get_shout_trees?host=${initURL?.host}&pathname=${initURL?.pathname}&search=${encodeURIComponent(initURL?.search)}&sort=${sort}`;
   const { data, status, refetch } = useQuery<GetShoutTreesQuery, string>(
     route, {
       enabled: autoFetch,
@@ -92,25 +94,25 @@ const Discussion = ({ initCurrentUser, autoFetch } : Props) => {
     }
   );
 
-  useEffect(() => {
-    const queryInfo = { active: true, lastFocusedWindow: true };
-    if (chrome.tabs) {
-      chrome.tabs.query(queryInfo, (tabs) => {
-        const newUrl : any = isValidURL(tabs[0].url);
-        const formatedUrl = {
-          pathname: newUrl.pathname,
-          host: newUrl.host,
-          search: newUrl.search,
-          Title: tabs[0].title,
-          origin: newUrl.origin,
-        };
-        setUrl(formatedUrl);
-        if (autoFetch) {
-          refetch();
-        }
-      });
-    }
-  }, []);
+  // useEffect(() => {
+  //   const queryInfo = { active: true, lastFocusedWindow: true };
+  //   if (chrome.tabs) {
+  //     chrome.tabs.query(queryInfo, (tabs) => {
+  //       const newUrl : any = isValidURL(tabs[0].url);
+  //       const formatedUrl = {
+  //         pathname: newUrl.pathname,
+  //         host: newUrl.host,
+  //         search: newUrl.search,
+  //         Title: tabs[0].title,
+  //         origin: newUrl.origin,
+  //       };
+  //       setUrl(formatedUrl);
+  //       if (autoFetch) {
+  //         refetch();
+  //       }
+  //     });
+  //   }
+  // }, []);
 
   const replyMutation = useMutation<SuccessResponse, AxiosError>(
     {
@@ -134,9 +136,9 @@ const Discussion = ({ initCurrentUser, autoFetch } : Props) => {
     const postShoutData = {
       Comment: comment,
       URL: {
-        Host: url.host,
-        Pathname: url.pathname,
-        Search: url.search,
+        Host: initURL.host,
+        Pathname: initURL.pathname,
+        Search: initURL.search,
       },
       CaptchaToken: captchaToken
     };
