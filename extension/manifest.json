@@ -1,8 +1,14 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "Netvyne Extension",
   "description": "Comment, share, and discuss your favorite websites.",
   "version": "2.0.0",
+  "cross_origin_embedder_policy": {
+    "value": "require-corp"
+  },
+  "cross_origin_opener_policy": {
+    "value": "same-origin"
+  },
   "content_scripts": [
     {
       "run_at": "document_end",
@@ -19,32 +25,35 @@
     }
   ],
   "web_accessible_resources": [
-    "popup.html"
+    {
+      "resources": [
+        "popup.html"
+      ],
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ]
+    }
   ],
-  "browser_action": {},
+  "action": {},
   "options_ui": {
     "page": "options.html",
     "open_in_tab": false
   },
   "background": {
-    "scripts": [
-      "background.js"
-    ],
-    "persistent": true
+    "service_worker": "background.js"
   },
   "icons": {
     "16": "icon-16.png",
     "48": "icon-48.png",
     "128": "icon-128.png"
   },
-  "content_security_policy": "script-src 'self' https://hcaptcha.com/1/api.js?render=explicit&onload=hcaptchaOnLoad https://newassets.hcaptcha.com/captcha/v1/2ebd8c0/hcaptcha.js 'unsafe-inline' 'unsafe-eval';",
   "permissions": [
-    "http://*/*",
-    "https://*/*",
     "storage",
-    "<all_urls>",
-    "permissions",
-    "ws://*/*",
-    "wss://*/*"
+    "permissions"
+  ],
+  "host_permissions": [
+    "*://*/*",
+    "<all_urls>"
   ]
 }

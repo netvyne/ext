@@ -129,9 +129,9 @@ export const Popup: FunctionComponent = () => {
     }
     if (data) {
       if (data.WebsiteShoutCount > 0) {
-        chrome.browserAction.setBadgeText({ text: `${data.WebsiteShoutCount}` });
+        // browser.browserAction.setBadgeText({ text: `${data.WebsiteShoutCount}` });
       } else {
-        chrome.browserAction.setBadgeText({ text: '' });
+        // browser.browserAction.setBadgeText({ text: '' });
       }
     }
     setTimeout(() => {
