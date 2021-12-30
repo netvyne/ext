@@ -1,10 +1,13 @@
+/* eslint-disable no-dupe-class-members */
+/* eslint-disable react/sort-comp */
+/* eslint-disable no-unused-vars */
 // Type definitions for @hcaptcha/react-hcaptcha 0.1
 // Project: https://github.com/hCaptcha/react-hcaptcha
 // Definitions by: Matt Sutkowski <https://github.com/msutkowski>
 // Original Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 // TypeScript Version: 2.8
 
-import * as React from "react";
+import * as React from 'react';
 
 interface HCaptchaState {
   isApiReady: boolean;
@@ -20,8 +23,8 @@ interface HCaptchaProps {
   onLoad?: () => any;
   languageOverride?: string;
   sitekey: string;
-  size?: "normal" | "compact" | "invisible";
-  theme?: "light" | "dark";
+  size?: 'normal' | 'compact' | 'invisible';
+  theme?: 'light' | 'dark';
   tabIndex?: number;
   id?: string;
   reCaptchaCompat?: boolean;
@@ -34,10 +37,15 @@ interface ExecuteResponse {
 
 declare class HCaptcha extends React.Component<HCaptchaProps, HCaptchaState> {
   resetCaptcha(): void;
+
   renderCaptcha(): void;
+
   removeCaptcha(): void;
+
   execute(opts: { async: true }): Promise<ExecuteResponse>
+
   execute(opts?: { async: false }): void;
+
   execute(opts?: { async: boolean }): Promise<ExecuteResponse> | void;
 }
 
