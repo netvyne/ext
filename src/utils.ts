@@ -65,11 +65,22 @@ export function createDiv() {
       chrome.runtime.sendMessage({ screenshot: 'createDiv' }, (response) => {
         if (response.confirmation) {
           chrome.tabs.sendMessage(tabs[0].id, 'toggle');
-          chrome.tabs.executeScript(tabs[0].id, { file: 'content-crop.js' }, () => {
-            if (chrome.runtime.lastError) {
-              console.log(`Script injection failed: ${chrome.runtime.lastError.message}`);
-            }
-          });
+          // chrome.runtime.getURL('content-crop.js');
+          // chrome.scripting.executeScript(
+          //   {
+          //     target: { tabId: tabs[0].id },
+          //     files: ['script.js'],
+          //   }, () => {
+          //     if (chrome.runtime.lastError) {
+          //       console.log(`Script injection failed: ${chrome.runtime.lastError.message}`);
+          //     }
+          //   }
+          // );
+          // chrome.scripting.executeScript(tabs[0].id, { file: 'content-crop.js' }, () => {
+          //   if (chrome.runtime.lastError) {
+          //     console.log(`Script injection failed: ${chrome.runtime.lastError.message}`);
+          //   }
+          // });
         }
       });
     });
@@ -79,4 +90,11 @@ export function createDiv() {
 export function formatImageURL(source: any) {
   // console.log(url);
   return `${process.env.REACT_APP_IMG_URL}/nosignature/size:300:300/plain${source}`;
+}
+export function setBadge(data: any) {
+  return new Promise(() => {
+    chrome.tabs.query({ active: true, currentWindow: true }, () => {
+      chrome.runtime.sendMessage({ type: 'setBadge', text: data });
+    });
+  });
 }

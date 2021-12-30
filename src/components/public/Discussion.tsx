@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import HCaptcha from '@hcaptcha/react-hcaptcha';
+// import HCaptcha from '@hcaptcha/react-hcaptcha';
 import {
   Box, MenuItem, Select
 } from '@mui/material';
@@ -11,6 +11,7 @@ import { useMutation, useQuery } from 'react-query';
 import {
   Shout, User, Website
 } from '../../../types/common/types';
+import HCaptcha from '../common/@hcaptcha/react-hcaptcha';
 // import { isValidURL } from '../../utils';
 import ReplyUI from './ReplyUI';
 import ShoutPlaceholder from './ShoutPlaceholder';
@@ -74,6 +75,7 @@ const discussionTheme = createTheme({
   }
 });
 const Discussion = ({ initCurrentUser, autoFetch, initURL } : Props) => {
+  // eslint-disable-next-line global-require
   // const [url, setUrl] = React.useState<any>({});
   const user : any = initCurrentUser;
   const [showForm, setShowForm] = React.useState(true);

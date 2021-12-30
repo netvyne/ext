@@ -1,4 +1,4 @@
-import HCaptcha from '@hcaptcha/react-hcaptcha';
+// import HCaptcha from '@hcaptcha/react-hcaptcha';
 import ReplyIcon from '@mui/icons-material/Reply';
 import SendIcon from '@mui/icons-material/Send';
 import {
@@ -9,6 +9,7 @@ import { AxiosError } from 'axios';
 import React from 'react';
 import { useMutation } from 'react-query';
 import { Shout, Website } from '../../../types/common/types';
+import HCaptcha from '../common/@hcaptcha/react-hcaptcha';
 
 interface Props {
   parent?: Shout;

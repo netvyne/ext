@@ -1,4 +1,4 @@
-chrome.browserAction.onClicked.addListener((tab) => {
+chrome.action.onClicked.addListener((tab) => {
   chrome.tabs.sendMessage(tab.id, 'toggle');
 });
 
@@ -22,7 +22,7 @@ chrome.runtime.onMessage.addListener(
   },
 );
 
-chrome.browserAction.onClicked.addListener(() => {
+chrome.action.onClicked.addListener(() => {
   // Send a message to the active tab
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const activeTab = tabs[0];
@@ -75,6 +75,16 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             chrome.storage.local.set({ screenshot: src }, () => {
               // console.log('Stored screenshot!');
               chrome.tabs.sendMessage(activeTab.id, 'toggle');
+              chrome.scripting.executeScript(
+                {
+                  target: { tabId: activeTab.id },
+                  files: ['content-crop.js'],
+                }, () => {
+                  if (chrome.runtime.lastError) {
+                    console.log(`Script injection failed: ${chrome.runtime.lastError.message}`);
+                  }
+                }
+              );
               sendResponse({ confirmation: 'Successfully created div' });
             });
           });
@@ -83,8 +93,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     });
     // sendResponse({ confirmation: 'Successfully created div' });
   } else if (request.clear_notifications) {
-    chrome.browserAction.setBadgeBackgroundColor({ color: [0, 0, 0, 0] });
-    chrome.browserAction.setBadgeText({ text: '' });
+    chrome.action.setBadgeBackgroundColor({ color: [0, 0, 0, 0] });
+    chrome.action.setBadgeText({ text: '' });
+  } else if (request.type && request.type === 'setBadge') {
+    chrome.action.setBadgeText({ text: `${request.text}` });
   } else {
     // this message is a request, use background script to make request
     fetch(request.url, request.init).then(
