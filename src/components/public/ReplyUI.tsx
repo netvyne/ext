@@ -1,5 +1,5 @@
 /* eslint-disable linebreak-style */
-import HCaptcha from '@hcaptcha/react-hcaptcha';
+// import HCaptcha from '@hcaptcha/react-hcaptcha';
 import ReplyIcon from '@mui/icons-material/Reply';
 import SendIcon from '@mui/icons-material/Send';
 import {
@@ -7,6 +7,7 @@ import {
 } from '@mui/material';
 import MDEditor from '@uiw/react-md-editor';
 import React from 'react';
+import HCaptcha from '../common/@hcaptcha/react-hcaptcha';
 
 interface Props {
     // eslint-disable-next-line react/require-default-props

@@ -14,7 +14,7 @@ import { User } from '../../types/common/types';
 import Notifications from '../components/notifications/Notifications';
 import Sharing from '../components/sharing/Sharing';
 import { queryClient } from '../query';
-import { formatImageURL, isValidURL } from '../utils';
+import { formatImageURL, isValidURL, setBadge } from '../utils';
 import './styles.scss';
 
 interface loginMutation {
@@ -129,9 +129,9 @@ export const Popup: FunctionComponent = () => {
     }
     if (data) {
       if (data.WebsiteShoutCount > 0) {
-        chrome.browserAction.setBadgeText({ text: `${data.WebsiteShoutCount}` });
+        setBadge(data.WebsiteShoutCount);
       } else {
-        chrome.browserAction.setBadgeText({ text: '' });
+        setBadge('');
       }
     }
     setTimeout(() => {
