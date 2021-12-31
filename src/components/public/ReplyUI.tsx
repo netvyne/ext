@@ -7,7 +7,7 @@ import {
 } from '@mui/material';
 import MDEditor from '@uiw/react-md-editor';
 import React from 'react';
-import HCaptcha from '../common/@hcaptcha/react-hcaptcha';
+import HCaptcha from '../common/hcaptcha';
 
 interface Props {
     // eslint-disable-next-line react/require-default-props

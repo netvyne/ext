@@ -11,7 +11,7 @@ import { useMutation, useQuery } from 'react-query';
 import {
   Shout, User, Website
 } from '../../../types/common/types';
-import HCaptcha from '../common/@hcaptcha/react-hcaptcha';
+import HCaptcha from '../common/hcaptcha';
 // import { isValidURL } from '../../utils';
 import ReplyUI from './ReplyUI';
 import ShoutPlaceholder from './ShoutPlaceholder';
