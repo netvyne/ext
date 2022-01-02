@@ -1,7 +1,8 @@
 :desktop_computer: A Web Extension starter kit built with React, TypeScript, SCSS, Storybook, EsLint, Prettier, Jest, Bootstrap,x &amp; Webpack. Compatible with Google Chrome, Mozilla Firefox, and Brave.
 
 **Getting Started**
-
+ Test
+ 
 Run the following commands to install dependencies and start developing
 
 ```
