@@ -15,7 +15,16 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 16.13.0
-      - run: yarn install
-      - run: npm run lint
-      - run: NODE_ENV=staging yarn build
-      # - run: npm run test -- --coverage
+      - name: Setup Ext
+        env:
+          NODE_ENV: staging
+          REACT_APP_PUBLIC_API: https://staging-api.netvyne.com/api
+          REACT_APP_VERSION: ${{ steps.latest.outputs.tag_name }}
+          REACT_APP_MOD_URL: https://www.netvyne.com/mod
+          REACT_APP_IMG_URL: https://staging-img.netvyne.com
+          REACT_APP_CAPTCHA_SITE_KEY: "b22ccc83-90b3-44d9-8ea8-3f434b9a6316"
+        run: |
+          yarn install
+          npm run lint
+          yarn build 
+          # npm run test -- --coverage
