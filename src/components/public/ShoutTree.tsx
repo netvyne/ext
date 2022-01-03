@@ -1,16 +1,21 @@
 /* eslint-disable max-len */
-import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
-import GavelIcon from '@mui/icons-material/Gavel';
+// import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+// import GavelIcon from '@mui/icons-material/Gavel';
+import ReplyIcon from '@mui/icons-material/Reply';
+import SendIcon from '@mui/icons-material/Send';
 import {
   Box, Button, CssBaseline, Grid, Typography
 } from '@mui/material';
+import MDEditor from '@uiw/react-md-editor';
+import { AxiosError } from 'axios';
 import { DateTime } from 'luxon';
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useMutation, useQuery } from 'react-query';
 import { Shout, User, Website } from '../../../types/common/types';
+import HCaptcha from '../common/hcaptcha';
 import DeleteShout from './DeleteShout';
-import LeaveReply from './LeaveReply';
+// import LeaveReply from './LeaveReply';
 import ShoutVoteButtons from './ShoutVoteButtons';
 import './styles.scss';
 import UserKarma from './UserKarma';
@@ -26,6 +31,10 @@ interface GetShoutTreesQuery {
   Website: Website;
 }
 
+interface SuccessResponse {
+  Shout: Shout;
+}
+
 const ShoutTree = ({
   treeRoot, website, defUser
 }: Props) => {
@@ -36,6 +45,13 @@ const ShoutTree = ({
   const [hide, setHide] = React.useState(root.Warn);
   const [clicked, setClicked] = React.useState(false);
   const [userKarmaOpen, setUserKarmaOpen] = React.useState(false);
+
+  const [comment, setComment] = React.useState('');
+  const [showForm, setShowForm] = React.useState(false);
+  const [showCaptcha, setShowCaptcha] = React.useState(false);
+  const [captchaToken, setCaptchaToken] = React.useState('');
+  const captchaRef = React.createRef<HCaptcha>();
+
   function toggleUserKarmaOpen() {
     setUserKarmaOpen(!userKarmaOpen);
   }
@@ -67,6 +83,70 @@ const ShoutTree = ({
     );
     return res;
   };
+
+  const mutation = useMutation<SuccessResponse, AxiosError>(
+    {
+      onSuccess: (data) => {
+        setComment('');
+        setShowCaptcha(false);
+        setCaptchaToken('');
+        setChildren((c) => [data.Shout, ...c]);
+        setShowForm(false);
+      },
+      onError: (err: AxiosError) => {
+        if (err.response?.status === 402) {
+          setShowCaptcha(true);
+        }
+      }
+    }
+  );
+
+  const postComment = async (event: any) => {
+    event.preventDefault();
+    const mutateData = {
+      WebsiteID: website.ID,
+      ParentShoutID: root.ID,
+      Comment: comment,
+      CaptchaToken: captchaToken
+    };
+    // @ts-ignore
+    const res = mutation.mutate({ route: '/post_shout', data: mutateData });
+    return res;
+  };
+  const commentForm = (
+    <form onSubmit={postComment}>
+      <Grid alignItems="stretch">
+        <MDEditor
+          height={100}
+          preview="edit"
+          value={comment}
+          onChange={(value: string | undefined) => value !== undefined && setComment(value)}
+        />
+        <Button
+          size="small"
+          onClick={() => {
+            setShowForm(false);
+          }}
+        >
+          Cancel
+        </Button>
+        <Button type="submit" size="small" color="primary" endIcon={<SendIcon />}>
+          {' '}
+          Submit
+          {' '}
+        </Button>
+      </Grid>
+      {showCaptcha
+        && (
+          <HCaptcha
+            sitekey={process.env.REACT_APP_CAPTCHA_SITE_KEY || ''}
+            onVerify={(token) => setCaptchaToken(token)}
+            ref={captchaRef}
+          />
+        )}
+    </form>
+  );
+
   const moreRepliesQuery = useQuery<GetShoutTreesQuery, string>(
     `/get_shout_trees?website_id=${website.ID}&root_ids=${root.MoreReplies?.join()}`,
     {
@@ -119,8 +199,6 @@ const ShoutTree = ({
             ? '#f5f77b'
             : color
         }
-        padding={1}
-        m={1}
         borderRadius="borderRadius"
         direction="column"
         style={{ margin: '0px', marginBottom: '5px' }}
@@ -160,14 +238,51 @@ const ShoutTree = ({
                 : <ReactMarkdown>{root.Comment}</ReactMarkdown>}
             </Grid>
 
-            <Grid item container component={Box} wrap="nowrap" spacing={1} style={{ display: 'flex', flexDirection: 'column' }}>
-              <LeaveReply website={website} parent={root} setChildren={setChildren} />
-              <Grid item style={{ display: 'flex', flexDirection: 'row' }}>
+            {/* <Grid item container component={Box} wrap="nowrap" spacing={1} style={{ display: 'flex', flexDirection: 'column' }}> */}
+            <Grid container wrap="nowrap" alignItems="center" sx={{ height: '30px' }}>
+              <ShoutVoteButtons
+                initShout={root}
+                defUser={defUser}
+              />
+              {!showForm && (
+              <Button size="small" onClick={() => setShowForm(!showForm)}>
+                <ReplyIcon />
+                Reply
+              </Button>
+              )}
+              <Button
+                disabled={clicked}
+                size="small"
+                onClick={(e) => {
+                  onSaveItem(e, !root.Saved);
+                  setClicked(true);
+                }}
+              >
+                {root.Saved ? 'UNDO' : 'SAVE'}
+              </Button>
+              {user.UserName === root.Author.UserName
+                && <DeleteShout initShout={root} setRoot={setRoot} />}
+              {(user?.IsMod)
+                    && (
+                      <Button href={`${process.env.REACT_APP_MOD_URL}/item/shout/${root.ID}`} target="_blank">
+                        MOD
+                        {' '}
+                      </Button>
+                    )}
+            </Grid>
+            {/* <LeaveReply website={website} parent={root} setChildren={setChildren} /> */}
+            {/* <Grid item style={{ display: 'flex', flexDirection: 'row' }}>
                 <Box>
                   <ShoutVoteButtons
                     initShout={root}
                     defUser={defUser}
                   />
+                  {!showForm && (
+                    <Button size="small" onClick={() => setShowForm(!showForm)}>
+                      <ReplyIcon />
+                      Reply
+                    </Button>
+                  )}
                 </Box>
                 {!root.Saved && defUser.Registered && (
                   <Box>
@@ -216,8 +331,11 @@ const ShoutTree = ({
                         setRoot={setRoot}
                       />
                     )}
-              </Grid>
-            </Grid>
+              </Grid> */}
+            {showForm && (
+              commentForm
+            )}
+            {/* </Grid> */}
           </Grid>
         </Grid>
 

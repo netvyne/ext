@@ -12,7 +12,7 @@ import * as React from 'react';
 export default function WebsitePlaceholder() {
   return (
     <>
-      <Box mx={3} borderRadius="borderRadius" height="70px">
+      <Box mx={2} borderRadius="borderRadius" height="70px">
         <Grid container wrap="nowrap">
           <Grid
             container
@@ -49,7 +49,7 @@ export default function WebsitePlaceholder() {
           </Grid>
         </Grid>
       </Box>
-      <Box my={1} height="40px">
+      <Box mt={1} height="40px">
         <Grid container wrap="nowrap" justifyContent="space-around" style={{ alignItems: 'center' }}>
           <Grid item>
             <ArrowUpward

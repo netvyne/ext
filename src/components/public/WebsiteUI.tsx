@@ -18,7 +18,7 @@ const WebsiteUI = ({
   initWebsite, url
 } : Props) => {
   let websiteTitle : string = '';
-  websiteTitle = (initWebsite.Title && initWebsite.Title !== '') ? initWebsite.Title : url.Title;
+  websiteTitle = (initWebsite?.Title && initWebsite?.Title !== '') ? initWebsite.Title : url?.Title;
   // websiteTitle = (currentTitle !== websiteTitle) ? currentTitle : websiteTitle;
   const website = (
     <Box mx={3} borderRadius="borderRadius" height="70px">

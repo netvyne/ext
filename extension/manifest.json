@@ -36,10 +36,7 @@
     }
   ],
   "action": {},
-  "options_ui": {
-    "page": "options.html",
-    "open_in_tab": false
-  },
+  "options_page": "options.html",
   "background": {
     "service_worker": "background.js"
   },
@@ -50,7 +47,9 @@
   },
   "permissions": [
     "storage",
-    "scripting"
+    "scripting",
+    "activeTab",
+    "tabs"
   ],
   "host_permissions": [
     "*://*/*",

@@ -19,6 +19,7 @@ import WebsiteUI from './WebsiteUI';
 interface Props {
   initCurrentUser: User[];
   autoFetch: boolean;
+  isTabActive: boolean;
 }
 
 interface GetShoutTreesQuery {
@@ -67,7 +68,7 @@ const discussionTheme = createTheme({
     }
   }
 });
-const Public = ({ initCurrentUser, autoFetch } : Props) => {
+const Public = ({ initCurrentUser, autoFetch, isTabActive } : Props) => {
   // const url : any = initUrl;
   const [url, setUrl] = React.useState<any>();
   const user : any = initCurrentUser;
@@ -81,7 +82,7 @@ const Public = ({ initCurrentUser, autoFetch } : Props) => {
   const route = `/get_shout_trees?host=${url?.host}&pathname=${url?.pathname}&search=${encodeURIComponent(url?.search)}`;
   const { data, status, refetch } = useQuery<GetShoutTreesQuery, string>(
     route, {
-      enabled: autoFetch
+      enabled: isTabActive && autoFetch
     }
   );
 
@@ -157,7 +158,7 @@ const Public = ({ initCurrentUser, autoFetch } : Props) => {
       <ThemeProvider theme={discussionTheme}>
         {website}
         {actionBox}
-        <Box my={1} height="40px">
+        <Box height="25px">
           <ToggleButtonGroup
             size="small"
             value={mode}
@@ -165,6 +166,7 @@ const Public = ({ initCurrentUser, autoFetch } : Props) => {
             onChange={handleMode}
             aria-label="public mode"
             fullWidth
+            style={{ height: '25px' }}
           >
             <ToggleButton value="discussion" aria-label="discussion">
               Discussion (
