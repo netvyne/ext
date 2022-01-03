@@ -1,6 +1,6 @@
 .popup-container {
     // min-width: 500px;
-    width: 500px;
+    width: 450px;
     min-height: 700px; 
     display: flex;
 }
@@ -75,4 +75,7 @@
 }
 .livechat-tab{
     display: none !important;
+}
+.text-area p{
+    margin-bottom: 0px !important;
 }

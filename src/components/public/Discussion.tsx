@@ -12,7 +12,6 @@ import {
   Shout, User, Website
 } from '../../../types/common/types';
 import HCaptcha from '../common/hcaptcha';
-// import { isValidURL } from '../../utils';
 import ReplyUI from './ReplyUI';
 import ShoutPlaceholder from './ShoutPlaceholder';
 import ShoutTree from './ShoutTree';
@@ -74,7 +73,9 @@ const discussionTheme = createTheme({
     }
   }
 });
-const Discussion = ({ initCurrentUser, autoFetch, initURL } : Props) => {
+const Discussion = ({
+  initCurrentUser, autoFetch, initURL
+} : Props) => {
   // eslint-disable-next-line global-require
   // const [url, setUrl] = React.useState<any>({});
   const user : any = initCurrentUser;
@@ -95,26 +96,6 @@ const Discussion = ({ initCurrentUser, autoFetch, initURL } : Props) => {
       }
     }
   );
-
-  // useEffect(() => {
-  //   const queryInfo = { active: true, lastFocusedWindow: true };
-  //   if (chrome.tabs) {
-  //     chrome.tabs.query(queryInfo, (tabs) => {
-  //       const newUrl : any = isValidURL(tabs[0].url);
-  //       const formatedUrl = {
-  //         pathname: newUrl.pathname,
-  //         host: newUrl.host,
-  //         search: newUrl.search,
-  //         Title: tabs[0].title,
-  //         origin: newUrl.origin,
-  //       };
-  //       setUrl(formatedUrl);
-  //       if (autoFetch) {
-  //         refetch();
-  //       }
-  //     });
-  //   }
-  // }, []);
 
   const replyMutation = useMutation<SuccessResponse, AxiosError>(
     {
@@ -179,9 +160,8 @@ const Discussion = ({ initCurrentUser, autoFetch, initURL } : Props) => {
   }
   const sorter = (
     <Box
-      m={1}
       p={1}
-      height="55px"
+      height="40px"
     >
       Sort:
       {' '}
@@ -190,6 +170,7 @@ const Discussion = ({ initCurrentUser, autoFetch, initURL } : Props) => {
         value={sort}
         label="Sort"
         onChange={(event : any) => setSort(event.target.value)}
+        style={{ height: '25px' }}
       >
         <MenuItem value="top">Top</MenuItem>
         <MenuItem value="best">Best</MenuItem>
@@ -206,7 +187,7 @@ const Discussion = ({ initCurrentUser, autoFetch, initURL } : Props) => {
           {reply}
         </Box>
         <Box style={{
-          height: '500px',
+          height: '540px',
           overflow: 'auto'
         }}
         >

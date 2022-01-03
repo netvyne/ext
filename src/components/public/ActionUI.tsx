@@ -28,7 +28,7 @@ const ActionUI = ({
   setShowShare, showShare, url
 } : Props) => {
   const actionbox = (
-    <Box my={1} height="40px">
+    <Box height="40px">
       <Grid container wrap="nowrap" justifyContent="space-around" style={{ alignItems: 'center' }}>
         <Grid item component={IconButton} value="1" onClick={postVote}>
           <ArrowUpwardIcon

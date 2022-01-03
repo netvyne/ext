@@ -6,20 +6,23 @@ import {
 } from '@mui/material/';
 import { styled } from '@mui/material/styles';
 import Public from '@src/components/public/Public';
-import { AxiosError } from 'axios';
+// import { AxiosError } from 'axios';
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import { QueryClientProvider, useMutation, useQuery } from 'react-query';
+// import { QueryClientProvider, useMutation, useQuery } from 'react-query';
+import { QueryClientProvider, useQuery } from 'react-query';
 import { browser } from 'webextension-polyfill-ts';
 import { User } from '../../types/common/types';
 import Notifications from '../components/notifications/Notifications';
 import Sharing from '../components/sharing/Sharing';
 import { queryClient } from '../query';
-import { formatImageURL, isValidURL, setBadge } from '../utils';
+import {
+  formatImageURL, isValidURL, setBadge
+} from '../utils';
 import './styles.scss';
 
-interface loginMutation {
-  CurrentUser: User;
-}
+// interface loginMutation {
+//   CurrentUser: User;
+// }
 
 function TabPanel(props : any) {
   const {
@@ -65,6 +68,8 @@ export const Popup: FunctionComponent = () => {
   const [autoFetch, setAutoFetch] = React.useState<any>(false);
   const [user, setUser] = React.useState<User|any>();
   const [url, setUrl] = useState<any>({});
+  // eslint-disable-next-line no-unused-vars
+  const [isTabActive, setIsTabActive] = useState<any>(true);
   const [intervalCount, setIntervalCount] = useState(0);
   // intervalCount
   const intervalMs = 5000;
@@ -76,48 +81,79 @@ export const Popup: FunctionComponent = () => {
     });
     browser.runtime.sendMessage({ popupMounted: true });
   }, []);
-  const mutation = useMutation<loginMutation, AxiosError>({});
-  const getUser = async () => {
-    const mutateData = {
-      Password: '',
-      Email: '',
-    };
-    const res = mutation.mutate(
-      // @ts-ignore
-      {
-        route: '/login',
-        data: mutateData,
-      },
-      {
-        onSuccess: (retData: { [CurrentUser: string]: User }) => {
-          if (retData && retData.CurrentUser) {
-            setUser(retData.CurrentUser);
-          }
-        },
-      },
-    );
-    return res;
-  };
+  // const mutation = useMutation<loginMutation, AxiosError>({});
+  // const getUser = async () => {
+  //   const mutateData = {
+  //     Password: '',
+  //     Email: '',
+  //   };
+  //   const res = mutation.mutate(
+  //     // @ts-ignore
+  //     {
+  //       route: '/login',
+  //       data: mutateData,
+  //     },
+  //     {
+  //       onSuccess: (retData: { [CurrentUser: string]: User }) => {
+  //         if (retData && retData.CurrentUser) {
+  //           setUser(retData.CurrentUser);
+  //         }
+  //       },
+  //     },
+  //   );
+  //   return res;
+  // };
 
-  React.useEffect(() => {
-    // getUser();
-    // eslint-disable-next-line no-unused-vars
-    setTimeout(() => {
-      const newCount = intervalCount + 1;
-      setIntervalCount(newCount);
-      getUser();
-    }, 5000);
-  }, [intervalCount]);
+  // React.useEffect(() => {
+  //   // getUser();
+  //   setTimeout(() => {
+  //     const newCount = intervalCount + 1;
+  //     if (isTabActive && autoFetch) {
+  //       setIntervalCount(newCount);
+  //       getUser();
+  //     }
+  //   }, 1000);
+  // }, [intervalCount]);
 
   const route = `/get_user_notifications?host=${url.host}&pathname=${url.pathname}&search=${encodeURIComponent(url.search)}`;
 
-  const { data, refetch } = useQuery<any, string>(route, { enabled: autoFetch && !!user, refetchInterval: intervalMs });
+  const { data, refetch } = useQuery<any, string>(route, { enabled: (isTabActive && autoFetch && !!user), refetchInterval: intervalMs });
 
+  // console.log('line 122 ::: ', isTabActive);
+  const loginRoute = '/login';
+
+  useQuery(loginRoute, {
+    enabled: (isTabActive && autoFetch),
+    refetchInterval: intervalMs,
+    onSuccess: (retData: { [CurrentUser: string]: User }) => {
+      if (retData && retData.CurrentUser) {
+        setUser(retData.CurrentUser);
+      }
+    },
+  });
+
+  // setTimeout(() => {
+  //   if (chrome.tabs) {
+  //     chrome.tabs.getCurrent((tab) => {
+  //       setIsTabActive(tab?.active);
+  //     });
+  //   }
+  // }, 1000);
+
+  React.useEffect(() => {
+    if (chrome.tabs) {
+      chrome.tabs.getCurrent((tab) => {
+        // console.log(' here line 146 ', tab);
+        setIsTabActive(tab?.active);
+      });
+    }
+  }, [intervalCount]);
   useEffect(() => {
     const queryInfo = { active: true, lastFocusedWindow: true };
     if (chrome.tabs) {
       chrome.tabs.query(queryInfo, (tabs) => {
         const newUrl : any = isValidURL(tabs[0].url);
+        // setIsTabActive(true);
         const formatedUrl = {
           pathname: newUrl.pathname,
           host: newUrl.host,
@@ -221,14 +257,14 @@ export const Popup: FunctionComponent = () => {
                 </Tabs>
               </Grid>
             </AppBar>
-            <Box sx={{ marginTop: '65px', padding: '8px' }}>
+            <Box sx={{ marginTop: '60px', padding: '8px', paddingTop: '0px' }}>
               <TabPanel value={value} index={0}>
-                <Public initCurrentUser={user} autoFetch={autoFetch} />
+                <Public initCurrentUser={user} autoFetch={autoFetch} isTabActive={isTabActive} />
               </TabPanel>
-              <TabPanel value={value} index={1}>
+              <TabPanel style={{ paddingTop: '8px' }} value={value} index={1}>
                 <Sharing defUser={user} />
               </TabPanel>
-              <TabPanel value={value} index={2}>
+              <TabPanel style={{ paddingTop: '8px' }} value={value} index={2}>
                 <Notifications refetch={refetch} />
               </TabPanel>
             </Box>

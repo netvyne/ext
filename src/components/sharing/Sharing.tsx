@@ -18,16 +18,33 @@ import {
   useMutation, useQuery
 } from 'react-query';
 import { Post, User } from '../../../types/common/types';
-import { getCurrentUser } from '../../auth/auth';
+// import { getCurrentUser } from '../../auth/auth';
 import { createDiv, isValidURL, screenShot } from '../../utils';
 import PostShare from '../talk/PostShare';
 import Dropdown from './dropdown';
+import './styles.scss';
 
 interface GetWebsitePostsQuery {
   FriendsPosts: Post[];
   ConversationsPosts: Post[];
 }
-
+const sharButtonTheme = createTheme({
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#9F00CF',
+          color: '#ffffff',
+          marginTop: '10px',
+          '&.Mui-disabled': {
+            color: '#6c757d',
+            backgroundColor: '#ffffff'
+          }
+        }
+      },
+    }
+  }
+});
 const sharingTheme = createTheme({
   components: {
     MuiLink: {
@@ -71,7 +88,7 @@ const Sharing = ({ defUser } : Props) => {
   const [open, setOpen] = React.useState(false);
 
   const [dataURL, setDataURL] = React.useState('');
-  const [user, setUser] = React.useState<User | any>();
+  // const [user, setUser] = React.useState<User | any>();
 
   const [friendHandles, setFriendHandles] = React.useState([]);
   const [createConv, setCreateConv] = React.useState(false);
@@ -97,7 +114,7 @@ const Sharing = ({ defUser } : Props) => {
     setCreateConv(false);
   };
 
-  getCurrentUser().then((currentUser: User | null) => setUser(currentUser));
+  // getCurrentUser().then((currentUser: User | null) => setUser(currentUser));
 
   function cropcallback() {
     chrome.storage.local.get({ screenshot: null }, (data) => {
@@ -303,7 +320,7 @@ const Sharing = ({ defUser } : Props) => {
         }}
         onClick={() => { setShowTalkTree(true); setPost(friend); }}
       >
-        {friend.Receivers.map((r: any) => ((user?.Handle === r.Handle) ? 'You' : r.FirstName)).join(', ').replace(/,([^,]*)$/, ' and $1')}
+        {friend.Receivers.map((r: any) => ((defUser?.Handle === r.Handle) ? 'You' : r.FirstName)).join(', ').replace(/,([^,]*)$/, ' and $1')}
       </Grid>
     ));
 
@@ -316,7 +333,7 @@ const Sharing = ({ defUser } : Props) => {
         }}
         onClick={() => { setShowTalkTree(true); setPost(conversation); }}
       >
-        {conversation.Receivers.map((cr: any) => ((user?.Handle === cr.Handle) ? 'You' : cr.FirstName)).join(', ').replace(/,([^,]*)$/, ' and $1')}
+        {conversation.Receivers.map((cr: any) => ((defUser?.Handle === cr.Handle) ? 'You' : cr.FirstName)).join(', ').replace(/,([^,]*)$/, ' and $1')}
       </Grid>
     ));
   }
@@ -336,7 +353,7 @@ const Sharing = ({ defUser } : Props) => {
 
   return (
     <ThemeProvider theme={sharingTheme}>
-      <Box m={1}>
+      <Box m={1} mt={2}>
         {!showTalkTree && (
         <Box m={1}>
           <Snackbar
@@ -418,6 +435,7 @@ const Sharing = ({ defUser } : Props) => {
               <Button
                 type="button"
                 onClick={createTestDiv}
+                sx={{ paddingLeft: '0PX' }}
               >
                 Include Screenshot
               </Button>
@@ -540,7 +558,7 @@ const Sharing = ({ defUser } : Props) => {
               </>
             </div>
             )}
-            <Box m={1}>
+            <Box sx={{ marginLeft: '0PX' }}>
               <MDEditor
                 textareaProps={{
                   placeholder: 'Lookit!',
@@ -551,13 +569,15 @@ const Sharing = ({ defUser } : Props) => {
                 onChange={(value: string | undefined) => value !== undefined && setComment(value)}
               />
             </Box>
-            <Button type="submit" disabled={(conversationID === 0 && friendHandles.length === 0) || !defUser?.Registered}>
-              {' '}
-              Share
-              {' '}
-              <ReplyIcon style={{ transform: 'scaleX(-1)' }} />
-              {' '}
-            </Button>
+            <ThemeProvider theme={sharButtonTheme}>
+              <Button className="sharePostBtn" type="submit" disabled={(conversationID === 0 && friendHandles.length === 0) || !defUser?.Registered}>
+                {' '}
+                Share
+                {' '}
+                <ReplyIcon style={{ transform: 'scaleX(-1)' }} />
+                {' '}
+              </Button>
+            </ThemeProvider>
             <Box width="100%">
               {!defUser?.Registered && (
               <Button
@@ -597,7 +617,7 @@ const Sharing = ({ defUser } : Props) => {
           <IconButton onClick={() => { setShowTalkTree(false); refetch(); }}>
             <KeyboardBackspace />
           </IconButton>
-          <PostShare post={post} key={post.ID} defUser={user} setShowTalkTree={setShowTalkTree} refetch={refetch} />
+          <PostShare post={post} key={post.ID} defUser={defUser} setShowTalkTree={setShowTalkTree} refetch={refetch} />
         </Box>
         )}
       </Box>

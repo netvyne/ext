@@ -20,6 +20,7 @@ interface User {
     LastRequest: DateTime;
     UpdatedAt: DateTime;
     DisableWarnNSFW: boolean;
+    IsMod: boolean;
   }
 
 // interface UserRelation {

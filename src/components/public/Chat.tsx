@@ -86,7 +86,7 @@ const ChatForm = styled('form')(() => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-end',
-  marginLeft: '20px',
+  marginLeft: '5px',
   marginBottom: '10px',
   marginRight: '20px',
 }));

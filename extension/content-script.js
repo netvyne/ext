@@ -15,7 +15,7 @@ function toggle() {
     chrome.storage.sync.set({
       isExtClosed: false,
     });
-    iframe.style.width = '500px';
+    iframe.style.width = '450px';
   } else {
     chrome.storage.sync.set({
       isExtClosed: true,
