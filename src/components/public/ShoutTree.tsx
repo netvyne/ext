@@ -4,7 +4,7 @@
 import ReplyIcon from '@mui/icons-material/Reply';
 import SendIcon from '@mui/icons-material/Send';
 import {
-  Box, Button, CssBaseline, Grid, Typography
+  Box, Button, Grid, Typography
 } from '@mui/material';
 import MDEditor from '@uiw/react-md-editor';
 import { AxiosError } from 'axios';
@@ -270,72 +270,9 @@ const ShoutTree = ({
                       </Button>
                     )}
             </Grid>
-            {/* <LeaveReply website={website} parent={root} setChildren={setChildren} /> */}
-            {/* <Grid item style={{ display: 'flex', flexDirection: 'row' }}>
-                <Box>
-                  <ShoutVoteButtons
-                    initShout={root}
-                    defUser={defUser}
-                  />
-                  {!showForm && (
-                    <Button size="small" onClick={() => setShowForm(!showForm)}>
-                      <ReplyIcon />
-                      Reply
-                    </Button>
-                  )}
-                </Box>
-                {!root.Saved && defUser.Registered && (
-                  <Box>
-                    <Button
-                      disabled={clicked}
-                      size="small"
-                      onClick={(e) => {
-                        onSaveItem(e, true);
-                        setClicked(true);
-                      }}
-                      style={{ color: '#000000' }}
-                    >
-                      SAVE
-                      <BookmarkBorderIcon />
-                    </Button>
-                  </Box>
-                )}
-                {root.Saved && defUser.Registered && (
-                  <Box>
-                    <Button
-                      disabled={clicked}
-                      size="small"
-                      onClick={(e) => {
-                        onSaveItem(e, false);
-                        setClicked(true);
-                      }}
-                      style={{ color: '#000000' }}
-                    >
-                      UNDO
-                      <BookmarkBorderIcon />
-                    </Button>
-                  </Box>
-                )}
-                {(user?.Role === 'mod' || user?.Role === 'admin')
-                  && (
-                    <Button href={`${process.env.REACT_APP_MOD_URL}/shout/${root.ID}`} target="_blank" style={{ color: '#000000' }}>
-                      MOD
-                      {' '}
-                      <GavelIcon />
-                    </Button>
-                  )}
-                {defUser.UserName === root.Author.UserName
-                    && (
-                      <DeleteShout
-                        initShout={root}
-                        setRoot={setRoot}
-                      />
-                    )}
-              </Grid> */}
             {showForm && (
               commentForm
             )}
-            {/* </Grid> */}
           </Grid>
         </Grid>
 
@@ -346,7 +283,7 @@ const ShoutTree = ({
     );
   }
 
-  return <CssBaseline>{content}</CssBaseline>;
+  return <Box ml={1}>{content}</Box>;
 };
 
 export default ShoutTree;
