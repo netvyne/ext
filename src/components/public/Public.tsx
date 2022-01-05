@@ -13,6 +13,7 @@ import { isValidURL } from '../../utils';
 import ActionContainer from './ActionContainer';
 import Chat from './Chat';
 import Discussion from './Discussion';
+// import ShoutPlaceholder from './ShoutPlaceholder';
 import WebsitePlaceholder from './WebsitePlaceholder';
 import WebsiteUI from './WebsiteUI';
 
@@ -73,13 +74,14 @@ const Public = ({ initCurrentUser, autoFetch, isTabActive } : Props) => {
   const [url, setUrl] = React.useState<any>();
   const user : any = initCurrentUser;
   const [mode, setMode] = React.useState('discussion');
+  const [sort, setSort] = React.useState('best');
   // const [timer, setTimer] = React.useState(0);
   const handleMode = (event : any, newMode : string) => {
     setMode(newMode);
   };
   // const [oldTitle, setOldTitle] = React.useState<any>('');
 
-  const route = `/get_shout_trees?host=${url?.host}&pathname=${url?.pathname}&search=${encodeURIComponent(url?.search)}`;
+  const route = `/get_shout_trees?host=${url?.host}&pathname=${url?.pathname}&search=${encodeURIComponent(url?.search)}&sort=${sort}`;
   const { data, status, refetch } = useQuery<GetShoutTreesQuery, string>(
     route, {
       enabled: isTabActive && autoFetch
@@ -183,7 +185,15 @@ const Public = ({ initCurrentUser, autoFetch, isTabActive } : Props) => {
         </Box>
         <Box>
           {mode === 'discussion'
-            ? <Discussion initCurrentUser={initCurrentUser} autoFetch={autoFetch} initURL={url} />
+            ? (
+              <Discussion
+                initCurrentUser={initCurrentUser}
+                autoFetch={autoFetch}
+                initURL={url}
+                sort={sort}
+                setSort={setSort}
+              />
+            )
             : <Chat />}
         </Box>
       </ThemeProvider>

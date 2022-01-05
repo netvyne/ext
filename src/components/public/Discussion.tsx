@@ -21,6 +21,8 @@ interface Props {
   initCurrentUser: User[];
   autoFetch: boolean;
   initURL: any;
+  sort: string;
+  setSort: any;
 }
 
 interface GetShoutTreesQuery {
@@ -74,13 +76,12 @@ const discussionTheme = createTheme({
   }
 });
 const Discussion = ({
-  initCurrentUser, autoFetch, initURL
+  initCurrentUser, autoFetch, initURL, sort, setSort
 } : Props) => {
   // eslint-disable-next-line global-require
   // const [url, setUrl] = React.useState<any>({});
   const user : any = initCurrentUser;
   const [showForm, setShowForm] = React.useState(true);
-  const [sort, setSort] = React.useState('best');
   const [showCaptcha, setShowCaptcha] = React.useState(false);
   const [captchaToken, setCaptchaToken] = React.useState('');
   const [children, setChildren] = React.useState<Shout[]>([]);
