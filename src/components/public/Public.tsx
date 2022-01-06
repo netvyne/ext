@@ -4,12 +4,11 @@ import {
   ToggleButton, ToggleButtonGroup
 } from '@mui/material';
 import { createTheme, styled, ThemeProvider } from '@mui/material/styles';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useQuery } from 'react-query';
 import {
   Shout, User, Website
 } from '../../../types/common/types';
-import { isValidURL } from '../../utils';
 import ActionContainer from './ActionContainer';
 import Chat from './Chat';
 import Discussion from './Discussion';
@@ -21,6 +20,7 @@ interface Props {
   initCurrentUser: User[];
   autoFetch: boolean;
   isTabActive: boolean;
+  url: any;
 }
 
 interface GetShoutTreesQuery {
@@ -69,9 +69,11 @@ const discussionTheme = createTheme({
     }
   }
 });
-const Public = ({ initCurrentUser, autoFetch, isTabActive } : Props) => {
+const Public = ({
+  initCurrentUser, autoFetch, isTabActive, url
+} : Props) => {
   // const url : any = initUrl;
-  const [url, setUrl] = React.useState<any>();
+  // const [url, setUrl] = React.useState<any>();
   const user : any = initCurrentUser;
   const [mode, setMode] = React.useState('discussion');
   const [sort, setSort] = React.useState('best');
@@ -88,54 +90,54 @@ const Public = ({ initCurrentUser, autoFetch, isTabActive } : Props) => {
     }
   );
 
-  const queryInfo = { active: true, lastFocusedWindow: true };
+  // const queryInfo = { active: true, lastFocusedWindow: true };
 
-  useEffect(() => {
-    chrome.runtime.onMessage.addListener(
-      (request) => {
-        // listen for messages sent from background.js
-        if (request.message === 'urlupdated') {
-          setTimeout(() => {
-            if (chrome.tabs) {
-              chrome.tabs.query(queryInfo, (tabs) => {
-                const newUrl : any = isValidURL(request.url);
-                const formatedUrl = {
-                  pathname: newUrl.pathname,
-                  host: newUrl.host,
-                  search: newUrl.search,
-                  Title: tabs[0].title,
-                  origin: newUrl.origin,
-                };
-                setUrl(formatedUrl);
-                if (autoFetch) {
-                  refetch();
-                }
-              });
-            }
-          }, 2000);
-        }
-      }
-    );
-  }, []);
+  // useEffect(() => {
+  //   chrome.runtime.onMessage.addListener(
+  //     (request) => {
+  //       // listen for messages sent from background.js
+  //       if (request.message === 'urlupdated') {
+  //         setTimeout(() => {
+  //           if (chrome.tabs) {
+  //             chrome.tabs.query(queryInfo, (tabs) => {
+  //               const newUrl : any = isValidURL(request.url);
+  //               const formatedUrl = {
+  //                 pathname: newUrl.pathname,
+  //                 host: newUrl.host,
+  //                 search: newUrl.search,
+  //                 Title: tabs[0].title,
+  //                 origin: newUrl.origin,
+  //               };
+  //               setUrl(formatedUrl);
+  //               if (autoFetch) {
+  //                 refetch();
+  //               }
+  //             });
+  //           }
+  //         }, 2000);
+  //       }
+  //     }
+  //   );
+  // }, []);
 
-  useEffect(() => {
-    if (chrome.tabs) {
-      chrome.tabs.query(queryInfo, (tabs) => {
-        const newUrl : any = isValidURL(tabs[0].url);
-        const formatedUrl = {
-          pathname: newUrl.pathname,
-          host: newUrl.host,
-          search: newUrl.search,
-          Title: tabs[0].title,
-          origin: newUrl.origin,
-        };
-        setUrl(formatedUrl);
-        if (autoFetch) {
-          refetch();
-        }
-      });
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (chrome.tabs) {
+  //     chrome.tabs.query(queryInfo, (tabs) => {
+  //       const newUrl : any = isValidURL(tabs[0].url);
+  //       const formatedUrl = {
+  //         pathname: newUrl.pathname,
+  //         host: newUrl.host,
+  //         search: newUrl.search,
+  //         Title: tabs[0].title,
+  //         origin: newUrl.origin,
+  //       };
+  //       setUrl(formatedUrl);
+  //       if (autoFetch) {
+  //         refetch();
+  //       }
+  //     });
+  //   }
+  // }, []);
   let website : any = '';
   let actionBox;
 
