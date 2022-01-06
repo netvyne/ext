@@ -71,7 +71,6 @@ export const Popup: FunctionComponent = () => {
   // eslint-disable-next-line no-unused-vars
   const [isTabActive, setIsTabActive] = useState<any>(true);
   const [intervalCount, setIntervalCount] = useState(0);
-  // intervalCount
   const intervalMs = 5000;
 
   // Sends the `popupMounted` event
@@ -81,45 +80,11 @@ export const Popup: FunctionComponent = () => {
     });
     browser.runtime.sendMessage({ popupMounted: true });
   }, []);
-  // const mutation = useMutation<loginMutation, AxiosError>({});
-  // const getUser = async () => {
-  //   const mutateData = {
-  //     Password: '',
-  //     Email: '',
-  //   };
-  //   const res = mutation.mutate(
-  //     // @ts-ignore
-  //     {
-  //       route: '/login',
-  //       data: mutateData,
-  //     },
-  //     {
-  //       onSuccess: (retData: { [CurrentUser: string]: User }) => {
-  //         if (retData && retData.CurrentUser) {
-  //           setUser(retData.CurrentUser);
-  //         }
-  //       },
-  //     },
-  //   );
-  //   return res;
-  // };
-
-  // React.useEffect(() => {
-  //   // getUser();
-  //   setTimeout(() => {
-  //     const newCount = intervalCount + 1;
-  //     if (isTabActive && autoFetch) {
-  //       setIntervalCount(newCount);
-  //       getUser();
-  //     }
-  //   }, 1000);
-  // }, [intervalCount]);
 
   const route = `/get_user_notifications?host=${url.host}&pathname=${url.pathname}&search=${encodeURIComponent(url.search)}`;
 
   const { data, refetch } = useQuery<any, string>(route, { enabled: (isTabActive && autoFetch && !!user), refetchInterval: intervalMs });
 
-  // console.log('line 122 ::: ', isTabActive);
   const loginRoute = '/login';
 
   useQuery(loginRoute, {
@@ -132,14 +97,6 @@ export const Popup: FunctionComponent = () => {
     },
   });
 
-  // setTimeout(() => {
-  //   if (chrome.tabs) {
-  //     chrome.tabs.getCurrent((tab) => {
-  //       setIsTabActive(tab?.active);
-  //     });
-  //   }
-  // }, 1000);
-
   React.useEffect(() => {
     if (chrome.tabs) {
       chrome.tabs.getCurrent((tab) => {
@@ -148,8 +105,38 @@ export const Popup: FunctionComponent = () => {
       });
     }
   }, [intervalCount]);
+
+  const queryInfo = { active: true, lastFocusedWindow: true };
+
   useEffect(() => {
-    const queryInfo = { active: true, lastFocusedWindow: true };
+    chrome.runtime.onMessage.addListener(
+      (request) => {
+        // listen for messages sent from background.js
+        if (request.message === 'urlupdated') {
+          setTimeout(() => {
+            if (chrome.tabs) {
+              chrome.tabs.query(queryInfo, (tabs) => {
+                const newUrl : any = isValidURL(request.url);
+                const formatedUrl = {
+                  pathname: newUrl.pathname,
+                  host: newUrl.host,
+                  search: newUrl.search,
+                  Title: tabs[0].title,
+                  origin: newUrl.origin,
+                };
+                setUrl(formatedUrl);
+                if (autoFetch) {
+                  refetch();
+                }
+              });
+            }
+          }, 2000);
+        }
+      }
+    );
+  }, []);
+
+  useEffect(() => {
     if (chrome.tabs) {
       chrome.tabs.query(queryInfo, (tabs) => {
         const newUrl : any = isValidURL(tabs[0].url);
@@ -259,7 +246,7 @@ export const Popup: FunctionComponent = () => {
             </AppBar>
             <Box sx={{ marginTop: '60px', padding: '8px', paddingTop: '0px' }}>
               <TabPanel value={value} index={0}>
-                <Public initCurrentUser={user} autoFetch={autoFetch} isTabActive={isTabActive} />
+                <Public initCurrentUser={user} autoFetch={autoFetch} isTabActive={isTabActive} url={url}/>
               </TabPanel>
               <TabPanel style={{ paddingTop: '8px' }} value={value} index={1}>
                 <Sharing defUser={user} />
