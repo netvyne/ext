@@ -23,5 +23,7 @@
 
 If you encounter any issues with the extension, or if there's something you'd like to see added, please open an issue on Github!
 
+Also, if you'd like to contribute code, you're more than welcome to do so! Please make an issue first so that we can discuss and be on the same page.
+
 ---
 &copy; 2021-2022 Netvyne, Inc.
