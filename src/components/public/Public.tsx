@@ -12,7 +12,6 @@ import {
 import ActionContainer from './ActionContainer';
 import Chat from './Chat';
 import Discussion from './Discussion';
-// import ShoutPlaceholder from './ShoutPlaceholder';
 import WebsitePlaceholder from './WebsitePlaceholder';
 import WebsiteUI from './WebsiteUI';
 
@@ -72,16 +71,12 @@ const discussionTheme = createTheme({
 const Public = ({
   initCurrentUser, autoFetch, isTabActive, url
 } : Props) => {
-  // const url : any = initUrl;
-  // const [url, setUrl] = React.useState<any>();
   const user : any = initCurrentUser;
   const [mode, setMode] = React.useState('discussion');
   const [sort, setSort] = React.useState('best');
-  // const [timer, setTimer] = React.useState(0);
   const handleMode = (event : any, newMode : string) => {
     setMode(newMode);
   };
-  // const [oldTitle, setOldTitle] = React.useState<any>('');
 
   const route = `/get_shout_trees?host=${url?.host}&pathname=${url?.pathname}&search=${encodeURIComponent(url?.search)}&sort=${sort}`;
   const { data, status, refetch } = useQuery<GetShoutTreesQuery, string>(
@@ -90,54 +85,6 @@ const Public = ({
     }
   );
 
-  // const queryInfo = { active: true, lastFocusedWindow: true };
-
-  // useEffect(() => {
-  //   chrome.runtime.onMessage.addListener(
-  //     (request) => {
-  //       // listen for messages sent from background.js
-  //       if (request.message === 'urlupdated') {
-  //         setTimeout(() => {
-  //           if (chrome.tabs) {
-  //             chrome.tabs.query(queryInfo, (tabs) => {
-  //               const newUrl : any = isValidURL(request.url);
-  //               const formatedUrl = {
-  //                 pathname: newUrl.pathname,
-  //                 host: newUrl.host,
-  //                 search: newUrl.search,
-  //                 Title: tabs[0].title,
-  //                 origin: newUrl.origin,
-  //               };
-  //               setUrl(formatedUrl);
-  //               if (autoFetch) {
-  //                 refetch();
-  //               }
-  //             });
-  //           }
-  //         }, 2000);
-  //       }
-  //     }
-  //   );
-  // }, []);
-
-  // useEffect(() => {
-  //   if (chrome.tabs) {
-  //     chrome.tabs.query(queryInfo, (tabs) => {
-  //       const newUrl : any = isValidURL(tabs[0].url);
-  //       const formatedUrl = {
-  //         pathname: newUrl.pathname,
-  //         host: newUrl.host,
-  //         search: newUrl.search,
-  //         Title: tabs[0].title,
-  //         origin: newUrl.origin,
-  //       };
-  //       setUrl(formatedUrl);
-  //       if (autoFetch) {
-  //         refetch();
-  //       }
-  //     });
-  //   }
-  // }, []);
   let website : any = '';
   let actionBox;
 

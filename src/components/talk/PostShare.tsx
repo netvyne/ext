@@ -6,7 +6,6 @@ import {
   Box, Button, Dialog, DialogActions, DialogContent,
   DialogTitle, Grid, IconButton, Snackbar, Tooltip
 } from '@mui/material';
-// import { makeStyles } from '@material-ui/core/styles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DateTime } from 'luxon';
 import React from 'react';
@@ -42,11 +41,6 @@ const theme = createTheme({
 export default function PostShare({
   post, defUser, setShowTalkTree, refetch
 }: Props) {
-  // const useStyles = makeStyles(() => ({
-  //   snackbar: {
-  //     zIndex: 10000,
-  //   },
-  // }));
   const [openShareMore, setOpenShareMore] = React.useState(false);
   const [dropdownRefetch, setDropdownRefetch] = React.useState(Date());
   const [friendHandles, setFriendHandles] = React.useState([]);
@@ -106,7 +100,6 @@ export default function PostShare({
       Delete: true
     };
     // @ts-ignore
-    // mutation.mutate({ route: '/update_user_post', data: mutateData });
     const res = mutation.mutate(
       // @ts-ignore
       {

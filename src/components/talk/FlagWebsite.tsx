@@ -57,7 +57,6 @@ function FlagWebsite({
     };
     // @ts-ignore
     const res = mutation.mutate({ route: '/post_flag_website', data: mutateData });
-    // refetch();
     return res;
   };
   return (

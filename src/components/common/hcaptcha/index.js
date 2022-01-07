@@ -76,32 +76,6 @@ function _createSuper(Derived) {
 function _isNativeReflectConstruct() { if (typeof Reflect === 'undefined' || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === 'function') return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], () => {})); return true; } catch (e) { return false; } }
 const { generateQuery } = _require; // Create script to init hCaptcha
 
-// let onLoadListeners = [];
-// let apiScriptRequested = false; // Generate hCaptcha API Script
-
-// const mountCaptchaScript = function mountCaptchaScript() {
-//   console.log();
-//   const params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-//   apiScriptRequested = true; // Create global onload callback
-
-//   window.hcaptchaOnLoad = function () {
-//     // Iterate over onload listeners, call each listener
-//     onLoadListeners = onLoadListeners.filter((listener) => {
-//       listener();
-//       return false;
-//     });
-//   };
-
-//   // const domain = params.apihost || 'https://js.hcaptcha.com';
-//   delete params.apihost;
-//   const script = document.createElement('script');
-//   script.src = '../HCaptcha.js?render=explicit&onload=hcaptchaOnLoad';
-//   script.async = true;
-//   const query = generateQuery(params);
-//   script.src += query !== '' ? '&'.concat(query) : '';
-//   document.head.appendChild(script);
-// };
-
 const HCaptcha = /* #__PURE__ */(function (_React$Component) {
   (0, _inherits2.default)(HCaptcha, _React$Component);
 

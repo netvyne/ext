@@ -14,14 +14,8 @@ import React, {
 } from 'react';
 import { useMutation } from 'react-query';
 import { ChatMessage } from '../../../types/common/types';
-// import { ChatMessage, User } from '../../../types/common/types';
-// import { getCurrentUser } from '../../auth/auth';
 import { isValidURL } from '../../utils';
 import './styles.scss';
-
-// interface GetUserQuery {
-//   initCurrentUser: User[];
-// }
 
 const chatFormTheme = createTheme({
   components: {
@@ -103,13 +97,8 @@ const Chat = () => {
   const webSocket = useRef<WebSocket | null>(null);
   const [messages, setMessages] = React.useState<ChatMessage[]>([]);
   const [url, setUrl] = useState<any>({});
-  // const [user, setUser] = React.useState<User|any>();
-  // const [showAction, setShowAction] = React.useState(false);
   const [show, setShow] = React.useState(false);
-  // const [websiteId, setWebsiteId] = React.useState<any>(null);
-  // const divRef : any = useRef(null);
   const messagesEndRef: any = useRef(null);
-  // getCurrentUser().then((currentUser:User|any) => setUser(initCurrentUser));
 
   const scrollToBottom = () => {
     messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -129,7 +118,6 @@ const Chat = () => {
     }
     webSocket.current = socket;
     webSocket.current.onmessage = (message : any) => {
-      // console.log('messages :::::', message);
       const response : any = JSON.parse(message.data);
       messages.push(response);
       setMessages(messages);
@@ -160,10 +148,6 @@ const Chat = () => {
   const mutation = useMutation({});
   const postChat = async (event : any) => {
     event.preventDefault();
-    // if (messages.length === 0) {
-    //   webSocket.current?.close();
-    //   createSocket(url);
-    // }
     const data = {
       ParentChatID: parentChat?.ID,
       Comment: comment,
@@ -204,8 +188,6 @@ const Chat = () => {
       <Grid
         container
         spacing={2}
-        // onMouseOver={() => setShowAction(true)}
-        // onMouseLeave={() => setShowAction(false)}
       >
         <div className="mydivouter">
           <div className="chatTextMessage">
@@ -227,12 +209,6 @@ const Chat = () => {
             <ReplyIcon />
 
           </button>
-          {/* <ReplyIcon
-            className="mybuttonoverlap btn btn-info"
-            onClick={() => {
-              setParentChat(message);
-            }}
-          /> */}
         </div>
 
       </Grid>

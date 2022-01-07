@@ -246,7 +246,7 @@ export const Popup: FunctionComponent = () => {
             </AppBar>
             <Box sx={{ marginTop: '60px', padding: '8px', paddingTop: '0px' }}>
               <TabPanel value={value} index={0}>
-                <Public initCurrentUser={user} autoFetch={autoFetch} isTabActive={isTabActive} url={url}/>
+                <Public initCurrentUser={user} autoFetch={autoFetch} isTabActive={isTabActive} url={url} />
               </TabPanel>
               <TabPanel style={{ paddingTop: '8px' }} value={value} index={1}>
                 <Sharing defUser={user} />
