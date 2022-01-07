@@ -18,7 +18,6 @@ import {
   useMutation, useQuery
 } from 'react-query';
 import { Post, User } from '../../../types/common/types';
-// import { getCurrentUser } from '../../auth/auth';
 import { createDiv, isValidURL, screenShot } from '../../utils';
 import PostShare from '../talk/PostShare';
 import Dropdown from './dropdown';
@@ -88,7 +87,6 @@ const Sharing = ({ defUser } : Props) => {
   const [open, setOpen] = React.useState(false);
 
   const [dataURL, setDataURL] = React.useState('');
-  // const [user, setUser] = React.useState<User | any>();
 
   const [friendHandles, setFriendHandles] = React.useState([]);
   const [createConv, setCreateConv] = React.useState(false);
@@ -113,8 +111,6 @@ const Sharing = ({ defUser } : Props) => {
     setMarkSensitive(false);
     setCreateConv(false);
   };
-
-  // getCurrentUser().then((currentUser: User | null) => setUser(currentUser));
 
   function cropcallback() {
     chrome.storage.local.get({ screenshot: null }, (data) => {
@@ -157,7 +153,6 @@ const Sharing = ({ defUser } : Props) => {
     }
     chrome.runtime.onMessage.addListener(handleMessage);
   }, []);
-  // // // // // //
 
   const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
     if (reason === 'clickaway') {
@@ -592,23 +587,18 @@ const Sharing = ({ defUser } : Props) => {
             </Box>
           </form>
           <Grid item container xs={12} direction="column" spacing={1} wrap="nowrap">
-            {/* {conversationShares.length > 0 && ( */}
             <Grid item xs={12}>
               <Typography variant="h6">
                 Shared with conversations
               </Typography>
               { (conversationShares.length > 0) ? conversationShares : nothingPlaceHolder }
             </Grid>
-            {/* )} */}
-            {/* {friendShares.length > 0 && ( */}
             <Grid item xs={12}>
               <Typography variant="h6">
                 Shared with friends
               </Typography>
               { (friendShares.length > 0) ? friendShares : nothingPlaceHolder }
-              {/* {friendShares} */}
             </Grid>
-            {/* )} */}
           </Grid>
         </Box>
         )}

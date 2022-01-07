@@ -68,7 +68,6 @@ export default function Dropdown({
       />
     );
   }
-  // Else, mode === 'friends'
   const friendsPlaceholder: User[] = [];
   let friends: User[] = [];
   const removeMember = (mem: ConversationMember) => {

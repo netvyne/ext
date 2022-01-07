@@ -7,7 +7,6 @@ import PublicIcon from '@mui/icons-material/Public';
 import {
   Avatar, Box, Button, Grid, Link, Tooltip, Typography
 } from '@mui/material';
-// import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DateTime } from 'luxon';
 import React from 'react';
 import ReactPlayer from 'react-player';
@@ -26,37 +25,6 @@ interface Props {
   initPost?: Post;
   defUser: User;
 }
-
-// const nonHiddenTheme = createTheme({
-//   components: {
-//     MuiLink: {
-//       styleOverrides: {
-//         root: {
-//           color: '#3f51b5',
-//           textDecoration: 'none',
-//           '@media (max-width: 768px)': {
-//             textOverflow: 'ellipsis',
-//             whiteSpace: 'nowrap',
-//             overflow: 'hidden',
-//             width: '145px',
-//             display: 'inline-block',
-//           },
-//         },
-//       },
-//     },
-//     MuiButton: {
-//       styleOverrides: {
-//         root: {
-//           color: '#3f51b5',
-//         },
-//         outlinedPrimary: {
-//           color: '#3f51b5',
-//           border: 'solid 1px #3f51b5',
-//         }
-//       },
-//     }
-//   }
-// });
 
 export default function FeedItem({
   initWebsite, reg, initPost, defUser
@@ -99,6 +67,13 @@ export default function FeedItem({
     return false;
   }
 
+  function clickComment() {
+    if (website && website.ID) {
+      window.open(`${process.env.PUBLIC_WEB}/w/${website.ID}`, '_blank', 'noopener,noreferrer');
+    }
+    return false;
+  }
+
   let focus = -1;
   if (window.location.search.includes('pfocus')) {
     const urlParams = new URLSearchParams(window.location.search);
@@ -124,7 +99,6 @@ export default function FeedItem({
     </Grid>
   );
   const nonHidden = (
-    // <ThemeProvider theme={nonHiddenTheme}>
     <Grid
       container
       component={Box}
@@ -281,16 +255,10 @@ export default function FeedItem({
                         )}
                       </Box>
                     ) : <Button size="small">Processing</Button>}
-                  {/* {(website.TagLabelNames)?.length > 0
-                    ? website.TagLabelNames?.map((t) => (
-                      <Button size="small" href={`/v/${t}`}>
-                        {t}
-                      </Button>
-                    )) : <Button size="small">Processing</Button>} */}
                 </Grid>
               )}
           <Grid item component={Box}>
-            <Button size="small" href={`/w/${website.ID}`}>
+            <Button size="small" onClick={() => clickComment()}>
               {website.ShoutCount}
               {' '}
               comments
@@ -349,7 +317,6 @@ export default function FeedItem({
         </Grid>
       </Grid>
     </Grid>
-    // </ThemeProvider>
   );
   return (
     <>

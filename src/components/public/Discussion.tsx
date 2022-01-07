@@ -1,12 +1,10 @@
 /* eslint-disable max-len */
-// import HCaptcha from '@hcaptcha/react-hcaptcha';
 import {
   Box, MenuItem, Select
 } from '@mui/material';
 import { createTheme, styled, ThemeProvider } from '@mui/material/styles';
 import { AxiosError } from 'axios';
 import React from 'react';
-// import React, { useEffect } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import {
   Shout, User, Website
@@ -79,7 +77,6 @@ const Discussion = ({
   initCurrentUser, autoFetch, initURL, sort, setSort
 } : Props) => {
   // eslint-disable-next-line global-require
-  // const [url, setUrl] = React.useState<any>({});
   const user : any = initCurrentUser;
   const [showForm, setShowForm] = React.useState(true);
   const [showCaptcha, setShowCaptcha] = React.useState(false);
@@ -87,7 +84,7 @@ const Discussion = ({
   const [children, setChildren] = React.useState<Shout[]>([]);
   const captchaRef = React.createRef<HCaptcha>();
   const [comment, setComment] = React.useState('');
-
+  const treeHeight = window.innerHeight - 392;
   const route = `/get_shout_trees?host=${initURL?.host}&pathname=${initURL?.pathname}&search=${encodeURIComponent(initURL?.search)}&sort=${sort}`;
   const { data, status, refetch } = useQuery<GetShoutTreesQuery, string>(
     route, {
@@ -134,7 +131,7 @@ const Discussion = ({
   let reply: any = '';
 
   if (status === 'loading') {
-    trees = <ShoutPlaceholder />;
+    trees = <Box sx={{ marginLeft: '8px' }}><ShoutPlaceholder /></Box>;
   } else if (status === 'success' && user) {
     if (children) {
       trees = children.map((treeRoot) => (
@@ -188,8 +185,9 @@ const Discussion = ({
           {reply}
         </Box>
         <Box style={{
-          height: '540px',
-          overflow: 'auto'
+          height: `${treeHeight}px`,
+          overflow: 'auto',
+          marginLeft: '-8px'
         }}
         >
           {trees}

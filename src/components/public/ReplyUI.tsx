@@ -1,5 +1,4 @@
 /* eslint-disable linebreak-style */
-// import HCaptcha from '@hcaptcha/react-hcaptcha';
 import ReplyIcon from '@mui/icons-material/Reply';
 import SendIcon from '@mui/icons-material/Send';
 import {

@@ -1,4 +1,3 @@
-// import HCaptcha from '@hcaptcha/react-hcaptcha';
 import SendIcon from '@mui/icons-material/Send';
 import {
   Button, Dialog, DialogContent, DialogContentText,
@@ -63,7 +62,6 @@ function PublishWebsite({
     };
     // @ts-ignore
     const res = mutation.mutate({ route: '/post_website_public', data: mutateData });
-    // refetch();
     return res;
   };
   return (

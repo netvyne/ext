@@ -17,9 +17,15 @@ interface Props {
 const WebsiteUI = ({
   initWebsite, url
 } : Props) => {
+  function clickTitle() {
+    if (initWebsite && initWebsite.ID) {
+      window.open(`${process.env.PUBLIC_WEB}/w/${initWebsite.ID}`, '_blank', 'noopener,noreferrer');
+    }
+    return false;
+  }
+
   let websiteTitle : string = '';
   websiteTitle = (initWebsite?.Title && initWebsite?.Title !== '') ? initWebsite.Title : url?.Title;
-  // websiteTitle = (currentTitle !== websiteTitle) ? currentTitle : websiteTitle;
   const website = (
     <Box mx={3} borderRadius="borderRadius" height="70px">
       <Grid container wrap="nowrap">
@@ -28,7 +34,15 @@ const WebsiteUI = ({
           direction="column"
         >
           <Grid item component={Box} my={1}>
-            <Typography variant="subtitle1" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
+            <Typography
+              variant="subtitle1"
+              sx={{
+                fontWeight: 'bold',
+                textAlign: 'center',
+                cursor: (initWebsite?.ID) ? 'pointer' : 'default'
+              }}
+              onClick={() => clickTitle()}
+            >
               {(websiteTitle && websiteTitle.length > 32)
                 ? websiteTitle.substring(0, 32).concat('...')
                 : (websiteTitle)}

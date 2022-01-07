@@ -1,6 +1,4 @@
 /* eslint-disable max-len */
-// import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
-// import GavelIcon from '@mui/icons-material/Gavel';
 import ReplyIcon from '@mui/icons-material/Reply';
 import SendIcon from '@mui/icons-material/Send';
 import {
@@ -15,7 +13,6 @@ import { useMutation, useQuery } from 'react-query';
 import { Shout, User, Website } from '../../../types/common/types';
 import HCaptcha from '../common/hcaptcha';
 import DeleteShout from './DeleteShout';
-// import LeaveReply from './LeaveReply';
 import ShoutVoteButtons from './ShoutVoteButtons';
 import './styles.scss';
 import UserKarma from './UserKarma';
@@ -40,7 +37,6 @@ const ShoutTree = ({
 }: Props) => {
   const [user] = React.useState<User>(defUser);
   const [root, setRoot] = React.useState<Shout>(treeRoot);
-  // const [showFlag, setShowFlag] = React.useState(false);
   const [children, setChildren] = React.useState<Shout[]>(root.Children || []);
   const [hide, setHide] = React.useState(root.Warn);
   const [clicked, setClicked] = React.useState(false);
@@ -77,7 +73,6 @@ const ShoutTree = ({
         onSuccess: (data: any) => {
           root.Saved = data.Shout.Saved;
           setRoot(root);
-          // refetch();
         },
       },
     );
@@ -237,8 +232,6 @@ const ShoutTree = ({
                 )
                 : <ReactMarkdown>{root.Comment}</ReactMarkdown>}
             </Grid>
-
-            {/* <Grid item container component={Box} wrap="nowrap" spacing={1} style={{ display: 'flex', flexDirection: 'column' }}> */}
             <Grid container wrap="nowrap" alignItems="center" sx={{ height: '30px' }}>
               <ShoutVoteButtons
                 initShout={root}
