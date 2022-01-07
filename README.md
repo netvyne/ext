@@ -2,6 +2,9 @@
   <a href="https://netvyne.com"><img src="https://www.netvyne.com/logo-full.png" alt="Netvyne" width="300" /></a> 
 </p>
 <p align="center">
+  <img src="assets/extension_screenshot.jpg" alt="Extension Screenshot" width="459" />
+</p>
+<p align="center">
   Credible Comments, One Click Away
 </p>
 
