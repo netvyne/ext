@@ -102,8 +102,8 @@ setTimeout(() => {
           pos4 = e.clientY;
           let leftBoundary = 15;
           let topBoundary = 42;
-          let righBoundary = (parentCropContainer.offsetWidth + 30) - (elmnt.offsetWidth + 15);
-          let bottomBoundary = (parentCropContainer.offsetHeight + 42 + 65) - (elmnt.offsetHeight + 65);
+          let righBoundary = (parentCropContainer.offsetWidth + 30) - (elmnt.offsetWidth + leftBoundary);
+          let bottomBoundary = (parentCropContainer.offsetHeight + topBoundary + 65) - (elmnt.offsetHeight + 65);
           // set the element's new position:
           if (elmnt.offsetTop < topBoundary && elmnt.offsetLeft < leftBoundary) {
             elmnt.style.top = `${topBoundary}px`;
@@ -214,8 +214,8 @@ setTimeout(() => {
 
         cropWidth = cropBox.offsetWidth * widthratio;
         cropHeight = cropBox.offsetHeight * heightratio;
-        cropLeft = (cropBox.offsetLeft - 15) * widthratio;
-        cropTop = (cropBox.offsetTop - 42) * heightratio;
+        cropLeft = (cropBox.offsetLeft - 10) * widthratio;
+        cropTop = (cropBox.offsetTop - 57) * heightratio;
 
         resize_canvas.width = cropWidth;
         resize_canvas.height = cropHeight;
