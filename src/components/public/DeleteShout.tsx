@@ -8,11 +8,12 @@ import { Shout } from '../../../types/common/types';
 interface Props {
   initShout: Shout;
   setRoot: any;
+  setShoutDeleted: any;
 }
 interface GetShoutTreeQuery {
   Roots: Shout[];
 }
-const DeleteShout = ({ initShout, setRoot }: Props) => {
+const DeleteShout = ({ initShout, setRoot, setShoutDeleted }: Props) => {
   const mutation = useMutation({});
   const { refetch } = useQuery<GetShoutTreeQuery, string>(
     `/get_talk_trees?post_id=${initShout?.ID}`, { enabled: false }
@@ -33,6 +34,7 @@ const DeleteShout = ({ initShout, setRoot }: Props) => {
       {
         onSuccess: (response : any) => {
           setRoot(response.Shout);
+          setShoutDeleted(true);
           refetch();
         },
       },
