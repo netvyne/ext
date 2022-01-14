@@ -28,8 +28,17 @@ setTimeout(() => {
             <div class="popupCloseButtonNetvyne">&times;</div>
             <h5 id="exampleModalLongTitle">Cropping Tool</h5>
             <div class="center-crop-tool-netvyne">
-              <div class="popup-netvyne">
-                <div class="popup-header-netvyne noselect">&nbsp;</div>
+              <div class="box-wrapper" id="box-wrapper">
+                  <div class="netvyneCropBox box" id="box">
+                      <div class="dot left-top" id="left-top"></div>
+                      <div class="dot left-bottom" id="left-bottom"></div>
+                      <div class="dot top-mid" id="top-mid"></div>
+                      <div class="dot bottom-mid" id="bottom-mid"></div>
+                      <div class="dot left-mid" id="left-mid"></div>
+                      <div class="dot right-mid" id="right-mid"></div>
+                      <div class="dot right-bottom" id="right-bottom"></div>
+                      <div class="dot right-top" id="right-top"></div>
+                  </div>
               </div>
               <img crossorigin="Anonymous" src="${data.screenshot}" class="crop-image-netvyne" alt=""/>
             </div>
@@ -42,181 +51,190 @@ setTimeout(() => {
     document.body.prepend(div);
     document.getElementById('mainExampleModalLong').innerHTML = innerHTML;
     (function () {
+      let box = document.getElementById('box');
+      let boxWrapper = document.getElementById('box-wrapper');
+      const minWidth = 40;
+      const minHeight = 40;
+
+      let initX; let initY; let mousePressX; let mousePressY; let initW; let initH; let
+        initRotate;
+      let parentCropContainer = document.getElementsByClassName('center-crop-tool-netvyne')[0];
+      let leftBoundary = 10;
+      let topBoundary = 42;
+      let righBoundary = (parentCropContainer.offsetWidth + 30) - (initW + leftBoundary);
+      let bottomBoundary = (parentCropContainer.offsetHeight + topBoundary + 65) - (initW + 65);
+
+      function repositionElement(x, y) {
+        boxWrapper.style.left = `${x}px`;
+        boxWrapper.style.top = `${y}px`;
+      }
+
+      function resize(w, h) {
+        box.style.width = `${w}px`;
+        box.style.height = `${h}px`;
+      }
+
+      // function getCurrentRotation(el) {
+      //   let st = window.getComputedStyle(el, null);
+      //   let tm = st.getPropertyValue('-webkit-transform')
+      //       || st.getPropertyValue('-moz-transform')
+      //       || st.getPropertyValue('-ms-transform')
+      //       || st.getPropertyValue('-o-transform')
+      //       || st.getPropertyValue('transform');
+      //   // eslint-disable-next-line no-unused-expressions
+      //   'none';
+      //   if (tm !== 'none') {
+      //     let values = tm.split('(')[1].split(')')[0].split(',');
+      //     let angle = Math.round(Math.atan2(values[1], values[0]) * (180 / Math.PI));
+      //     return (angle < 0 ? angle + 360 : angle);
+      //   }
+      //   return 0;
+      // }
+
+      // function rotateBox(deg) {
+      //   boxWrapper.style.transform = `rotate(${deg}deg)`;
+      // }
+
+      boxWrapper.addEventListener('mousedown', function (event) {
+        if (event.target.className.indexOf('dot') > -1) {
+          return;
+        }
+
+        initX = this.offsetLeft;
+        initY = this.offsetTop;
+        mousePressX = event.clientX;
+        mousePressY = event.clientY;
+
+        function eventMoveHandler(event1) {
+          let newLeft = (initX + (event1.clientX - mousePressX)) - boxWrapper.offsetWidth / 2;
+          let newTop = (initY + (event1.clientY - mousePressY)) - boxWrapper.offsetHeight / 2;
+
+          righBoundary = (parentCropContainer.offsetWidth + 30) - (boxWrapper.offsetWidth + leftBoundary);
+          bottomBoundary = (parentCropContainer.offsetHeight + topBoundary + 65) - (boxWrapper.offsetHeight + 65);
+          if (newLeft >= leftBoundary && newTop >= topBoundary && newLeft <= righBoundary && newTop <= bottomBoundary) {
+            repositionElement(initX + (event1.clientX - mousePressX),
+              initY + (event1.clientY - mousePressY));
+          }
+        }
+
+        boxWrapper.addEventListener('mousemove', eventMoveHandler, false);
+        window.addEventListener('mouseup', function eventEndHandler() {
+          boxWrapper.removeEventListener('mousemove', eventMoveHandler, false);
+          window.removeEventListener('mouseup', eventEndHandler);
+        }, false);
+      }, false);
+
+      // handle resize
+      let rightMid = document.getElementById('right-mid');
+      let leftMid = document.getElementById('left-mid');
+      let topMid = document.getElementById('top-mid');
+      let bottomMid = document.getElementById('bottom-mid');
+
+      let leftTop = document.getElementById('left-top');
+      let rightTop = document.getElementById('right-top');
+      let rightBottom = document.getElementById('right-bottom');
+      let leftBottom = document.getElementById('left-bottom');
+
+      function resizeHandler(event, left = false, top = false, xResize = false, yResize = false) {
+        initX = boxWrapper.offsetLeft;
+        initY = boxWrapper.offsetTop;
+        mousePressX = event.clientX;
+        mousePressY = event.clientY;
+
+        initW = box.offsetWidth;
+        initH = box.offsetHeight;
+
+        // initRotate = getCurrentRotation(boxWrapper);
+        initRotate = 0;
+        let initRadians = initRotate * Math.PI / 180;
+        let cosFraction = Math.cos(initRadians);
+        let sinFraction = Math.sin(initRadians);
+        function eventMoveHandler(event2) {
+          let wDiff = (event2.clientX - mousePressX);
+          let hDiff = (event2.clientY - mousePressY);
+          let rotatedWDiff = cosFraction * wDiff + sinFraction * hDiff;
+          let rotatedHDiff = cosFraction * hDiff - sinFraction * wDiff;
+
+          let newW = initW; let newH = initH; let newX = initX; let
+            newY = initY;
+
+          if (xResize) {
+            if (left) {
+              newW = initW - rotatedWDiff;
+              if (newW < minWidth) {
+                newW = minWidth;
+                rotatedWDiff = initW - minWidth;
+              }
+            } else {
+              newW = initW + rotatedWDiff;
+              if (newW < minWidth) {
+                newW = minWidth;
+                rotatedWDiff = minWidth - initW;
+              }
+            }
+            newX += 0.5 * rotatedWDiff * cosFraction;
+            newY += 0.5 * rotatedWDiff * sinFraction;
+          }
+
+          if (yResize) {
+            if (top) {
+              newH = initH - rotatedHDiff;
+              if (newH < minHeight) {
+                newH = minHeight;
+                rotatedHDiff = initH - minHeight;
+              }
+            } else {
+              newH = initH + rotatedHDiff;
+              if (newH < minHeight) {
+                newH = minHeight;
+                rotatedHDiff = minHeight - initH;
+              }
+            }
+            newX -= 0.5 * rotatedHDiff * sinFraction;
+            newY += 0.5 * rotatedHDiff * cosFraction;
+          }
+          righBoundary = (parentCropContainer.offsetWidth + 30) - (newW + leftBoundary);
+          bottomBoundary = (parentCropContainer.offsetHeight + topBoundary + 65) - (newH + 65);
+          if ((newX - newW / 2) >= leftBoundary && (newY - newH / 2) >= topBoundary && (newX - newW / 2) <= righBoundary && (newY - newH / 2) <= bottomBoundary) {
+            resize(newW, newH);
+            repositionElement(newX, newY);
+          }
+        }
+
+        window.addEventListener('mousemove', eventMoveHandler, false);
+        window.addEventListener('mouseup', function eventEndHandler() {
+          window.removeEventListener('mousemove', eventMoveHandler, false);
+          window.removeEventListener('mouseup', eventEndHandler);
+        }, false);
+      }
+
+      rightMid.addEventListener('mousedown', (e) => resizeHandler(e, false, false, true, false));
+      leftMid.addEventListener('mousedown', (e) => resizeHandler(e, true, false, true, false));
+      topMid.addEventListener('mousedown', (e) => resizeHandler(e, false, true, false, true));
+      bottomMid.addEventListener('mousedown', (e) => resizeHandler(e, false, false, false, true));
+      leftTop.addEventListener('mousedown', (e) => resizeHandler(e, true, true, true, true));
+      rightTop.addEventListener('mousedown', (e) => resizeHandler(e, false, true, true, true));
+      rightBottom.addEventListener('mousedown', (e) => resizeHandler(e, false, false, true, true));
+      leftBottom.addEventListener('mousedown', (e) => resizeHandler(e, true, false, true, true));
+
+      resize(300, 200);
+      repositionElement(200, 200);
       let resize_canvas = null;
       let image_target = document.querySelector('.crop-image-netvyne');
       let heightratio = 1.0;
       let widthratio = 1.0;
-      let cropLeft = 0;
-      let cropTop = 0;
-      let cropWidth = 0;
-      let cropHeight = 0;
-      function initDragElement() {
-        let pos1 = 0;
-        let pos2 = 0;
-        let pos3 = 0;
-        let pos4 = 0;
-        let popups = document.getElementsByClassName('popup-netvyne');
-        let parentCropContainer = document.getElementsByClassName('center-crop-tool-netvyne')[0];
-        let elmnt = null;
-        let currentZIndex = 100; // TODO reset z index when a threshold is passed
-
-        for (let i = 0; i < popups.length; i++) {
-          let popup = popups[i];
-          let header = getHeader(popup);
-
-          popup.onmousedown = function () {
-            this.style.zIndex = `${++currentZIndex}`;
-          };
-
-          if (header) {
-            header.parentPopup = popup;
-            header.onmousedown = dragMouseDown;
-          }
-        }
-
-        function dragMouseDown(e) {
-          console.log('dragMouseDown func');
-          elmnt = this.parentPopup;
-          elmnt.style.zIndex = `${++currentZIndex}`;
-
-          e = e || window.event;
-          // get the mouse cursor position at startup:
-          pos3 = e.clientX;
-          pos4 = e.clientY;
-          document.onmouseup = closeDragElement;
-          // call a function whenever the cursor moves:
-          document.onmousemove = elementDrag;
-        }
-
-        function elementDrag(e) {
-          console.log('elementDrag func');
-          if (!elmnt) {
-            return;
-          }
-
-          e = e || window.event;
-          // calculate the new cursor position:
-          pos1 = pos3 - e.clientX;
-          pos2 = pos4 - e.clientY;
-          pos3 = e.clientX;
-          pos4 = e.clientY;
-          let leftBoundary = 15;
-          let topBoundary = 42;
-          let righBoundary = (parentCropContainer.offsetWidth + 30) - (elmnt.offsetWidth + leftBoundary);
-          let bottomBoundary = (parentCropContainer.offsetHeight + topBoundary + 65) - (elmnt.offsetHeight + 65);
-          // set the element's new position:
-          if (elmnt.offsetTop < topBoundary && elmnt.offsetLeft < leftBoundary) {
-            elmnt.style.top = `${topBoundary}px`;
-            elmnt.style.left = `${leftBoundary}px`;
-          } else if (elmnt.offsetTop < topBoundary) {
-            elmnt.style.top = `${topBoundary}px`;
-            elmnt.style.left = `${elmnt.offsetLeft - pos1}px`;
-          } else if (elmnt.offsetLeft < leftBoundary) {
-            elmnt.style.top = `${elmnt.offsetTop - pos2}px`;
-            elmnt.style.left = `${leftBoundary}px`;
-          } else if (elmnt.offsetTop > bottomBoundary && elmnt.offsetLeft > righBoundary) {
-            elmnt.style.top = `${bottomBoundary}px`;
-            elmnt.style.left = `${righBoundary}px`;
-          } else if (elmnt.offsetTop > bottomBoundary) {
-            elmnt.style.top = `${bottomBoundary}px`;
-            elmnt.style.left = `${elmnt.offsetLeft - pos1}px`;
-          } else if (elmnt.offsetLeft > righBoundary) {
-            elmnt.style.top = `${elmnt.offsetTop - pos2}px`;
-            elmnt.style.left = `${righBoundary}px`;
-          } else {
-            elmnt.style.top = `${elmnt.offsetTop - pos2}px`;
-            elmnt.style.left = `${elmnt.offsetLeft - pos1}px`;
-          }
-        }
-
-        function closeDragElement() {
-          console.log('closeDragElement func');
-          /* stop moving when mouse button is released: */
-          document.onmouseup = null;
-          document.onmousemove = null;
-        }
-
-        function getHeader(element) {
-          console.log('getHeader func');
-          let headerItems = element.getElementsByClassName('popup-header-netvyne');
-
-          if (headerItems.length === 1) {
-            return headerItems[0];
-          }
-
-          return null;
-        }
-      }
-
-      function initResizeElement() {
-        console.log('initResizeElement func');
-        let popups = document.getElementsByClassName('popup-netvyne');
-        let element = null;
-        let startX; let startY; let startWidth; let
-          startHeight;
-
-        for (let i = 0; i < popups.length; i++) {
-          let p = popups[i];
-
-          let right = document.createElement('div');
-          right.className = 'resizer-right';
-          p.appendChild(right);
-          right.addEventListener('mousedown', initDrag, false);
-          right.parentPopup = p;
-
-          let bottom = document.createElement('div');
-          bottom.className = 'resizer-bottom';
-          p.appendChild(bottom);
-          bottom.addEventListener('mousedown', initDrag, false);
-          bottom.parentPopup = p;
-
-          let both = document.createElement('div');
-          both.className = 'resizer-both';
-          p.appendChild(both);
-          both.addEventListener('mousedown', initDrag, false);
-          both.parentPopup = p;
-        }
-
-        function initDrag(e) {
-          console.log('initDrag func');
-          element = this.parentPopup;
-          startX = e.clientX;
-          startY = e.clientY;
-          startWidth = parseInt(
-            document.defaultView.getComputedStyle(element).width,
-            10
-          );
-          startHeight = parseInt(
-            document.defaultView.getComputedStyle(element).height,
-            10
-          );
-          document.documentElement.addEventListener('mousemove', doDrag, false);
-          document.documentElement.addEventListener('mouseup', stopDrag, false);
-        }
-
-        function doDrag(e) {
-          element.style.width = `${startWidth + e.clientX - startX}px`;
-          element.style.height = `${startHeight + e.clientY - startY}px`;
-        }
-
-        function stopDrag() {
-          document.documentElement.removeEventListener('mousemove', doDrag, false);
-          document.documentElement.removeEventListener('mouseup', stopDrag, false);
-        }
-      }
 
       function crop() {
-        let cropBox = document.querySelector('.popup-netvyne');
-        resize_canvas = document.createElement('canvas');
-
         widthratio = (image_target.naturalWidth / image_target.offsetWidth);
         heightratio = (image_target.naturalHeight / image_target.offsetHeight);
 
-        cropWidth = cropBox.offsetWidth * widthratio;
-        cropHeight = cropBox.offsetHeight * heightratio;
-        cropLeft = (cropBox.offsetLeft - 10) * widthratio;
-        cropTop = (cropBox.offsetTop - 57) * heightratio;
-
+        let cropWidth = parseInt(box.style.width.replace('px', ''), 10);
+        let cropHeight = parseInt(box.style.height.replace('px', ''), 10);
+        const cropLeft = (parseInt(boxWrapper.style.left.replace('px', ''), 10) - (cropWidth / 2) - 10) * widthratio;
+        const cropTop = (parseInt(boxWrapper.style.top.replace('px', ''), 10) - (cropHeight / 2) - 47) * heightratio;
+        cropWidth *= widthratio;
+        cropHeight *= heightratio;
+        resize_canvas = document.createElement('canvas');
         resize_canvas.width = cropWidth;
         resize_canvas.height = cropHeight;
 
@@ -242,9 +260,6 @@ setTimeout(() => {
           // removeHandlers();
         }
       }
-
-      initDragElement();
-      initResizeElement();
       document.querySelector('.btn-crop').addEventListener('click', openCropCanvasImg);
 
       openPopUp();

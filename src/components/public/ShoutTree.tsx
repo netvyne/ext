@@ -2,7 +2,7 @@
 import ReplyIcon from '@mui/icons-material/Reply';
 import SendIcon from '@mui/icons-material/Send';
 import {
-  Box, Button, Grid, Typography
+  Alert, Box, Button, Grid, Snackbar, Typography
 } from '@mui/material';
 import MDEditor from '@uiw/react-md-editor';
 import { AxiosError } from 'axios';
@@ -47,6 +47,7 @@ const ShoutTree = ({
   const [showCaptcha, setShowCaptcha] = React.useState(false);
   const [captchaToken, setCaptchaToken] = React.useState('');
   const captchaRef = React.createRef<HCaptcha>();
+  const [shoutDeleted, setShoutDeleted] = React.useState(false);
 
   function toggleUserKarmaOpen() {
     setUserKarmaOpen(!userKarmaOpen);
@@ -254,7 +255,7 @@ const ShoutTree = ({
                 {root.Saved ? 'UNDO' : 'SAVE'}
               </Button>
               {user.UserName === root.Author.UserName
-                && <DeleteShout initShout={root} setRoot={setRoot} />}
+                && <DeleteShout initShout={root} setRoot={setRoot} setShoutDeleted={setShoutDeleted} />}
               {(user?.IsMod)
                     && (
                       <Button href={`${process.env.REACT_APP_MOD_URL}/item/shout/${root.ID}`} target="_blank">
@@ -276,7 +277,16 @@ const ShoutTree = ({
     );
   }
 
-  return <Box ml={1}>{content}</Box>;
+  return (
+    <Box ml={1}>
+      {content}
+      <Snackbar style={{ zIndex: 10000 }} anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={shoutDeleted} autoHideDuration={3000} onClose={() => setShoutDeleted(false)}>
+        <Alert onClose={() => setShoutDeleted(false)} severity="success">
+          Success!
+        </Alert>
+      </Snackbar>
+    </Box>
+  );
 };
 
 export default ShoutTree;
