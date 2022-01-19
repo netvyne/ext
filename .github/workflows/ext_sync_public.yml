@@ -18,8 +18,8 @@ jobs:
         with:
           personal_token: ${{ secrets.NETVYNE_ADMIN_GITHUB_PAT }}
           src_path: /.
-          dst_path: /ext/
+          dst_path: /
           dst_owner: netvyne
-          dst_repo_name: netvyne
+          dst_repo_name: ext
           clean: true
           commit_message: ${{ env.CM }}
