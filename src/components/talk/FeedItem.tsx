@@ -1,5 +1,6 @@
 import { SentimentSatisfiedAlt } from '@mui/icons-material';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import FlagIcon from '@mui/icons-material/Flag';
 import ImageIcon from '@mui/icons-material/Image';
 import LinkIcon from '@mui/icons-material/Link';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
@@ -125,14 +126,27 @@ export default function FeedItem({
             </Link>
           </Grid>
           <Grid item component={Box} fontSize="15px" flexGrow={1}>
-            <Grid container direction="row" alignItems="center">
-              <Grid item>
-                <AccessTimeIcon style={{ fill: 'grey' }} fontSize="inherit" />
+            <Grid container direction="row" alignItems="center" justifyContent="space-between">
+              <Grid item sx={{ display: 'flex' }}>
+                <Grid item>
+                  <AccessTimeIcon style={{ fill: 'grey' }} fontSize="inherit" />
+                </Grid>
+                <Grid item component={Box} pl={0.5}>
+                  <Typography noWrap variant="caption" style={{ color: 'grey' }}>
+                    {DateTime.fromISO(website.CreatedAt.toString(), { zone: 'utc' }).toRelative()}
+                  </Typography>
+                </Grid>
               </Grid>
-              <Grid item component={Box} pl={0.5}>
-                <Typography noWrap variant="caption" style={{ color: 'grey' }}>
-                  {DateTime.fromISO(website.CreatedAt.toString(), { zone: 'utc' }).toRelative()}
-                </Typography>
+              <Grid item alignItems="center">
+                <FlagWebsite
+                  open={showFlag}
+                  handleClose={() => setShowFlag(false)}
+                  website={website}
+                />
+                <Box>
+                  <FlagIcon onClick={() => { setShowFlag(true); }} style={{ fill: 'grey' }} fontSize="inherit" />
+                  {/* <Button size="small" onClick={() => { setShowFlag(true); }}>Flag</Button> */}
+                </Box>
               </Grid>
             </Grid>
           </Grid>
@@ -143,11 +157,6 @@ export default function FeedItem({
               website={website}
               setWebsite={setWebsite}
             />
-            <Box>
-              {website.Public
-                ? <Button variant="outlined" size="small" onClick={() => { setShowShare(true); }}>Vyne</Button>
-                : <Button onClick={() => { setShowShare(true); }}>Publish</Button>}
-            </Box>
           </Grid>
         </Grid>
       </Grid>
@@ -297,16 +306,6 @@ export default function FeedItem({
             </Button>
           </Grid>
           )}
-          <Grid item container alignItems="center">
-            <FlagWebsite
-              open={showFlag}
-              handleClose={() => setShowFlag(false)}
-              website={website}
-            />
-            <Box>
-              <Button size="small" onClick={() => { setShowFlag(true); }}>Flag</Button>
-            </Box>
-          </Grid>
           {(user?.Role === 'mod' || user?.Role === 'admin')
               && (
                 <Button size="small" onClick={() => clickMod()}>

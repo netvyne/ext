@@ -6,12 +6,12 @@ import { Talk } from '../../../types/common/types';
 
 interface Props {
   initTalk: Talk;
-  setInitTalk: any
+  postRefetch: any;
 }
 interface GetTalkTreeQuery {
   Roots: Talk[];
 }
-const DeleteTalk = ({ initTalk, setInitTalk }: Props) => {
+const DeleteTalk = ({ initTalk, postRefetch }: Props) => {
   const mutation = useMutation({});
   const { refetch } = useQuery<GetTalkTreeQuery, string>(
     `/get_talk_trees?post_id=${initTalk?.PostID}`, { enabled: false }
@@ -28,7 +28,8 @@ const DeleteTalk = ({ initTalk, setInitTalk }: Props) => {
         onSuccess: (response: any) => {
           const deletedTalk: any = initTalk;
           deletedTalk.Comment = response.Talk.Comment;
-          setInitTalk(deletedTalk);
+          // setInitTalk(deletedTalk);
+          postRefetch();
           // initTalk.Comment = response.Talk.Comment;
           refetch();
         }

@@ -11,11 +11,14 @@ interface Props {
   parent?: Talk;
   post: Post;
   initShowForm?: boolean;
+  postRefetch: any;
 }
 interface GetTalkTreeQuery {
   Roots: Talk[];
 }
-const LeaveReply = ({ parent, post, initShowForm }: Props) => {
+const LeaveReply = ({
+  parent, post, initShowForm, postRefetch
+}: Props) => {
   const [comment, setComment] = React.useState('');
   const [showForm, setShowForm] = React.useState(initShowForm);
   const mutation = useMutation({});
@@ -37,6 +40,7 @@ const LeaveReply = ({ parent, post, initShowForm }: Props) => {
             setShowForm(false);
           }
           setComment('');
+          postRefetch();
           refetch();
         }
       });
