@@ -16,27 +16,27 @@ interface Props {
   post: Post;
   defUser: User;
   setShowTalkTree: any;
+  postRefetch: any;
 }
 
 const TalkTree = ({
-  treeRoot, post, defUser, setShowTalkTree
+  treeRoot, post, defUser, setShowTalkTree, postRefetch
 }: Props) => {
-  const [initTalk, setInitTalk] = React.useState<Talk>(treeRoot);
   let focus = -1;
   if (window.location.search.includes('tfocus')) {
     const urlParams = new URLSearchParams(window.location.search);
     focus = parseInt(urlParams.get('tfocus') as string, 10);
   }
-  const children = initTalk.Children.map((talk: Talk) => (
-    <TalkTree treeRoot={talk} key={talk.ID} post={post} defUser={defUser} setShowTalkTree={setShowTalkTree} />
+  const children = treeRoot.Children.map((talk: Talk) => (
+    <TalkTree treeRoot={talk} key={talk.ID} post={post} defUser={defUser} setShowTalkTree={setShowTalkTree} postRefetch={postRefetch} />
   ));
 
-  const color = initTalk.Level % 2 === 0 ? '#eceff1' : '#fafafa';
+  const color = treeRoot.Level % 2 === 0 ? '#eceff1' : '#fafafa';
   const content = (
     <Grid
       container
       component={Box}
-      bgcolor={initTalk.ID === focus
+      bgcolor={treeRoot.ID === focus
         ? '#f5f77b'
         : color}
       padding={1}
@@ -49,17 +49,17 @@ const TalkTree = ({
         direction="row"
         wrap="nowrap"
       >
-        {initTalk.Author.AvatarPath && (
+        {treeRoot.Author.AvatarPath && (
           <Avatar
             alt="Notification"
-            src={formatImageURL(initTalk.Author.AvatarPath)}
+            src={formatImageURL(treeRoot.Author.AvatarPath)}
           />
         )}
-        {!initTalk.Author.AvatarPath && (
+        {!treeRoot.Author.AvatarPath && (
           <Avatar
             alt="Notification"
           >
-            {initTalk.Author.Handle.charAt(0).toUpperCase()}
+            {treeRoot.Author.Handle.charAt(0).toUpperCase()}
           </Avatar>
         )}
         <Grid
@@ -70,15 +70,15 @@ const TalkTree = ({
           <Grid container alignItems="center">
             <Grid item component={Box}>
               <Typography variant="subtitle2">
-                {initTalk.Author.FirstName}
+                {treeRoot.Author.FirstName}
                 {' '}
-                {initTalk.Author.LastName}
+                {treeRoot.Author.LastName}
               </Typography>
             </Grid>
-            {initTalk.CreatedAt && (
+            {treeRoot.CreatedAt && (
               <Grid item component={Box} pl={1}>
                 <Typography variant="caption">
-                  {DateTime.fromISO(initTalk.CreatedAt.toString(), {
+                  {DateTime.fromISO(treeRoot.CreatedAt.toString(), {
                     zone: 'utc',
                   }).toRelative()}
                 </Typography>
@@ -91,7 +91,7 @@ const TalkTree = ({
               p: (props) => <div {...props} />
             }}
             >
-              {initTalk.Comment}
+              {treeRoot.Comment}
 
             </ReactMarkdown>
           </Grid>
@@ -109,18 +109,18 @@ const TalkTree = ({
                 }}
               >
                 <TalkVoteButtons
-                  initTalk={initTalk}
+                  initTalk={treeRoot}
                   defUser={defUser}
                 />
-                {defUser.Handle === initTalk.Author.Handle
+                {defUser.Handle === treeRoot.Author.Handle
                 && (
                   <DeleteTalk
-                    initTalk={initTalk}
-                    setInitTalk={setInitTalk}
+                    initTalk={treeRoot}
+                    postRefetch={postRefetch}
                   />
                 )}
               </Grid>
-              <LeaveReply parent={initTalk} post={post} />
+              <LeaveReply parent={treeRoot} post={post} postRefetch={postRefetch} />
             </Grid>
           </Grid>
         </Grid>

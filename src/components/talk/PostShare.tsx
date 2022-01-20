@@ -21,7 +21,7 @@ interface Props {
   post: Post;
   defUser: User;
   setShowTalkTree: any;
-  refetch: any;
+  postRefetch: any;
 }
 
 interface GetTalkTreeQuery {
@@ -39,11 +39,12 @@ const theme = createTheme({
 });
 
 export default function PostShare({
-  post, defUser, setShowTalkTree, refetch
+  post, defUser, setShowTalkTree, postRefetch
 }: Props) {
   const [openShareMore, setOpenShareMore] = React.useState(false);
   const [dropdownRefetch, setDropdownRefetch] = React.useState(Date());
   const [friendHandles, setFriendHandles] = React.useState([]);
+  const [trees, setTrees] = React.useState<any>('');
   const toggleShareMore = () => {
     setOpenShareMore(!openShareMore);
   };
@@ -52,21 +53,29 @@ export default function PostShare({
     setSbarOpen(!sbarOpen);
   };
 
-  const { data, status } = useQuery<GetTalkTreeQuery, string>(
-    `/get_talk_trees?post_id=${post.ID}`
+  // let treesVar: any = '';
+  const { refetch } = useQuery<GetTalkTreeQuery, string>(
+    `/get_talk_trees?post_id=${post.ID}`,
+    {
+      onSuccess: (data: GetTalkTreeQuery) => {
+        setTrees(data.Roots.map((treeRoot : any) => (
+          <TalkTree key={treeRoot.ID} treeRoot={treeRoot} post={post} defUser={defUser} setShowTalkTree={setShowTalkTree} postRefetch={refetch} />
+        )));
+      }
+    }
   );
-  let trees: {} | null | undefined;
-  if (status === 'error') {
-    trees = <div>Error</div>;
-  } else if (status === 'loading') {
-    trees = <div>Loading</div>;
-  } else if (status === 'idle') {
-    trees = <div />;
-  } else {
-    trees = data!.Roots.map((treeRoot) => (
-      <TalkTree key={treeRoot.ID} treeRoot={treeRoot} post={post} defUser={defUser} setShowTalkTree={setShowTalkTree} />
-    ));
-  }
+  // if (status === 'error') {
+  //   trees = <div>Error</div>;
+  // } else if (status === 'loading') {
+  //   trees = <div>Loading</div>;
+  // } else if (status === 'idle') {
+  //   trees = <div />;
+  // } else {
+  //   trees = '';
+  //   trees = data!.Roots.map((treeRoot) => (
+  //     <TalkTree key={treeRoot.ID} treeRoot={treeRoot} post={post} defUser={defUser} setShowTalkTree={setShowTalkTree} postRefetch={refetch} />
+  //   ));
+  // }
   const shareMoreMutation = useMutation({});
   const shareMore = async (event: any) => {
     event.preventDefault();
@@ -86,7 +95,7 @@ export default function PostShare({
           toggleSbar();
           setDropdownRefetch(Date());
           setFriendHandles([]);
-          refetch();
+          postRefetch();
         },
       },
     );
@@ -109,7 +118,7 @@ export default function PostShare({
       {
         onSuccess: () => {
           setShowTalkTree(false);
-          refetch();
+          postRefetch();
         },
       },
     );
@@ -179,7 +188,7 @@ export default function PostShare({
           </Box>
         </Grid>
         {trees}
-        <LeaveReply post={post} initShowForm />
+        <LeaveReply post={post} initShowForm postRefetch={refetch} />
       </Grid>
       <Dialog
         maxWidth="sm"

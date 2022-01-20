@@ -218,6 +218,7 @@ const Sharing = ({ defUser } : Props) => {
       CreateConv: createConv,
       ConversationID: conversationID,
       MarkSensitive: markSensitive,
+      PostType: 'website',
     };
     const res = shareMutation.mutate(
       // @ts-ignore
@@ -607,7 +608,7 @@ const Sharing = ({ defUser } : Props) => {
           <IconButton onClick={() => { setShowTalkTree(false); refetch(); }}>
             <KeyboardBackspace />
           </IconButton>
-          <PostShare post={post} key={post.ID} defUser={defUser} setShowTalkTree={setShowTalkTree} refetch={refetch} />
+          <PostShare post={post} key={post.ID} defUser={defUser} setShowTalkTree={setShowTalkTree} postRefetch={refetch} />
         </Box>
         )}
       </Box>
