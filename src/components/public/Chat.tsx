@@ -107,12 +107,12 @@ const Chat = () => {
   function createSocket(currentUrl : any) {
     const publicApiUrl : any = process.env.REACT_APP_PUBLIC_API;
     const socketUrl = publicApiUrl.replace('http', 'ws');
-    const socket = new WebSocket(`${socketUrl}/get_chat_socket?host=${currentUrl.host}&pathname=${currentUrl.pathname}&search=${encodeURIComponent(currentUrl.search)}`);
-    // console.log('Socket created', socket);
+    const socket = new WebSocket(`${socketUrl}/get_chat_socket?host=${currentUrl.host}&pathname=${encodeURIComponent(currentUrl.pathname)}&search=${encodeURIComponent(currentUrl.search)}`);
+    console.log('Socket created', socket);
     if (!socket) {
-      const intervalID = setInterval(alert, 30000);
-      clearInterval(intervalID);
-      setInterval(() => {
+      // const intervalID = setInterval(alert, 30000);
+      // clearInterval(intervalID);
+      setTimeout(() => {
         createSocket(currentUrl);
       }, 30000);
     }

@@ -71,6 +71,7 @@ export const Popup: FunctionComponent = () => {
   // eslint-disable-next-line no-unused-vars
   const [isTabActive, setIsTabActive] = useState<any>(true);
   const [intervalCount, setIntervalCount] = useState(0);
+  const [isTabUpdated, setIsTabUpdated] = useState(true);
   const intervalMs = 5000;
 
   // Sends the `popupMounted` event
@@ -113,6 +114,7 @@ export const Popup: FunctionComponent = () => {
       (request) => {
         // listen for messages sent from background.js
         if (request.message === 'urlupdated') {
+          setIsTabUpdated(true);
           setTimeout(() => {
             if (chrome.tabs) {
               chrome.tabs.query(queryInfo, (tabs) => {
@@ -246,7 +248,7 @@ export const Popup: FunctionComponent = () => {
             </AppBar>
             <Box sx={{ marginTop: '60px', padding: '8px', paddingTop: '0px' }}>
               <TabPanel value={value} index={0}>
-                <Public initCurrentUser={user} autoFetch={autoFetch} isTabActive={isTabActive} url={url} />
+                <Public initCurrentUser={user} isTabActive={isTabActive} url={url} isTabUpdated={isTabUpdated} />
               </TabPanel>
               <TabPanel style={{ paddingTop: '8px' }} value={value} index={1}>
                 <Sharing defUser={user} />

@@ -17,10 +17,10 @@ import './styles.scss';
 
 interface Props {
   initCurrentUser: User[];
-  autoFetch: boolean;
   initURL: any;
   sort: string;
   setSort: any;
+  isTabUpdated: boolean;
 }
 
 interface GetShoutTreesQuery {
@@ -74,7 +74,7 @@ const discussionTheme = createTheme({
   }
 });
 const Discussion = ({
-  initCurrentUser, autoFetch, initURL, sort, setSort
+  initCurrentUser, initURL, sort, setSort, isTabUpdated
 } : Props) => {
   // eslint-disable-next-line global-require
   const user : any = initCurrentUser;
@@ -85,10 +85,10 @@ const Discussion = ({
   const captchaRef = React.createRef<HCaptcha>();
   const [comment, setComment] = React.useState('');
   const treeHeight = window.innerHeight - 392;
-  const route = `/get_shout_trees?host=${initURL?.host}&pathname=${initURL?.pathname}&search=${encodeURIComponent(initURL?.search)}&sort=${sort}`;
+  const route = `/get_shout_trees?host=${initURL?.host}&pathname=${encodeURIComponent(initURL?.pathname)}&search=${encodeURIComponent(initURL?.search)}&sort=${sort}`;
   const { data, status, refetch } = useQuery<GetShoutTreesQuery, string>(
     route, {
-      enabled: autoFetch,
+      enabled: isTabUpdated,
       onSuccess: (shoutData) => {
         setChildren(shoutData.Roots);
       }

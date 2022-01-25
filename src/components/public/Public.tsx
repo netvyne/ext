@@ -17,9 +17,9 @@ import WebsiteUI from './WebsiteUI';
 
 interface Props {
   initCurrentUser: User[];
-  autoFetch: boolean;
   isTabActive: boolean;
   url: any;
+  isTabUpdated: boolean;
 }
 
 interface GetShoutTreesQuery {
@@ -69,7 +69,7 @@ const discussionTheme = createTheme({
   }
 });
 const Public = ({
-  initCurrentUser, autoFetch, isTabActive, url
+  initCurrentUser, isTabActive, url, isTabUpdated
 } : Props) => {
   const user : any = initCurrentUser;
   const [mode, setMode] = React.useState('discussion');
@@ -78,10 +78,10 @@ const Public = ({
     setMode(newMode);
   };
 
-  const route = `/get_shout_trees?host=${url?.host}&pathname=${url?.pathname}&search=${encodeURIComponent(url?.search)}&sort=${sort}`;
+  const route = `/get_shout_trees?host=${url?.host}&pathname=${encodeURIComponent(url?.pathname)}&search=${encodeURIComponent(url?.search)}&sort=${sort}`;
   const { data, status, refetch } = useQuery<GetShoutTreesQuery, string>(
     route, {
-      enabled: isTabActive && autoFetch
+      enabled: isTabActive && isTabUpdated
     }
   );
 
@@ -137,10 +137,10 @@ const Public = ({
             ? (
               <Discussion
                 initCurrentUser={initCurrentUser}
-                autoFetch={autoFetch}
                 initURL={url}
                 sort={sort}
                 setSort={setSort}
+                isTabUpdated={isTabUpdated}
               />
             )
             : <Chat />}
