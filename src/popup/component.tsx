@@ -6,9 +6,7 @@ import {
 } from '@mui/material/';
 import { styled } from '@mui/material/styles';
 import Public from '@src/components/public/Public';
-// import { AxiosError } from 'axios';
 import React, { FunctionComponent, useEffect, useState } from 'react';
-// import { QueryClientProvider, useMutation, useQuery } from 'react-query';
 import { QueryClientProvider, useQuery } from 'react-query';
 import { browser } from 'webextension-polyfill-ts';
 import { User } from '../../types/common/types';
@@ -19,10 +17,6 @@ import {
   formatImageURL, isValidURL, setBadge
 } from '../utils';
 import './styles.scss';
-
-// interface loginMutation {
-//   CurrentUser: User;
-// }
 
 function TabPanel(props : any) {
   const {
@@ -69,20 +63,60 @@ export const Popup: FunctionComponent = () => {
   const [user, setUser] = React.useState<User|any>();
   const [url, setUrl] = useState<any>({});
   // eslint-disable-next-line no-unused-vars
-  const [isTabActive, setIsTabActive] = useState<any>(true);
-  const [intervalCount, setIntervalCount] = useState(0);
-  const [isTabUpdated, setIsTabUpdated] = useState(true);
+  const [isTabActive, setIsTabActive] = useState<any>(false);
+  const [isTabUpdated, setIsTabUpdated] = useState(false);
   const intervalMs = 5000;
 
   // Sends the `popupMounted` event
   React.useEffect(() => {
-    chrome.storage.sync.set({
-      isExtClosed: true,
+    chrome.runtime.onMessage.addListener((msg) => {
+      if (msg === 'toggle') {
+        chrome.storage.sync.get(['isExtClosed'], (result) => {
+          if (result.isExtClosed === true) {
+            chrome.storage.sync.get(
+              {
+                netvyneBadge: true,
+              },
+              (items) => {
+                if (items.netvyneBadge === true || items.netvyneBadge === null) {
+                  setIsTabUpdated(true);
+                  setAutoFetch(true);
+                } else {
+                  setIsTabUpdated(false);
+                  setAutoFetch(false);
+                }
+              }
+            );
+          } else {
+            setIsTabUpdated(true);
+            setAutoFetch(true);
+          }
+        });
+      }
     });
     browser.runtime.sendMessage({ popupMounted: true });
+
+    chrome.storage.sync.get(['isExtClosed'], (result) => {
+      if (result.isExtClosed === true) {
+        chrome.storage.sync.get(
+          {
+            netvyneBadge: true,
+          },
+          (items) => {
+            if (items.netvyneBadge === true || items.netvyneBadge === null) {
+              setAutoFetch(true);
+            } else {
+              setAutoFetch(false);
+            }
+          }
+        );
+      } else {
+        setAutoFetch(true);
+      }
+    });
   }, []);
 
-  const route = `/get_user_notifications?host=${url.host}&pathname=${url.pathname}&search=${encodeURIComponent(url.search)}`;
+  const route = `/get_user_notifications?host=${url.host}&pathname=${encodeURIComponent(url.pathname)}&search=${encodeURIComponent(url.search)}`;
 
   const { data, refetch } = useQuery<any, string>(route, { enabled: (isTabActive && autoFetch && !!user), refetchInterval: intervalMs });
 
@@ -101,11 +135,10 @@ export const Popup: FunctionComponent = () => {
   React.useEffect(() => {
     if (chrome.tabs) {
       chrome.tabs.getCurrent((tab) => {
-        // console.log(' here line 146 ', tab);
         setIsTabActive(tab?.active);
       });
     }
-  }, [intervalCount]);
+  }, []);
 
   const queryInfo = { active: true, lastFocusedWindow: true };
 
@@ -159,27 +192,7 @@ export const Popup: FunctionComponent = () => {
         setBadge('');
       }
     }
-    setTimeout(() => {
-      const newCount = intervalCount + 1;
-      setIntervalCount(newCount);
-      setAutoFetch(false);
-      chrome.storage.sync.get(
-        {
-          netvyneBadge: true,
-        },
-        (items) => {
-          if (items.netvyneBadge === true || items.netvyneBadge === null) {
-            setAutoFetch(true);
-          }
-        }
-      );
-      chrome.storage.sync.get(['isExtClosed'], (result) => {
-        if (result.isExtClosed === false) {
-          setAutoFetch(true);
-        }
-      });
-    }, 5000);
-  }, [data, intervalCount]);
+  }, [data]);
 
   const [value, setValue] = React.useState(0);
   const handleChange = (event : any, newValue : any) => {
