@@ -13,12 +13,12 @@ import {
 } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import MDEditor from '@uiw/react-md-editor';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
   useMutation, useQuery
 } from 'react-query';
 import { Post, User } from '../../../types/common/types';
-import { createDiv, isValidURL, screenShot } from '../../utils';
+import { createDiv, screenShot } from '../../utils';
 import PostShare from '../talk/PostShare';
 import Dropdown from './dropdown';
 import './styles.scss';
@@ -76,12 +76,12 @@ const sharingTheme = createTheme({
 });
 
 interface Props {
-  defUser: User
+  defUser: User;
+  url: any;
 }
-const Sharing = ({ defUser } : Props) => {
+const Sharing = ({ defUser, url } : Props) => {
   const [shareSeparately, setShareSeparately] = React.useState(false);
   const [markSensitive, setMarkSensitive] = React.useState(false);
-  const [url, setUrl] = useState<any>({});
   const [comment, setComment] = React.useState('Check this out!');
   const [conversationID, setConversationID] = React.useState(0);
   const [open, setOpen] = React.useState(false);
@@ -138,19 +138,6 @@ const Sharing = ({ defUser } : Props) => {
   );
 
   useEffect(() => {
-    const queryInfo = { active: true, lastFocusedWindow: true };
-    if (chrome.tabs) {
-      chrome.tabs.query(queryInfo, (tabs) => {
-        const newUrl : any = isValidURL(tabs[0].url);
-        const formatedUrl = {
-          pathname: newUrl.pathname,
-          host: newUrl.host,
-          search: newUrl.search,
-          Title: tabs[0].title,
-        };
-        setUrl(formatedUrl);
-      });
-    }
     chrome.runtime.onMessage.addListener(handleMessage);
   }, []);
 
