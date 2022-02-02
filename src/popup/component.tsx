@@ -264,7 +264,7 @@ export const Popup: FunctionComponent = () => {
                 <Public initCurrentUser={user} isTabActive={isTabActive} url={url} isTabUpdated={isTabUpdated} />
               </TabPanel>
               <TabPanel style={{ paddingTop: '8px' }} value={value} index={1}>
-                <Sharing defUser={user} />
+                <Sharing defUser={user} url={url} />
               </TabPanel>
               <TabPanel style={{ paddingTop: '8px' }} value={value} index={2}>
                 <Notifications refetch={refetch} />
