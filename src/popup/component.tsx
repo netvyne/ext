@@ -2,9 +2,10 @@
 import HomeIcon from '@mui/icons-material/Home';
 import PublicIcon from '@mui/icons-material/Public';
 import {
-  AppBar, Avatar, Badge, Box, Grid, Tab, Tabs, Typography
+  AppBar, Avatar, Badge, Box, Grid, PaletteMode, Tab, Tabs, Typography
 } from '@mui/material/';
-import { styled } from '@mui/material/styles';
+import { amber, deepOrange, grey } from '@mui/material/colors';
+import { createTheme, styled, ThemeProvider } from '@mui/material/styles';
 import Public from '@src/components/public/Public';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { QueryClientProvider, useQuery } from 'react-query';
@@ -65,7 +66,55 @@ export const Popup: FunctionComponent = () => {
   // eslint-disable-next-line no-unused-vars
   const [isTabActive, setIsTabActive] = useState<any>(false);
   const [isTabUpdated, setIsTabUpdated] = useState(false);
+  const [mode, setMode] = useState<PaletteMode>('dark');
   const intervalMs = 5000;
+
+  const getDesignTokens = (extMode: PaletteMode) => ({
+    palette: {
+      mode: extMode,
+      ...(extMode === 'light'
+        ? {
+          // palette values for light mode
+          primary: grey,
+          divider: amber[200],
+          background: {
+            default: deepOrange[700],
+            paper: deepOrange[700],
+          },
+          text: {
+            primary: grey[900],
+            secondary: grey[800],
+          }
+        }
+        : {
+          // palette values for dark mode
+          primary: grey,
+          divider: grey[50],
+          background: {
+            default: grey[900],
+            paper: grey[900],
+          },
+          text: {
+            primary: '#fff',
+            secondary: grey[500],
+          }
+        }),
+    },
+  });
+
+  // chrome.storage.sync.get(['mode'], (result) => {
+  //   if (!result.mode) {
+  //     chrome.storage.sync.set(
+  //       {
+  //         mode: 'dark',
+  //       }
+  //     );
+  //   } else {
+  //     setMode(result.mode);
+  //   }
+  // });
+
+  const theme = React.useMemo(() => createTheme(getDesignTokens(mode)), [mode]);
 
   // Sends the `popupMounted` event
   React.useEffect(() => {
@@ -90,6 +139,7 @@ export const Popup: FunctionComponent = () => {
           } else {
             setIsTabUpdated(true);
             setAutoFetch(true);
+            setIsTabActive(true);
           }
         });
       }
@@ -202,77 +252,79 @@ export const Popup: FunctionComponent = () => {
   // Renders the component tree
   return (
     <QueryClientProvider client={queryClient}>
-      <Root className={classes.root}>
-        <div className="popup-container">
-          <div className="container mx-1 my-1">
-            <AppBar position="fixed" sx={{ top: '0px' }} color="default" elevation={1}>
-              <Grid className="topbar">
-                <Tabs
-                  className="tabs"
-                  value={value}
-                  onChange={handleChange}
-                  indicatorColor="primary"
-                  textColor="primary"
-                  variant="fullWidth"
-                  aria-label="icon label tabs example"
-                  TabIndicatorProps={{
-                    style: {
-                      backgroundColor: '#9F00CF',
-                    },
-                  }}
-                >
-                  <Tab icon={<PublicIcon sx={{ color: value === 0 ? '#9F00CF' : 'black' }} />} label="Public" {...a11yProps(0)} />
-                  <Tab icon={<HomeIcon sx={{ color: value === 1 ? '#9F00CF' : 'black' }} />} label="Private" {...a11yProps(1)} />
-                  <Tab
-                    icon={(
-                      <Badge
-                        anchorOrigin={{
-                          vertical: 'bottom',
-                          horizontal: 'right',
-                        }}
-                        color="primary"
-                        variant="dot"
-                        invisible={!data?.ContainsUnread}
-                      >
-                        {user?.AvatarPath ? (
-                          <Avatar
-                            style={{ width: 24, height: 24 }}
-                            alt="Avatar"
-                            src={formatImageURL(user.AvatarPath)}
-                          />
-                        )
-                          : (
+      <ThemeProvider theme={theme}>
+        <Root className={classes.root}>
+          <div className={`popup-container mode-${mode}`}>
+            <div className="container mx-1 my-1">
+              <AppBar position="fixed" sx={{ top: '0px' }} elevation={1}>
+                <Grid className="topbar">
+                  <Tabs
+                    className="tabs"
+                    value={value}
+                    onChange={handleChange}
+                    indicatorColor="primary"
+                    textColor="primary"
+                    variant="fullWidth"
+                    aria-label="icon label tabs example"
+                    TabIndicatorProps={{
+                      style: {
+                        backgroundColor: '#9F00CF',
+                      },
+                    }}
+                  >
+                    <Tab icon={<PublicIcon sx={{ color: value === 0 ? '#9F00CF' : 'default' }} />} label="Public" {...a11yProps(0)} />
+                    <Tab icon={<HomeIcon sx={{ color: value === 1 ? '#9F00CF' : 'default' }} />} label="Private" {...a11yProps(1)} />
+                    <Tab
+                      icon={(
+                        <Badge
+                          anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'right',
+                          }}
+                          color="primary"
+                          variant="dot"
+                          invisible={!data?.ContainsUnread}
+                        >
+                          {user?.AvatarPath ? (
                             <Avatar
-                              alt="Handle initial"
-                              style={{
-                                width: 24, height: 24, fontSize: '1.5rem', backgroundColor: 'black'
-                              }}
-                            >
-                              {`${user?.UserName?.charAt(0).toUpperCase()}`}
-                            </Avatar>
-                          )}
-                      </Badge>
-)}
-                    label="Profile"
-                    {...a11yProps(2)}
-                  />
-                </Tabs>
-              </Grid>
-            </AppBar>
-            <Box sx={{ marginTop: '60px', padding: '8px', paddingTop: '0px' }}>
-              <TabPanel value={value} index={0}>
-                <Public initCurrentUser={user} isTabActive={isTabActive} url={url} isTabUpdated={isTabUpdated} />
-              </TabPanel>
-              <TabPanel style={{ paddingTop: '8px' }} value={value} index={1}>
-                <Sharing defUser={user} url={url} />
-              </TabPanel>
-              <TabPanel style={{ paddingTop: '8px' }} value={value} index={2}>
-                <Notifications refetch={refetch} />
-              </TabPanel>
-            </Box>
+                              style={{ width: 24, height: 24 }}
+                              alt="Avatar"
+                              src={formatImageURL(user.AvatarPath)}
+                            />
+                          )
+                            : (
+                              <Avatar
+                                alt="Handle initial"
+                                style={{
+                                  width: 24, height: 24, fontSize: '1.5rem', backgroundColor: 'black'
+                                }}
+                              >
+                                {`${user?.UserName?.charAt(0).toUpperCase()}`}
+                              </Avatar>
+                            )}
+                        </Badge>
+  )}
+                      label="Profile"
+                      {...a11yProps(2)}
+                    />
+                  </Tabs>
+                </Grid>
+              </AppBar>
+              <Box sx={{ marginTop: '60px', padding: '8px', paddingTop: '0px' }}>
+                <TabPanel value={value} index={0}>
+                  <Public initCurrentUser={user} isTabActive={isTabActive} url={url} isTabUpdated={isTabUpdated} />
+                </TabPanel>
+                <TabPanel style={{ paddingTop: '8px' }} value={value} index={1}>
+                  <Sharing defUser={user} url={url} />
+                </TabPanel>
+                <TabPanel style={{ paddingTop: '8px' }} value={value} index={2}>
+                  <Notifications refetch={refetch} mode={mode} setMode={setMode} />
+                </TabPanel>
+              </Box>
+            </div>
           </div>
-        </div>
-      </Root>
+        </Root>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 };

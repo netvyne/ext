@@ -49,7 +49,7 @@ const ActionUI = ({
             initUrl={url}
           />
           <Tooltip title="Share Publicly">
-            <IosShareIcon onClick={() => { setShowShare(true); }} sx={{ color: 'black' }} />
+            <IosShareIcon onClick={() => { setShowShare(true); }} />
           </Tooltip>
         </Grid>
         <Grid item component={Box} mr={1}>

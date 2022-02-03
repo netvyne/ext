@@ -69,7 +69,7 @@ const ReplyUI = ({
       <ReplyIcon />
     </Button>
   );
-  return <Box bgcolor="white">{content}</Box>;
+  return <Box>{content}</Box>;
 };
 
 export default ReplyUI;

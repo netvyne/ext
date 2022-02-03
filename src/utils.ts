@@ -98,3 +98,23 @@ export function setBadge(data: any) {
     });
   });
 }
+
+export function getThemeColors(theme: string) {
+  const themes: any = {
+    dark: {
+      commentParent: '#bdbdbd',
+      commentChild: '#9e9e9e',
+      commentText: '#000000',
+      toggleButton: '#ffffff',
+      toggleButtonHover: 'rgba(255, 255, 255, 0.08)'
+    },
+    light: {
+      commentParent: '#eceff1',
+      commentChild: '#fafafa',
+      commentText: '#000000',
+      toggleButton: 'rgba(0, 0, 0, 0.54)',
+      toggleButtonHover: 'rgba(0, 0, 0, 0.04)'
+    }
+  };
+  return themes[theme];
+}

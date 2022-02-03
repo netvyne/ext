@@ -9,6 +9,7 @@ import { useQuery } from 'react-query';
 import {
   Shout, User, Website
 } from '../../../types/common/types';
+import { getThemeColors } from '../../utils';
 import ActionContainer from './ActionContainer';
 import Chat from './Chat';
 import Discussion from './Discussion';
@@ -74,9 +75,16 @@ const Public = ({
   const user : any = initCurrentUser;
   const [mode, setMode] = React.useState('discussion');
   const [sort, setSort] = React.useState('best');
+  const [themeColor, setThemeColors] = React.useState<any>('');
   const handleMode = (event : any, newMode : string) => {
     setMode(newMode);
   };
+
+  chrome.storage.sync.get(['mode'], (result) => {
+    if (result.mode) {
+      setThemeColors(getThemeColors(result.mode));
+    }
+  });
 
   const route = `/get_shout_trees?host=${url?.host}&pathname=${encodeURIComponent(url?.pathname)}&search=${encodeURIComponent(url?.search)}&sort=${sort}`;
   const { data, status, refetch } = useQuery<GetShoutTreesQuery, string>(
@@ -117,14 +125,14 @@ const Public = ({
             onChange={handleMode}
             aria-label="public mode"
             fullWidth
-            style={{ height: '25px' }}
+            sx={{ height: '25px', backgroundColor: themeColor.toggleButton }}
           >
-            <ToggleButton value="discussion" aria-label="discussion">
+            <ToggleButton value="discussion" aria-label="discussion" sx={{ '&:hover': { backgroundColor: themeColor.toggleButtonHover } }}>
               Discussion (
               {data?.Website.ShoutCount}
               )
             </ToggleButton>
-            <ToggleButton value="chat" aria-label="chat">
+            <ToggleButton value="chat" aria-label="chat" sx={{ '&:hover': { backgroundColor: themeColor.toggleButtonHover } }}>
               Live Chat
               (
               {data?.Website.LiveCount}

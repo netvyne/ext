@@ -11,6 +11,7 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useMutation, useQuery } from 'react-query';
 import { Shout, User, Website } from '../../../types/common/types';
+import { getThemeColors } from '../../utils';
 import HCaptcha from '../common/hcaptcha';
 import DeleteShout from './DeleteShout';
 import ShoutVoteButtons from './ShoutVoteButtons';
@@ -48,6 +49,13 @@ const ShoutTree = ({
   const [captchaToken, setCaptchaToken] = React.useState('');
   const captchaRef = React.createRef<HCaptcha>();
   const [shoutDeleted, setShoutDeleted] = React.useState(false);
+  const [themeColor, setThemeColors] = React.useState<any>('');
+
+  chrome.storage.sync.get(['mode'], (result) => {
+    if (result.mode) {
+      setThemeColors(getThemeColors(result.mode));
+    }
+  });
 
   function toggleUserKarmaOpen() {
     setUserKarmaOpen(!userKarmaOpen);
@@ -184,7 +192,7 @@ const ShoutTree = ({
     // Content is just children directly without a parent comment
     content = innerContent;
   } else {
-    const color = root.Level % 2 === 0 ? '#eceff1' : '#fafafa';
+    const color = root.Level % 2 === 0 ? themeColor.commentParent : themeColor.commentChild;
     content = (
       <Grid
         item
@@ -198,6 +206,7 @@ const ShoutTree = ({
         borderRadius="borderRadius"
         direction="column"
         style={{ margin: '0px', marginBottom: '5px' }}
+        color={themeColor.commentText}
       >
         <Grid item container direction="row" wrap="nowrap">
           {/* @ts-ignore */}
