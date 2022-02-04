@@ -11,12 +11,15 @@ interface Props {
   refetch: any;
   mode: string;
   setMode: any;
+  themeColors: any;
 }
 interface GetUserNotifsQuery {
   Notifications: Notification[];
   ContainsUnread: boolean;
 }
-const Notifications = ({ refetch, mode, setMode } : Props) => {
+const Notifications = ({
+  refetch, mode, setMode, themeColors
+} : Props) => {
 // export const Notifications : FunctionComponent = ({ refetch }: Props) => {
   const [allNotifications, setAllNotifications] = React.useState<any>([]);
 
@@ -55,14 +58,12 @@ const Notifications = ({ refetch, mode, setMode } : Props) => {
     notifications = <div>Loading</div>;
   } else {
     notifications = allNotifications.map((notification : any) => (
-      <NotificationBox notification={notification} refetch={refetch} />
+      <NotificationBox notification={notification} refetch={refetch} themeColors={themeColors} />
     ));
   }
 
   function changeMode(extMode: string) {
-    chrome.storage.sync.set({
-      mode: extMode,
-    });
+    localStorage.setItem('mode', extMode);
     setMode(extMode);
   }
 
@@ -107,7 +108,7 @@ const Notifications = ({ refetch, mode, setMode } : Props) => {
       </Box>
 
       {allNotifications.length > 0 && (
-      <Box width="100%" justifyContent="center" display="flex" flexDirection="column" alignItems="center">
+      <Box width="100%" justifyContent="center" display="flex" flexDirection="column" alignItems="center" mt={1}>
         <Button
           type="button"
           variant="outlined"

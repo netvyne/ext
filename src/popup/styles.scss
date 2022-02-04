@@ -6,7 +6,11 @@
 }
 .mode-dark {
     background-color: #000000;
-    color: #ffffff;
+    color: #eeeeee;
+}
+
+.mode-dark .MuiButtonBase-root.MuiChip-root.MuiChip-filled {
+    background-color: #757575;
 }
 
 .popup-container .container{

@@ -12,12 +12,13 @@ interface Props {
   post: Post;
   initShowForm?: boolean;
   postRefetch: any;
+  themeColors: any;
 }
 interface GetTalkTreeQuery {
   Roots: Talk[];
 }
 const LeaveReply = ({
-  parent, post, initShowForm, postRefetch
+  parent, post, initShowForm, postRefetch, themeColors
 }: Props) => {
   const [comment, setComment] = React.useState('');
   const [showForm, setShowForm] = React.useState(initShowForm);
@@ -72,6 +73,7 @@ const LeaveReply = ({
         textareaProps={{
           placeholder: 'Leave a reply...',
         }}
+        style={{ backgroundColor: themeColors.divBackground }}
         height={100}
         value={comment}
         preview="edit"

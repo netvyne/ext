@@ -21,6 +21,7 @@ interface Props {
   sort: string;
   setSort: any;
   isTabUpdated: boolean;
+  themeColors: any;
 }
 
 interface GetShoutTreesQuery {
@@ -74,7 +75,7 @@ const discussionTheme = createTheme({
   }
 });
 const Discussion = ({
-  initCurrentUser, initURL, sort, setSort, isTabUpdated
+  initCurrentUser, initURL, sort, setSort, isTabUpdated, themeColors
 } : Props) => {
   // eslint-disable-next-line global-require
   const user : any = initCurrentUser;
@@ -140,6 +141,7 @@ const Discussion = ({
           website={data!.Website}
           treeRoot={treeRoot}
           defUser={user}
+          themeColors={themeColors}
         />
       ));
     }
@@ -153,6 +155,7 @@ const Discussion = ({
         showCaptcha={showCaptcha}
         captchaRef={captchaRef}
         setCaptchaToken={setCaptchaToken}
+        themeColors={themeColors}
       />
     );
   }
@@ -168,7 +171,7 @@ const Discussion = ({
         value={sort}
         label="Sort"
         onChange={(event : any) => setSort(event.target.value)}
-        style={{ height: '25px' }}
+        style={{ height: '25px', backgroundColor: themeColors.divBackground, color: themeColors.commentText }}
       >
         <MenuItem value="top">Top</MenuItem>
         <MenuItem value="best">Best</MenuItem>

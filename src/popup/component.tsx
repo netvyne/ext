@@ -4,7 +4,6 @@ import PublicIcon from '@mui/icons-material/Public';
 import {
   AppBar, Avatar, Badge, Box, Grid, PaletteMode, Tab, Tabs, Typography
 } from '@mui/material/';
-import { amber, deepOrange, grey } from '@mui/material/colors';
 import { createTheme, styled, ThemeProvider } from '@mui/material/styles';
 import Public from '@src/components/public/Public';
 import React, { FunctionComponent, useEffect, useState } from 'react';
@@ -15,7 +14,7 @@ import Notifications from '../components/notifications/Notifications';
 import Sharing from '../components/sharing/Sharing';
 import { queryClient } from '../query';
 import {
-  formatImageURL, isValidURL, setBadge
+  formatImageURL, getThemeColors, isValidURL, setBadge
 } from '../utils';
 import './styles.scss';
 
@@ -66,58 +65,30 @@ export const Popup: FunctionComponent = () => {
   // eslint-disable-next-line no-unused-vars
   const [isTabActive, setIsTabActive] = useState<any>(false);
   const [isTabUpdated, setIsTabUpdated] = useState(false);
-  const [mode, setMode] = useState<PaletteMode>('dark');
+  const [mode, setMode] = useState<PaletteMode>('light');
+  const [themeColors, setThemeColors] = React.useState<any>('');
   const intervalMs = 5000;
 
   const getDesignTokens = (extMode: PaletteMode) => ({
     palette: {
-      mode: extMode,
-      ...(extMode === 'light'
-        ? {
-          // palette values for light mode
-          primary: grey,
-          divider: amber[200],
-          background: {
-            default: deepOrange[700],
-            paper: deepOrange[700],
-          },
-          text: {
-            primary: grey[900],
-            secondary: grey[800],
-          }
-        }
-        : {
-          // palette values for dark mode
-          primary: grey,
-          divider: grey[50],
-          background: {
-            default: grey[900],
-            paper: grey[900],
-          },
-          text: {
-            primary: '#fff',
-            secondary: grey[500],
-          }
-        }),
+      mode: extMode
     },
   });
-
-  // chrome.storage.sync.get(['mode'], (result) => {
-  //   if (!result.mode) {
-  //     chrome.storage.sync.set(
-  //       {
-  //         mode: 'dark',
-  //       }
-  //     );
-  //   } else {
-  //     setMode(result.mode);
-  //   }
-  // });
 
   const theme = React.useMemo(() => createTheme(getDesignTokens(mode)), [mode]);
 
   // Sends the `popupMounted` event
   React.useEffect(() => {
+    setThemeColors(getThemeColors(mode));
+  }, [mode]);
+
+  React.useEffect(() => {
+    const preferredMode = localStorage.getItem('mode');
+    if (preferredMode === 'light' || preferredMode === 'dark') {
+      setMode(preferredMode);
+    } else {
+      setMode('light');
+    }
     chrome.runtime.onMessage.addListener((msg) => {
       if (msg === 'toggle') {
         chrome.storage.sync.get(['isExtClosed'], (result) => {
@@ -162,6 +133,7 @@ export const Popup: FunctionComponent = () => {
         );
       } else {
         setAutoFetch(true);
+        setIsTabActive(true);
       }
     });
   }, []);
@@ -254,9 +226,9 @@ export const Popup: FunctionComponent = () => {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
         <Root className={classes.root}>
-          <div className={`popup-container mode-${mode}`}>
+          <div className={`popup-container mode-${mode}`} style={{ height: `${window.innerHeight}px` }}>
             <div className="container mx-1 my-1">
-              <AppBar position="fixed" sx={{ top: '0px' }} elevation={1}>
+              <AppBar position="fixed" sx={{ top: '0px', backgroundColor: themeColors.divBackground }} elevation={1}>
                 <Grid className="topbar">
                   <Tabs
                     className="tabs"
@@ -312,13 +284,13 @@ export const Popup: FunctionComponent = () => {
               </AppBar>
               <Box sx={{ marginTop: '60px', padding: '8px', paddingTop: '0px' }}>
                 <TabPanel value={value} index={0}>
-                  <Public initCurrentUser={user} isTabActive={isTabActive} url={url} isTabUpdated={isTabUpdated} />
+                  <Public initCurrentUser={user} isTabActive={isTabActive} url={url} isTabUpdated={isTabUpdated} themeColors={themeColors} />
                 </TabPanel>
                 <TabPanel style={{ paddingTop: '8px' }} value={value} index={1}>
-                  <Sharing defUser={user} url={url} />
+                  <Sharing defUser={user} url={url} themeColors={themeColors} />
                 </TabPanel>
                 <TabPanel style={{ paddingTop: '8px' }} value={value} index={2}>
-                  <Notifications refetch={refetch} mode={mode} setMode={setMode} />
+                  <Notifications refetch={refetch} mode={mode} setMode={setMode} themeColors={themeColors} />
                 </TabPanel>
               </Box>
             </div>

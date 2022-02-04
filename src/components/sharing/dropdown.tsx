@@ -14,10 +14,11 @@ interface Props {
   setFriendHandles?: any;
   convMembers?: ConversationMember[];
   mode: string;
+  themeColors: any;
 }
 
 export default function Dropdown({
-  dropdownRefetch, mode, setFriendHandles, setConversationID, convMembers, disabled
+  dropdownRefetch, mode, setFriendHandles, setConversationID, convMembers, disabled, themeColors
 }: Props) {
   const { isLoading, isSuccess, data } = useQuery<any>('/get_conversation_list', { enabled: mode === 'conv' });
   const friendQuery = useQuery<GetFriendQuery>('/get_user_friends', { enabled: mode === 'friends' });
@@ -41,7 +42,7 @@ export default function Dropdown({
         key={dropdownRefetch}
         onChange={changed}
         id="tags-standard"
-        style={{ width: 'auto' }}
+        style={{ width: 'auto', backgroundColor: themeColors.divBackground, borderRadius: '5px' }}
         options={isLoading ? friendsPlaceholder : conversations}
         disablePortal
         loading={isLoading}
@@ -61,7 +62,10 @@ export default function Dropdown({
                   ) : null}
                   {params.InputProps.endAdornment}
                 </>
-              ),
+              )
+            }}
+            InputLabelProps={{
+              style: { color: themeColors.commentText }
             }}
           />
         )}
@@ -90,8 +94,8 @@ export default function Dropdown({
       key={dropdownRefetch}
       multiple
       onChange={changed}
+      style={{ width: 'auto', backgroundColor: themeColors.divBackground, borderRadius: '5px' }}
       id="tags-standard"
-      style={{ width: 'auto' }}
       options={friendQuery.status === 'loading' ? friendsPlaceholder : friends}
       disablePortal
       loading={friendQuery.status === 'loading'}
@@ -111,7 +115,10 @@ export default function Dropdown({
                 ) : null}
                 {params.InputProps.endAdornment}
               </>
-            ),
+            )
+          }}
+          InputLabelProps={{
+            style: { color: themeColors.commentText }
           }}
         />
       )}

@@ -22,6 +22,7 @@ interface Props {
   defUser: User;
   setShowTalkTree: any;
   postRefetch: any;
+  themeColors: any;
 }
 
 interface GetTalkTreeQuery {
@@ -39,7 +40,7 @@ const theme = createTheme({
 });
 
 export default function PostShare({
-  post, defUser, setShowTalkTree, postRefetch
+  post, defUser, setShowTalkTree, postRefetch, themeColors
 }: Props) {
   const [openShareMore, setOpenShareMore] = React.useState(false);
   const [dropdownRefetch, setDropdownRefetch] = React.useState(Date());
@@ -59,23 +60,11 @@ export default function PostShare({
     {
       onSuccess: (data: GetTalkTreeQuery) => {
         setTrees(data.Roots.map((treeRoot : any) => (
-          <TalkTree key={treeRoot.ID} treeRoot={treeRoot} post={post} defUser={defUser} setShowTalkTree={setShowTalkTree} postRefetch={refetch} />
+          <TalkTree key={treeRoot.ID} treeRoot={treeRoot} post={post} defUser={defUser} setShowTalkTree={setShowTalkTree} postRefetch={refetch} themeColors={themeColors} />
         )));
       }
     }
   );
-  // if (status === 'error') {
-  //   trees = <div>Error</div>;
-  // } else if (status === 'loading') {
-  //   trees = <div>Loading</div>;
-  // } else if (status === 'idle') {
-  //   trees = <div />;
-  // } else {
-  //   trees = '';
-  //   trees = data!.Roots.map((treeRoot) => (
-  //     <TalkTree key={treeRoot.ID} treeRoot={treeRoot} post={post} defUser={defUser} setShowTalkTree={setShowTalkTree} postRefetch={refetch} />
-  //   ));
-  // }
   const shareMoreMutation = useMutation({});
   const shareMore = async (event: any) => {
     event.preventDefault();
@@ -131,7 +120,6 @@ export default function PostShare({
         component={Box}
         boxShadow={3}
         direction="column"
-        m={1}
         p={1}
         borderRadius="borderRadius"
         wrap="nowrap"
@@ -164,8 +152,8 @@ export default function PostShare({
           )}
         </Grid>
 
-        <Grid container component={Box}>
-          <FeedItem initWebsite={post.Website} initPost={post} defUser={defUser} />
+        <Grid container component={Box} sx={{ backgroundColor: themeColors.commentParent }}>
+          <FeedItem initWebsite={post.Website} initPost={post} defUser={defUser} themeColors={themeColors} />
         </Grid>
         <Grid item component={Box}>
           <Box component="span">
@@ -188,7 +176,7 @@ export default function PostShare({
           </Box>
         </Grid>
         {trees}
-        <LeaveReply post={post} initShowForm postRefetch={refetch} />
+        <LeaveReply post={post} initShowForm postRefetch={refetch} themeColors={themeColors} />
       </Grid>
       <Dialog
         maxWidth="sm"
@@ -200,7 +188,7 @@ export default function PostShare({
           Share This Post with More Friends
         </DialogTitle>
         <DialogContent style={{ height: '75px' }}>
-          <Dropdown dropdownRefetch={dropdownRefetch} setFriendHandles={setFriendHandles} mode="friends" />
+          <Dropdown dropdownRefetch={dropdownRefetch} setFriendHandles={setFriendHandles} mode="friends" themeColors={themeColors} />
         </DialogContent>
         <DialogActions>
           <Button onClick={toggleShareMore} color="primary">

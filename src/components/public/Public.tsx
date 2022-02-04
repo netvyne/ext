@@ -9,7 +9,6 @@ import { useQuery } from 'react-query';
 import {
   Shout, User, Website
 } from '../../../types/common/types';
-import { getThemeColors } from '../../utils';
 import ActionContainer from './ActionContainer';
 import Chat from './Chat';
 import Discussion from './Discussion';
@@ -21,6 +20,7 @@ interface Props {
   isTabActive: boolean;
   url: any;
   isTabUpdated: boolean;
+  themeColors: any;
 }
 
 interface GetShoutTreesQuery {
@@ -55,36 +55,18 @@ const discussionTheme = createTheme({
           },
         },
       },
-    },
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          color: '#3f51b5',
-        },
-        outlinedPrimary: {
-          color: '#3f51b5',
-          border: 'solid 1px #3f51b5',
-        }
-      },
     }
   }
 });
 const Public = ({
-  initCurrentUser, isTabActive, url, isTabUpdated
+  initCurrentUser, isTabActive, url, isTabUpdated, themeColors
 } : Props) => {
   const user : any = initCurrentUser;
   const [mode, setMode] = React.useState('discussion');
   const [sort, setSort] = React.useState('best');
-  const [themeColor, setThemeColors] = React.useState<any>('');
   const handleMode = (event : any, newMode : string) => {
     setMode(newMode);
   };
-
-  chrome.storage.sync.get(['mode'], (result) => {
-    if (result.mode) {
-      setThemeColors(getThemeColors(result.mode));
-    }
-  });
 
   const route = `/get_shout_trees?host=${url?.host}&pathname=${encodeURIComponent(url?.pathname)}&search=${encodeURIComponent(url?.search)}&sort=${sort}`;
   const { data, status, refetch } = useQuery<GetShoutTreesQuery, string>(
@@ -125,14 +107,14 @@ const Public = ({
             onChange={handleMode}
             aria-label="public mode"
             fullWidth
-            sx={{ height: '25px', backgroundColor: themeColor.toggleButton }}
+            sx={{ height: '25px', backgroundColor: themeColors.toggleButton }}
           >
-            <ToggleButton value="discussion" aria-label="discussion" sx={{ '&:hover': { backgroundColor: themeColor.toggleButtonHover } }}>
+            <ToggleButton value="discussion" aria-label="discussion" sx={{ '&:hover': { backgroundColor: themeColors.toggleButtonHover } }}>
               Discussion (
               {data?.Website.ShoutCount}
               )
             </ToggleButton>
-            <ToggleButton value="chat" aria-label="chat" sx={{ '&:hover': { backgroundColor: themeColor.toggleButtonHover } }}>
+            <ToggleButton value="chat" aria-label="chat" sx={{ '&:hover': { backgroundColor: themeColors.toggleButtonHover } }}>
               Live Chat
               (
               {data?.Website.LiveCount}
@@ -149,6 +131,7 @@ const Public = ({
                 sort={sort}
                 setSort={setSort}
                 isTabUpdated={isTabUpdated}
+                themeColors={themeColors}
               />
             )
             : <Chat />}

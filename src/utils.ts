@@ -102,18 +102,24 @@ export function setBadge(data: any) {
 export function getThemeColors(theme: string) {
   const themes: any = {
     dark: {
-      commentParent: '#bdbdbd',
-      commentChild: '#9e9e9e',
-      commentText: '#000000',
+      commentParent: '#424242',
+      commentChild: '#616161',
+      commentText: '#eeeeee',
       toggleButton: '#ffffff',
-      toggleButtonHover: 'rgba(255, 255, 255, 0.08)'
+      toggleButtonHover: 'rgba(255, 255, 255, 0.08)',
+      iconsButtonsColor: '#ffffff',
+      iconsButtonsColorHover: '#bdbdbd',
+      divBackground: '#424242'
     },
     light: {
       commentParent: '#eceff1',
       commentChild: '#fafafa',
       commentText: '#000000',
-      toggleButton: 'rgba(0, 0, 0, 0.54)',
-      toggleButtonHover: 'rgba(0, 0, 0, 0.04)'
+      toggleButton: '#eceff1',
+      toggleButtonHover: '#fafafa',
+      iconsButtonsColor: '#000000',
+      iconsButtonsColorHover: '#bdbdbd',
+      divBackground: '#eceff1'
     }
   };
   return themes[theme];

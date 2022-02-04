@@ -11,7 +11,6 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useMutation, useQuery } from 'react-query';
 import { Shout, User, Website } from '../../../types/common/types';
-import { getThemeColors } from '../../utils';
 import HCaptcha from '../common/hcaptcha';
 import DeleteShout from './DeleteShout';
 import ShoutVoteButtons from './ShoutVoteButtons';
@@ -22,6 +21,7 @@ interface Props {
   website: Website;
   treeRoot: Shout;
   defUser: User;
+  themeColors: any;
 }
 
 interface GetShoutTreesQuery {
@@ -34,7 +34,7 @@ interface SuccessResponse {
 }
 
 const ShoutTree = ({
-  treeRoot, website, defUser
+  treeRoot, website, defUser, themeColors
 }: Props) => {
   const [user] = React.useState<User>(defUser);
   const [root, setRoot] = React.useState<Shout>(treeRoot);
@@ -49,13 +49,6 @@ const ShoutTree = ({
   const [captchaToken, setCaptchaToken] = React.useState('');
   const captchaRef = React.createRef<HCaptcha>();
   const [shoutDeleted, setShoutDeleted] = React.useState(false);
-  const [themeColor, setThemeColors] = React.useState<any>('');
-
-  chrome.storage.sync.get(['mode'], (result) => {
-    if (result.mode) {
-      setThemeColors(getThemeColors(result.mode));
-    }
-  });
 
   function toggleUserKarmaOpen() {
     setUserKarmaOpen(!userKarmaOpen);
@@ -175,6 +168,7 @@ const ShoutTree = ({
           website={website}
           treeRoot={shout}
           defUser={user}
+          themeColors={themeColors}
         />
       ))}
       {(root.MoreReplies && root.MoreReplies.length > 0)
@@ -192,7 +186,7 @@ const ShoutTree = ({
     // Content is just children directly without a parent comment
     content = innerContent;
   } else {
-    const color = root.Level % 2 === 0 ? themeColor.commentParent : themeColor.commentChild;
+    const color = root.Level % 2 === 0 ? themeColors.commentParent : themeColors.commentChild;
     content = (
       <Grid
         item
@@ -206,7 +200,7 @@ const ShoutTree = ({
         borderRadius="borderRadius"
         direction="column"
         style={{ margin: '0px', marginBottom: '5px' }}
-        color={themeColor.commentText}
+        color={themeColors.commentText}
       >
         <Grid item container direction="row" wrap="nowrap">
           {/* @ts-ignore */}
