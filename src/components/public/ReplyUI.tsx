@@ -18,11 +18,12 @@ interface Props {
     showCaptcha: any;
     captchaRef: any;
     setCaptchaToken: any;
+    themeColors: any;
   }
 
 const ReplyUI = ({
   postComment, setComment, comment, showForm, setShowForm, showCaptcha,
-  captchaRef, setCaptchaToken
+  captchaRef, setCaptchaToken, themeColors
 }: Props) => {
   const commentForm = (
     <form onSubmit={postComment}>
@@ -33,6 +34,7 @@ const ReplyUI = ({
         height={100}
         value={comment}
         preview="edit"
+        style={{ backgroundColor: themeColors.divBackground }}
         onChange={(value: string | undefined) => value !== undefined && setComment(value)}
       />
       <Box my={1}>
@@ -69,7 +71,7 @@ const ReplyUI = ({
       <ReplyIcon />
     </Button>
   );
-  return <Box bgcolor="white">{content}</Box>;
+  return <Box>{content}</Box>;
 };
 
 export default ReplyUI;

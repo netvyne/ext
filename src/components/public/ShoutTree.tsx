@@ -21,6 +21,7 @@ interface Props {
   website: Website;
   treeRoot: Shout;
   defUser: User;
+  themeColors: any;
 }
 
 interface GetShoutTreesQuery {
@@ -33,7 +34,7 @@ interface SuccessResponse {
 }
 
 const ShoutTree = ({
-  treeRoot, website, defUser
+  treeRoot, website, defUser, themeColors
 }: Props) => {
   const [user] = React.useState<User>(defUser);
   const [root, setRoot] = React.useState<Shout>(treeRoot);
@@ -167,6 +168,7 @@ const ShoutTree = ({
           website={website}
           treeRoot={shout}
           defUser={user}
+          themeColors={themeColors}
         />
       ))}
       {(root.MoreReplies && root.MoreReplies.length > 0)
@@ -184,7 +186,7 @@ const ShoutTree = ({
     // Content is just children directly without a parent comment
     content = innerContent;
   } else {
-    const color = root.Level % 2 === 0 ? '#eceff1' : '#fafafa';
+    const color = root.Level % 2 === 0 ? themeColors.commentParent : themeColors.commentChild;
     content = (
       <Grid
         item
@@ -198,6 +200,7 @@ const ShoutTree = ({
         borderRadius="borderRadius"
         direction="column"
         style={{ margin: '0px', marginBottom: '5px' }}
+        color={themeColors.commentText}
       >
         <Grid item container direction="row" wrap="nowrap">
           {/* @ts-ignore */}

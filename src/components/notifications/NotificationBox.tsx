@@ -13,9 +13,10 @@ import './styles.scss';
 interface Props {
   notification: Notification;
   refetch: any;
+  themeColors: any;
 }
 
-const NotificationBox = ({ notification, refetch } : Props) => {
+const NotificationBox = ({ notification, refetch, themeColors } : Props) => {
   const updateNotifMutation = useMutation({});
   const handleClickedNotif = async (event: any, notif: number, markAll: boolean) => {
     event.preventDefault();
@@ -48,11 +49,12 @@ const NotificationBox = ({ notification, refetch } : Props) => {
 
   const notif = (
     <Box
-      color="text.primary"
+      color={themeColors.commentText}
       border={0}
       m={1}
       padding={1}
       className="notificationBox"
+      bgcolor={themeColors.divBackground}
       width="100%"
       onClick={() => {
         notificationLink(notification.Link);

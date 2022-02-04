@@ -14,6 +14,7 @@ interface Props {
   parent?: Shout;
   website: Website
   setChildren: React.Dispatch<React.SetStateAction<Shout[]>>;
+  themeColors: any;
 }
 
 interface SuccessResponse {
@@ -21,7 +22,7 @@ interface SuccessResponse {
 }
 
 const LeaveReply = ({
-  parent, website, setChildren
+  parent, website, setChildren, themeColors
 }: Props) => {
   const [comment, setComment] = React.useState('');
   const [showForm, setShowForm] = React.useState(false);
@@ -65,6 +66,7 @@ const LeaveReply = ({
         height={100}
         value={comment}
         preview="edit"
+        style={{ backgroundColor: themeColors.divBackground }}
         onChange={(value: string | undefined) => value !== undefined && setComment(value)}
       />
       <Button
