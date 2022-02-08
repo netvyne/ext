@@ -13,7 +13,7 @@ jobs:
         uses: actions/checkout@master
       - name: Generate Commit Message
         run: echo CM=$(git rev-parse --short "$GITHUB_SHA") >> $GITHUB_ENV
-      - name: Copy
+      - name: Copy to netvyne/netvyne
         uses: andstor/copycat-action@v3
         with:
           personal_token: ${{ secrets.NETVYNE_ADMIN_GITHUB_PAT }}

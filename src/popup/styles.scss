@@ -4,6 +4,14 @@
     min-height: 700px; 
     display: flex;
 }
+.mode-dark {
+    background-color: #000000;
+    color: #eeeeee;
+}
+
+.mode-dark .MuiButtonBase-root.MuiChip-root.MuiChip-filled {
+    background-color: #757575;
+}
 
 .popup-container .container{
     padding-left: 0px;

@@ -17,10 +17,11 @@ interface Props {
   defUser: User;
   setShowTalkTree: any;
   postRefetch: any;
+  themeColors: any;
 }
 
 const TalkTree = ({
-  treeRoot, post, defUser, setShowTalkTree, postRefetch
+  treeRoot, post, defUser, setShowTalkTree, postRefetch, themeColors
 }: Props) => {
   let focus = -1;
   if (window.location.search.includes('tfocus')) {
@@ -28,10 +29,10 @@ const TalkTree = ({
     focus = parseInt(urlParams.get('tfocus') as string, 10);
   }
   const children = treeRoot.Children.map((talk: Talk) => (
-    <TalkTree treeRoot={talk} key={talk.ID} post={post} defUser={defUser} setShowTalkTree={setShowTalkTree} postRefetch={postRefetch} />
+    <TalkTree treeRoot={talk} key={talk.ID} post={post} defUser={defUser} setShowTalkTree={setShowTalkTree} postRefetch={postRefetch} themeColors={themeColors} />
   ));
 
-  const color = treeRoot.Level % 2 === 0 ? '#eceff1' : '#fafafa';
+  const color = treeRoot.Level % 2 === 0 ? themeColors.commentParent : themeColors.commentChild;
   const content = (
     <Grid
       container
@@ -43,6 +44,7 @@ const TalkTree = ({
       borderRadius="borderRadius"
       direction="column"
       style={{ marginBottom: '5px' }}
+      color={themeColors.commentText}
     >
       <Grid
         container
@@ -120,7 +122,7 @@ const TalkTree = ({
                   />
                 )}
               </Grid>
-              <LeaveReply parent={treeRoot} post={post} postRefetch={postRefetch} />
+              <LeaveReply parent={treeRoot} post={post} postRefetch={postRefetch} themeColors={themeColors} />
             </Grid>
           </Grid>
         </Grid>

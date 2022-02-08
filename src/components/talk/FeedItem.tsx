@@ -25,10 +25,11 @@ interface Props {
   // eslint-disable-next-line react/require-default-props
   initPost?: Post;
   defUser: User;
+  themeColors: any;
 }
 
 export default function FeedItem({
-  initWebsite, reg, initPost, defUser
+  initWebsite, reg, initPost, defUser, themeColors
 }: Props) {
   const [user] = React.useState<User>(defUser);
   const queryClient = useQueryClient();
@@ -74,25 +75,16 @@ export default function FeedItem({
     }
     return false;
   }
-
-  let focus = -1;
-  if (window.location.search.includes('pfocus')) {
-    const urlParams = new URLSearchParams(window.location.search);
-    focus = parseInt(urlParams.get('pfocus') as string, 10);
-  }
   const hidden = (
     <Grid
       container
       component={Box}
-      bgcolor={initPost?.ID === focus
-        ? '#f5f77b'
-        : '#ffffff'}
+      bgcolor={themeColors.commentParent}
       direction="column"
-      boxShadow={3}
-      m={1}
       p={1}
       borderRadius="borderRadius"
       wrap="nowrap"
+      color={themeColors.commentText}
     >
       <Typography variant="h6" color="primary">This Feed Item contains possibly sensitive material.</Typography>
       <Typography variant="subtitle2">Please take caution before viewing. </Typography>
@@ -103,15 +95,12 @@ export default function FeedItem({
     <Grid
       container
       component={Box}
-      bgcolor={initPost?.ID === focus
-        ? '#f5f77b'
-        : '#ffffff'}
+      bgcolor={themeColors.commentParent}
       direction="column"
-      boxShadow={1}
-      m={1}
       p={1}
       borderRadius="borderRadius"
       wrap="nowrap"
+      color={themeColors.commentText}
     >
       <Grid item>
         <Grid container direction="row" alignItems="flex-start" spacing={2}>
@@ -132,7 +121,7 @@ export default function FeedItem({
                   <AccessTimeIcon style={{ fill: 'grey' }} fontSize="inherit" />
                 </Grid>
                 <Grid item component={Box} pl={0.5}>
-                  <Typography noWrap variant="caption" style={{ color: 'grey' }}>
+                  <Typography noWrap variant="caption">
                     {DateTime.fromISO(website.CreatedAt.toString(), { zone: 'utc' }).toRelative()}
                   </Typography>
                 </Grid>
@@ -184,7 +173,7 @@ export default function FeedItem({
             </Avatar>
           </Grid>
           <Grid item component={Box} xs={11}>
-            <a href={website.URL} target="_blank" rel="noreferrer" style={{ textDecoration: 'none', color: 'black' }}>
+            <a href={website.URL} target="_blank" rel="noreferrer" style={{ textDecoration: 'none', color: themeColors.commentText }}>
               <Grid container component={Box} pl={1} direction="column">
                 <Grid item component={Box} width="auto">
                   <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', width: 'auto' }}>

@@ -21,6 +21,7 @@ interface Props {
   isTabActive: boolean;
   url: any;
   isTabUpdated: boolean;
+  themeColors: any;
 }
 
 interface GetShoutTreesQuery {
@@ -55,22 +56,11 @@ const discussionTheme = createTheme({
           },
         },
       },
-    },
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          color: '#3f51b5',
-        },
-        outlinedPrimary: {
-          color: '#3f51b5',
-          border: 'solid 1px #3f51b5',
-        }
-      },
     }
   }
 });
 const Public = ({
-  initCurrentUser, isTabActive, url, isTabUpdated
+  initCurrentUser, isTabActive, url, isTabUpdated, themeColors
 } : Props) => {
   const user : any = initCurrentUser;
   const [mode, setMode] = React.useState('discussion');
@@ -119,14 +109,14 @@ const Public = ({
             onChange={handleMode}
             aria-label="public mode"
             fullWidth
-            style={{ height: '25px' }}
+            sx={{ height: '25px', backgroundColor: themeColors.toggleButton }}
           >
-            <ToggleButton value="discussion" aria-label="discussion">
+            <ToggleButton value="discussion" aria-label="discussion" sx={{ '&:hover': { backgroundColor: themeColors.toggleButtonHover } }}>
               Discussion (
               {data?.Website.ShoutCount}
               )
             </ToggleButton>
-            <ToggleButton value="chat" aria-label="chat">
+            <ToggleButton value="chat" aria-label="chat" sx={{ '&:hover': { backgroundColor: themeColors.toggleButtonHover } }}>
               Live Chat
               (
               {data?.Website.LiveCount}
@@ -143,6 +133,7 @@ const Public = ({
                 sort={sort}
                 setSort={setSort}
                 isTabUpdated={isTabUpdated}
+                themeColors={themeColors}
               />
             )
             : <Chat />}
