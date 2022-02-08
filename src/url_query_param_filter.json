@@ -1,0 +1,5 @@
+{
+    "www.youtube.com" : ["t", "feature"],
+    "www.netflix.com" : ["trackId"],
+    "news.ycombinator.com" : ["p"]
+}

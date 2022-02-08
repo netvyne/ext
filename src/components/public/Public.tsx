@@ -4,6 +4,7 @@ import {
   ToggleButton, ToggleButtonGroup
 } from '@mui/material';
 import { createTheme, styled, ThemeProvider } from '@mui/material/styles';
+import { sha256 } from 'js-sha256';
 import React from 'react';
 import { useQuery } from 'react-query';
 import {
@@ -78,7 +79,8 @@ const Public = ({
     setMode(newMode);
   };
 
-  const route = `/get_shout_trees?host=${url?.host}&pathname=${encodeURIComponent(url?.pathname)}&search=${encodeURIComponent(url?.search)}&sort=${sort}`;
+  const urlHash = sha256(`${url?.host}${url?.pathname}${url?.search}`);
+  const route = `/get_shout_trees?url_hash=${urlHash}&sort=${sort}`;
   const { data, status, refetch } = useQuery<GetShoutTreesQuery, string>(
     route, {
       enabled: isTabActive && isTabUpdated

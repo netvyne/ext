@@ -6,6 +6,7 @@ import {
 } from '@mui/material/';
 import { styled } from '@mui/material/styles';
 import Public from '@src/components/public/Public';
+import { sha256 } from 'js-sha256';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { QueryClientProvider, useQuery } from 'react-query';
 import { browser } from 'webextension-polyfill-ts';
@@ -116,7 +117,9 @@ export const Popup: FunctionComponent = () => {
     });
   }, []);
 
-  const route = `/get_user_notifications?host=${url.host}&pathname=${encodeURIComponent(url.pathname)}&search=${encodeURIComponent(url.search)}`;
+  const urlHash = sha256(`${url.host}${url.pathname}${url.search}`);
+
+  const route = `/get_user_notifications?url_hash=${urlHash}`;
 
   const { data, refetch } = useQuery<any, string>(route, { enabled: (isTabActive && autoFetch && !!user), refetchInterval: intervalMs });
 

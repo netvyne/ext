@@ -9,6 +9,7 @@ import {
 import { createTheme, styled, ThemeProvider } from '@mui/material/styles';
 import { Picker } from 'emoji-mart';
 import 'emoji-mart/css/emoji-mart.css';
+import { sha256 } from 'js-sha256';
 import React, {
   useEffect, useRef, useState
 } from 'react';
@@ -107,7 +108,8 @@ const Chat = () => {
   function createSocket(currentUrl : any) {
     const publicApiUrl : any = process.env.REACT_APP_PUBLIC_API;
     const socketUrl = publicApiUrl.replace('http', 'ws');
-    const socket = new WebSocket(`${socketUrl}/get_chat_socket?host=${currentUrl.host}&pathname=${encodeURIComponent(currentUrl.pathname)}&search=${encodeURIComponent(currentUrl.search)}`);
+    const urlHash = sha256(`${currentUrl.host}${currentUrl.pathname}${currentUrl.search}`);
+    const socket = new WebSocket(`${socketUrl}/get_chat_socket?url=${urlHash}`);
     console.log('Socket created', socket);
     if (!socket) {
       // const intervalID = setInterval(alert, 30000);
