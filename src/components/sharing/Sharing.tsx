@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import MDEditor from '@uiw/react-md-editor';
+import { sha256 } from 'js-sha256';
 import React, { useEffect } from 'react';
 import {
   useMutation, useQuery
@@ -118,8 +119,9 @@ const Sharing = ({ defUser, url, themeColors } : Props) => {
     }
   };
 
+  const urlHash = sha256(`${url.host}${url.pathname}${url.search}`);
   const { refetch, status } = useQuery<GetWebsitePostsQuery, string>(
-    `/get_website_posts?host=${url.host}&pathname=${url.pathname}&search=${encodeURIComponent(url.search)}`, {
+    `/get_website_posts?url_hash=${urlHash}`, {
       onSuccess: (postData) => {
         setFriendsPosts(postData.FriendsPosts);
         setConversationsPosts(postData.ConversationsPosts);

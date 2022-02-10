@@ -65,22 +65,6 @@ export function createDiv() {
       chrome.runtime.sendMessage({ screenshot: 'createDiv' }, (response) => {
         if (response.confirmation) {
           chrome.tabs.sendMessage(tabs[0].id, 'toggle');
-          // chrome.runtime.getURL('content-crop.js');
-          // chrome.scripting.executeScript(
-          //   {
-          //     target: { tabId: tabs[0].id },
-          //     files: ['script.js'],
-          //   }, () => {
-          //     if (chrome.runtime.lastError) {
-          //       console.log(`Script injection failed: ${chrome.runtime.lastError.message}`);
-          //     }
-          //   }
-          // );
-          // chrome.scripting.executeScript(tabs[0].id, { file: 'content-crop.js' }, () => {
-          //   if (chrome.runtime.lastError) {
-          //     console.log(`Script injection failed: ${chrome.runtime.lastError.message}`);
-          //   }
-          // });
         }
       });
     });
@@ -123,4 +107,34 @@ export function getThemeColors(theme: string) {
     }
   };
   return themes[theme];
+}
+
+export function cleanUrl(url: any, urlDomainMap : any, urlQueryParamFilter: any) {
+  const reqUrl = url;
+
+  reqUrl.search = reqUrl.search.replace('&amp;', '&');
+  reqUrl.search = reqUrl.search.replace('%&', '&');
+
+  const keys = Object.keys(urlDomainMap);
+  const paramKeys = Object.keys(urlQueryParamFilter);
+  if (keys.indexOf(reqUrl.host) > -1) {
+    reqUrl.host = urlDomainMap[reqUrl.host as keyof typeof urlDomainMap];
+  }
+
+  if (paramKeys.indexOf(reqUrl.host) > -1) {
+    reqUrl.search = reqUrl.search.replace('?', '');
+    let searchParamsArray: any = reqUrl.search.split('&');
+    const domainFilters = urlQueryParamFilter[reqUrl.host as keyof typeof urlQueryParamFilter];
+    searchParamsArray.forEach((sp : any, i: number) => {
+      if (domainFilters.indexOf(sp.split('=')[0]) > -1) {
+        searchParamsArray.splice(i, 1);
+      }
+    });
+    searchParamsArray = searchParamsArray.join('&');
+    if (searchParamsArray !== '') {
+      searchParamsArray = `?${searchParamsArray}`;
+    }
+    reqUrl.search = searchParamsArray;
+  }
+  return reqUrl;
 }

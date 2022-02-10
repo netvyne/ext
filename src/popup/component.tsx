@@ -6,6 +6,7 @@ import {
 } from '@mui/material/';
 import { createTheme, styled, ThemeProvider } from '@mui/material/styles';
 import Public from '@src/components/public/Public';
+import { sha256 } from 'js-sha256';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { QueryClientProvider, useQuery } from 'react-query';
 import { browser } from 'webextension-polyfill-ts';
@@ -13,8 +14,10 @@ import { User } from '../../types/common/types';
 import Notifications from '../components/notifications/Notifications';
 import Sharing from '../components/sharing/Sharing';
 import { queryClient } from '../query';
+import urlDomainMap from '../url_domain_map.json';
+import urlQueryParamFilter from '../url_query_param_filter.json';
 import {
-  formatImageURL, getThemeColors, isValidURL, setBadge
+  cleanUrl, formatImageURL, getThemeColors, isValidURL, setBadge
 } from '../utils';
 import './styles.scss';
 
@@ -138,7 +141,9 @@ export const Popup: FunctionComponent = () => {
     });
   }, []);
 
-  const route = `/get_user_notifications?host=${url.host}&pathname=${encodeURIComponent(url.pathname)}&search=${encodeURIComponent(url.search)}`;
+  const urlHash = sha256(`${url.host}${url.pathname}${url.search}`);
+
+  const route = `/get_user_notifications?url_hash=${urlHash}`;
 
   const { data, refetch } = useQuery<any, string>(route, { enabled: (isTabActive && autoFetch && !!user), refetchInterval: intervalMs });
 
@@ -174,13 +179,14 @@ export const Popup: FunctionComponent = () => {
             if (chrome.tabs) {
               chrome.tabs.query(queryInfo, (tabs) => {
                 const newUrl : any = isValidURL(request.url);
-                const formatedUrl = {
+                let formatedUrl = {
                   pathname: newUrl.pathname,
                   host: newUrl.host,
                   search: newUrl.search,
                   Title: tabs[0].title,
                   origin: newUrl.origin,
                 };
+                formatedUrl = cleanUrl(formatedUrl, urlDomainMap, urlQueryParamFilter);
                 setUrl(formatedUrl);
                 if (autoFetch) {
                   refetch();
@@ -198,12 +204,13 @@ export const Popup: FunctionComponent = () => {
       chrome.tabs.query(queryInfo, (tabs) => {
         const newUrl : any = isValidURL(tabs[0].url);
         // setIsTabActive(true);
-        const formatedUrl = {
+        let formatedUrl = {
           pathname: newUrl.pathname,
           host: newUrl.host,
           search: newUrl.search,
           Title: tabs[0].title,
         };
+        formatedUrl = cleanUrl(formatedUrl, urlDomainMap, urlQueryParamFilter);
         setUrl(formatedUrl);
       });
     }

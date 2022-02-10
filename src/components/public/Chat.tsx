@@ -9,12 +9,15 @@ import {
 import { createTheme, styled, ThemeProvider } from '@mui/material/styles';
 import { Picker } from 'emoji-mart';
 import 'emoji-mart/css/emoji-mart.css';
+import { sha256 } from 'js-sha256';
 import React, {
   useEffect, useRef, useState
 } from 'react';
 import { useMutation } from 'react-query';
 import { ChatMessage } from '../../../types/common/types';
-import { isValidURL } from '../../utils';
+// import urlDomainMap from '../../url_domain_map.json';
+// import urlQueryParamFilter from '../../url_query_param_filter.json';
+// import { cleanUrl, isValidURL } from '../../utils';
 import './styles.scss';
 
 const chatFormTheme = createTheme({
@@ -91,12 +94,16 @@ const Root = styled('div')(() => ({
   },
 }));
 
-const Chat = () => {
+interface Props {
+  initURL: any;
+}
+
+const Chat = ({ initURL } : Props) => {
   const [comment, setComment] = React.useState('');
   const [parentChat, setParentChat] = useState<ChatMessage | null>();
   const webSocket = useRef<WebSocket | null>(null);
   const [messages, setMessages] = React.useState<ChatMessage[]>([]);
-  const [url, setUrl] = useState<any>({});
+  // const [url, setUrl] = useState<any>({});
   const [show, setShow] = React.useState(false);
   const messagesEndRef: any = useRef(null);
 
@@ -104,16 +111,17 @@ const Chat = () => {
     messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
   };
 
-  function createSocket(currentUrl : any) {
+  function createSocket() {
     const publicApiUrl : any = process.env.REACT_APP_PUBLIC_API;
     const socketUrl = publicApiUrl.replace('http', 'ws');
-    const socket = new WebSocket(`${socketUrl}/get_chat_socket?host=${currentUrl.host}&pathname=${encodeURIComponent(currentUrl.pathname)}&search=${encodeURIComponent(currentUrl.search)}`);
+    const urlHash = sha256(`${initURL.host}${initURL.pathname}${initURL.search}`);
+    const socket = new WebSocket(`${socketUrl}/get_chat_socket?url_hash=${urlHash}`);
     console.log('Socket created', socket);
     if (!socket) {
       // const intervalID = setInterval(alert, 30000);
       // clearInterval(intervalID);
       setTimeout(() => {
-        createSocket(currentUrl);
+        createSocket();
       }, 30000);
     }
     webSocket.current = socket;
@@ -127,20 +135,22 @@ const Chat = () => {
 
   let parentChatTitle : any = '';
   useEffect(() => {
-    const queryInfo = { active: true };
-    if (chrome.tabs) {
-      chrome.tabs.query(queryInfo, (t) => {
-        const newUrl : any = isValidURL(t[0].url);
-        const formatedUrl = {
-          pathname: newUrl.pathname,
-          host: newUrl.host,
-          search: newUrl.search,
-          Title: t[0].title,
-        };
-        setUrl(formatedUrl);
-        createSocket(formatedUrl);
-      });
-    }
+    // const queryInfo = { active: true };
+    // if (chrome.tabs) {
+    //   chrome.tabs.query(queryInfo, (t) => {
+    //     const newUrl : any = isValidURL(t[0].url);
+    //     let formatedUrl = {
+    //       pathname: newUrl.pathname,
+    //       host: newUrl.host,
+    //       search: newUrl.search,
+    //       Title: t[0].title,
+    //     };
+    //     formatedUrl = cleanUrl(formatedUrl, urlDomainMap, urlQueryParamFilter);
+    //     setUrl(formatedUrl);
+    //     createSocket(formatedUrl);
+    //   });
+    // }
+    createSocket();
   }, []);
 
   useEffect(scrollToBottom, [messages]);
@@ -152,9 +162,9 @@ const Chat = () => {
       ParentChatID: parentChat?.ID,
       Comment: comment,
       URL: {
-        Host: url.host,
-        Pathname: url.pathname,
-        Search: url.search,
+        Host: initURL.host,
+        Pathname: initURL.pathname,
+        Search: initURL.search,
       },
     };
       // @ts-ignore

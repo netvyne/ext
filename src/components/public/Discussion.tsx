@@ -4,6 +4,7 @@ import {
 } from '@mui/material';
 import { createTheme, styled, ThemeProvider } from '@mui/material/styles';
 import { AxiosError } from 'axios';
+import { sha256 } from 'js-sha256';
 import React from 'react';
 import { useMutation, useQuery } from 'react-query';
 import {
@@ -86,7 +87,9 @@ const Discussion = ({
   const captchaRef = React.createRef<HCaptcha>();
   const [comment, setComment] = React.useState('');
   const treeHeight = window.innerHeight - 392;
-  const route = `/get_shout_trees?host=${initURL?.host}&pathname=${encodeURIComponent(initURL?.pathname)}&search=${encodeURIComponent(initURL?.search)}&sort=${sort}`;
+
+  const urlHash = sha256(`${initURL?.host}${initURL?.pathname}${initURL?.search}`);
+  const route = `/get_shout_trees?url_hash=${urlHash}&sort=${sort}`;
   const { data, status, refetch } = useQuery<GetShoutTreesQuery, string>(
     route, {
       enabled: isTabUpdated,
