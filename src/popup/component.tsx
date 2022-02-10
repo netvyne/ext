@@ -14,8 +14,10 @@ import { User } from '../../types/common/types';
 import Notifications from '../components/notifications/Notifications';
 import Sharing from '../components/sharing/Sharing';
 import { queryClient } from '../query';
+import urlDomainMap from '../url_domain_map.json';
+import urlQueryParamFilter from '../url_query_param_filter.json';
 import {
-  formatImageURL, getThemeColors, isValidURL, setBadge
+  cleanUrl, formatImageURL, getThemeColors, isValidURL, setBadge
 } from '../utils';
 import './styles.scss';
 
@@ -177,13 +179,14 @@ export const Popup: FunctionComponent = () => {
             if (chrome.tabs) {
               chrome.tabs.query(queryInfo, (tabs) => {
                 const newUrl : any = isValidURL(request.url);
-                const formatedUrl = {
+                let formatedUrl = {
                   pathname: newUrl.pathname,
                   host: newUrl.host,
                   search: newUrl.search,
                   Title: tabs[0].title,
                   origin: newUrl.origin,
                 };
+                formatedUrl = cleanUrl(formatedUrl, urlDomainMap, urlQueryParamFilter);
                 setUrl(formatedUrl);
                 if (autoFetch) {
                   refetch();
@@ -201,12 +204,13 @@ export const Popup: FunctionComponent = () => {
       chrome.tabs.query(queryInfo, (tabs) => {
         const newUrl : any = isValidURL(tabs[0].url);
         // setIsTabActive(true);
-        const formatedUrl = {
+        let formatedUrl = {
           pathname: newUrl.pathname,
           host: newUrl.host,
           search: newUrl.search,
           Title: tabs[0].title,
         };
+        formatedUrl = cleanUrl(formatedUrl, urlDomainMap, urlQueryParamFilter);
         setUrl(formatedUrl);
       });
     }

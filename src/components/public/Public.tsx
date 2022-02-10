@@ -136,7 +136,7 @@ const Public = ({
                 themeColors={themeColors}
               />
             )
-            : <Chat />}
+            : <Chat initURL={url} />}
         </Box>
       </ThemeProvider>
     </Root>
