@@ -1,5 +1,5 @@
 {
-    "www.youtube.com" : ["t", "feature", "list", "index"],
+    "www.youtube.com" : ["t", "feature", "list", "index","start_radio"],
     "www.netflix.com" : ["trackId"],
     "news.ycombinator.com" : ["p"]
 }
