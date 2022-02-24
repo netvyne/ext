@@ -19,18 +19,15 @@ interface Props {
     captchaRef: any;
     setCaptchaToken: any;
     themeColors: any;
+    showFullEditor: boolean;
   }
 
 const ReplyUI = ({
   postComment, setComment, comment, showForm, setShowForm, showCaptcha,
-  captchaRef, setCaptchaToken, themeColors
+  captchaRef, setCaptchaToken, themeColors, showFullEditor
 }: Props) => {
-  const [showFullEditor, setShowFullEditor] = React.useState(false);
   const commentForm = (
     <form onSubmit={postComment}>
-      <Button onClick={() => setShowFullEditor(!showFullEditor)}>
-        {showFullEditor ? 'Basic Editor' : 'Full Editor'}
-      </Button>
       {showFullEditor && (
         <MDEditor
           textareaProps={{
