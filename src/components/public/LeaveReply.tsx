@@ -77,7 +77,7 @@ const LeaveReply = ({
       >
         Cancel
       </Button>
-      <Button type="submit" size="small" color="primary" endIcon={<SendIcon />}>
+      <Button type="submit" size="small" color="primary" disabled={comment.trim().length === 0} endIcon={<SendIcon />}>
         {' '}
         Submit
         {' '}

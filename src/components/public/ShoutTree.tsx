@@ -2,7 +2,7 @@
 import ReplyIcon from '@mui/icons-material/Reply';
 import SendIcon from '@mui/icons-material/Send';
 import {
-  Alert, Box, Button, Grid, Snackbar, Typography
+  Alert, Box, Button, Grid, Snackbar, Tooltip, Typography
 } from '@mui/material';
 import MDEditor from '@uiw/react-md-editor';
 import { AxiosError } from 'axios';
@@ -207,7 +207,7 @@ const ShoutTree = ({
 
           <Grid item container component={Box} m={1}>
             <Grid item container component={Box} wrap="nowrap" spacing={1}>
-              <Grid item component={Box} onClick={toggleUserKarmaOpen}>
+              <Grid item component={Box} onClick={toggleUserKarmaOpen} sx={{ display: 'flex', alignItems: 'center' }}>
                 <Typography variant="body2" color={root.Author.UserName === user?.UserName ? 'primary' : 'textPrimary'}>
                   {root.Author.UserName}
                 </Typography>
@@ -217,10 +217,42 @@ const ShoutTree = ({
                   userName={root.Author.UserName}
                 />
               </Grid>
-              <Grid item component={Box}>
+              <Grid item component={Box} sx={{ display: 'flex', alignItems: 'center' }}>
                 {DateTime.fromISO(root.CreatedAt?.toString(), {
                   zone: 'utc',
                 }).toRelative()}
+              </Grid>
+              <Grid item component={Box} sx={{ display: 'flex', alignItems: 'center' }}>
+                {(root.LatestModerationAt)
+                  ? (
+                    <Tooltip title={`Last Reviewed: ${DateTime.fromISO(root.LatestModerationAt.toString(), {
+                      zone: 'utc',
+                    }).toRelative()}`}
+                    >
+                      <div
+                        className="dot"
+                        style={{
+                          height: '5px',
+                          width: '5px',
+                          backgroundColor: '#80e5ff',
+                          borderRadius: '50%'
+                        }}
+                      />
+                    </Tooltip>
+                  )
+                  : (
+                    <Tooltip title="Pending Review">
+                      <div
+                        className="dot"
+                        style={{
+                          height: '5px',
+                          width: '5px',
+                          backgroundColor: '#bbb',
+                          borderRadius: '50%'
+                        }}
+                      />
+                    </Tooltip>
+                  )}
               </Grid>
             </Grid>
 

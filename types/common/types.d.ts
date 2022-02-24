@@ -152,6 +152,9 @@ interface Shout {
     Bot?: boolean;
     Abuse?: boolean;
     Illegal?: boolean
+
+    LatestModerationAt: DateTime;
+    LatestModerationReasons: string;
   }
 
 // interface ShoutSave {
