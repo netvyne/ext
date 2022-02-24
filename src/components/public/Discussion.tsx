@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import {
-  Box, MenuItem, Select
+  Box, Button, MenuItem, Select
 } from '@mui/material';
 import { createTheme, styled, ThemeProvider } from '@mui/material/styles';
 import { AxiosError } from 'axios';
@@ -87,6 +87,7 @@ const Discussion = ({
   const captchaRef = React.createRef<HCaptcha>();
   const [comment, setComment] = React.useState('');
   const treeHeight = window.innerHeight - 392;
+  const [showFullEditor, setShowFullEditor] = React.useState(false);
 
   const urlHash = sha256(`${initURL?.host}${initURL?.pathname}${initURL?.search}`);
   const route = `/get_shout_trees?url_hash=${urlHash}&sort=${sort}`;
@@ -159,6 +160,7 @@ const Discussion = ({
         captchaRef={captchaRef}
         setCaptchaToken={setCaptchaToken}
         themeColors={themeColors}
+        showFullEditor={showFullEditor}
       />
     );
   }
@@ -166,21 +168,28 @@ const Discussion = ({
     <Box
       p={1}
       height="40px"
+      display="flex"
+      justifyContent="space-between"
     >
-      Sort:
-      {' '}
-      <Select
-        size="small"
-        value={sort}
-        label="Sort"
-        onChange={(event : any) => setSort(event.target.value)}
-        style={{ height: '25px', backgroundColor: themeColors.divBackground, color: themeColors.commentText }}
-      >
-        <MenuItem value="top">Top</MenuItem>
-        <MenuItem value="best">Best</MenuItem>
-        <MenuItem value="old">Old</MenuItem>
-        <MenuItem value="new">New</MenuItem>
-      </Select>
+      <Box>
+        Sort:
+        {' '}
+        <Select
+          size="small"
+          value={sort}
+          label="Sort"
+          onChange={(event : any) => setSort(event.target.value)}
+          style={{ height: '25px', backgroundColor: themeColors.divBackground, color: themeColors.commentText }}
+        >
+          <MenuItem value="top">Top</MenuItem>
+          <MenuItem value="best">Best</MenuItem>
+          <MenuItem value="old">Old</MenuItem>
+          <MenuItem value="new">New</MenuItem>
+        </Select>
+      </Box>
+      <Button onClick={() => setShowFullEditor(!showFullEditor)}>
+        {showFullEditor ? 'Basic Editor' : 'Full Editor'}
+      </Button>
     </Box>
   );
   return (
