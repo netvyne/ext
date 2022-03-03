@@ -1,7 +1,7 @@
+import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
-import NightlightOutlinedIcon from '@mui/icons-material/NightlightOutlined';
 import {
-  Box, Button, Typography
+  Box, Button
 } from '@mui/material';
 import React from 'react';
 import { useMutation, useQuery } from 'react-query';
@@ -63,7 +63,8 @@ const Notifications = ({
   }
 
   function changeMode(extMode: string) {
-    localStorage.setItem('mode', extMode);
+    chrome.storage.local.set({ mode: extMode });
+    // localStorage.setItem('mode', extMode);
     setMode(extMode);
   }
 
@@ -77,33 +78,36 @@ const Notifications = ({
   }
   return (
     <Box m={2}>
-      <Box>
-        <Typography>Mode</Typography>
-        <Box width="100%" justifyContent="center" display="flex" flexDirection="row" alignItems="center" sx={{ border: 'solid 1px', borderRadius: '5px' }}>
-          <Box
-            width="50%"
-            justifyContent="center"
-            display="flex"
-            flexDirection="row"
-            alignItems="center"
-            sx={{ borderRight: 'solid 1px', padding: '10px', backgroundColor: (mode === 'light') ? 'gray' : 'transparent' }}
-            onClick={() => changeMode('light')}
-          >
-            <LightModeIcon />
-            <Typography>Light</Typography>
+      <Box sx={{
+        display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center'
+      }}
+      >
+        <Box sx={{
+          backgroundColor: 'gray',
+          height: '40px',
+          width: '200px',
+          borderRadius: '20px',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginBottom: '10px',
+          cursor: 'pointer'
+        }}
+        >
+          {mode === 'light' && (
+          <Box onClick={() => { changeMode('dark'); console.log('clicked light'); }}>
+            Toggle Dark Mode
+            {/* <LightModeIcon /> */}
+            <DarkModeIcon sx={{ '&:hover': { color: 'white' } }} />
           </Box>
-          <Box
-            width="50%"
-            justifyContent="center"
-            display="flex"
-            flexDirection="row"
-            alignItems="center"
-            sx={{ padding: '10px', backgroundColor: (mode === 'dark') ? 'gray' : 'transparent' }}
-            onClick={() => changeMode('dark')}
-          >
-            <NightlightOutlinedIcon />
-            <Typography>Dark</Typography>
+          )}
+          {mode === 'dark' && (
+          <Box onClick={() => { changeMode('light'); console.log('clicked light'); }}>
+            Toggle Light Mode
+            {/* <LightModeIcon /> */}
+            <LightModeIcon sx={{ '&:hover': { color: 'yellow' } }} />
           </Box>
+          )}
         </Box>
       </Box>
 
