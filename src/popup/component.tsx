@@ -67,6 +67,7 @@ export const Popup: FunctionComponent = () => {
   const [url, setUrl] = useState<any>({});
   // eslint-disable-next-line no-unused-vars
   const [isTabActive, setIsTabActive] = useState<any>(false);
+  const [isExtClosed, setIsExtClosed] = useState<any>(true);
   const [isTabUpdated, setIsTabUpdated] = useState(false);
   const [mode, setMode] = useState<PaletteMode>('light');
   const [themeColors, setThemeColors] = React.useState<any>('');
@@ -86,12 +87,15 @@ export const Popup: FunctionComponent = () => {
   }, [mode]);
 
   React.useEffect(() => {
-    const preferredMode = localStorage.getItem('mode');
-    if (preferredMode === 'light' || preferredMode === 'dark') {
-      setMode(preferredMode);
-    } else {
-      setMode('light');
-    }
+    let preferredMode: string = '';
+    chrome.storage.local.get('mode', (result) => {
+      preferredMode = result.mode;
+      if (preferredMode === 'light' || preferredMode === 'dark') {
+        setMode(preferredMode);
+      } else {
+        setMode('light');
+      }
+    });
     chrome.runtime.onMessage.addListener((msg) => {
       if (msg === 'toggle') {
         chrome.storage.sync.get(['isExtClosed'], (result) => {
@@ -111,6 +115,7 @@ export const Popup: FunctionComponent = () => {
               }
             );
           } else {
+            setIsExtClosed(false);
             setIsTabUpdated(true);
             setAutoFetch(true);
             setIsTabActive(true);
@@ -268,7 +273,7 @@ export const Popup: FunctionComponent = () => {
                             <Avatar
                               style={{ width: 24, height: 24 }}
                               alt="Avatar"
-                              src={formatImageURL(user.AvatarPath)}
+                              src={!isExtClosed ? formatImageURL(user.AvatarPath) : ''}
                             />
                           )
                             : (

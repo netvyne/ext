@@ -49,6 +49,7 @@ const ReplyUI = ({
           label="Leave a reply..."
           placeholder="Leave a reply..."
           onInput={(e: any) => setComment(e.target.value)}
+          style={{ backgroundColor: themeColors.divBackground, color: themeColors.commentText }}
           value={comment}
         />
       )}
