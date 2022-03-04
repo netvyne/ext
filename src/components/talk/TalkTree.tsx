@@ -1,7 +1,9 @@
 /* eslint-disable max-len */
-import {
-  Avatar, Box, CssBaseline, Grid, Typography
-} from '@mui/material';
+import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
+import CssBaseline from '@mui/material/CssBaseline';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 import { DateTime } from 'luxon';
 import React from 'react';
 import ReactMarkdown from 'react-markdown';

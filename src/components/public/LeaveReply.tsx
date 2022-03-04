@@ -1,8 +1,7 @@
 import ReplyIcon from '@mui/icons-material/Reply';
 import SendIcon from '@mui/icons-material/Send';
-import {
-  Box, Button
-} from '@mui/material';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import MDEditor from '@uiw/react-md-editor';
 import { AxiosError } from 'axios';
 import React from 'react';

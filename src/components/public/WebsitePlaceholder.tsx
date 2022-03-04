@@ -5,7 +5,8 @@ import IosShare from '@mui/icons-material/IosShare';
 import PublicIcon from '@mui/icons-material/Public';
 import ReplyIcon from '@mui/icons-material/Reply';
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
-import { Box, Grid } from '@mui/material';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
 import Skeleton from '@mui/material/Skeleton';
 import * as React from 'react';
 

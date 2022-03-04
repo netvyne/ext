@@ -1,9 +1,7 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-unused-vars */
 import Autocomplete from '@mui/lab/Autocomplete';
-import {
-  TextField
-} from '@mui/material';
+import TextField from '@mui/material/TextField';
 import React from 'react';
 import { useQuery } from 'react-query';
 import { Label } from '../../../types/common/types';

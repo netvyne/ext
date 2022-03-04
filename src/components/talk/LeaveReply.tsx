@@ -1,7 +1,5 @@
 import SendIcon from '@mui/icons-material/Send';
-import {
-  Button
-} from '@mui/material';
+import Button from '@mui/material/Button';
 import MDEditor from '@uiw/react-md-editor';
 import React from 'react';
 import { useMutation, useQuery } from 'react-query';

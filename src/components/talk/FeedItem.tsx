@@ -5,9 +5,13 @@ import ImageIcon from '@mui/icons-material/Image';
 import LinkIcon from '@mui/icons-material/Link';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import PublicIcon from '@mui/icons-material/Public';
-import {
-  Avatar, Box, Button, Grid, Link, Tooltip, Typography
-} from '@mui/material';
+import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import Link from '@mui/material/Link';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 import { DateTime } from 'luxon';
 import React from 'react';
 import ReactPlayer from 'react-player';

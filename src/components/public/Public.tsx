@@ -1,9 +1,8 @@
 /* eslint-disable max-len */
-import {
-  Box,
-  ToggleButton, ToggleButtonGroup
-} from '@mui/material';
+import Box from '@mui/material/Box';
 import { createTheme, styled, ThemeProvider } from '@mui/material/styles';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { sha256 } from 'js-sha256';
 import React from 'react';
 import { useQuery } from 'react-query';

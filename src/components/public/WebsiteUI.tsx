@@ -3,9 +3,11 @@ import LinkIcon from '@mui/icons-material/Link';
 import PublicIcon from '@mui/icons-material/Public';
 import ReplyIcon from '@mui/icons-material/Reply';
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
-import {
-  Box, CssBaseline, Grid, Tooltip, Typography
-} from '@mui/material';
+import Box from '@mui/material/Box';
+import CssBaseline from '@mui/material/CssBaseline';
+import Grid from '@mui/material/Grid';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 import React from 'react';
 import { Url, Website } from '../../../types/common/types';
 
