@@ -1,8 +1,10 @@
 import SendIcon from '@mui/icons-material/Send';
-import {
-  Button, Dialog,
-  DialogContent, DialogContentText, DialogTitle, TextField
-} from '@mui/material';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import TextField from '@mui/material/TextField';
 import { AxiosError } from 'axios';
 import React from 'react';
 import { useMutation } from 'react-query';

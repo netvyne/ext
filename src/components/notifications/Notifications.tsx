@@ -1,8 +1,7 @@
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
-import {
-  Box, Button
-} from '@mui/material';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import React from 'react';
 import { useMutation, useQuery } from 'react-query';
 import NotificationBox from './NotificationBox';

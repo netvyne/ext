@@ -1,7 +1,10 @@
 import CancelIcon from '@mui/icons-material/Cancel';
 import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
-import { Button, IconButton } from '@mui/material';
-import { createTheme, styled, ThemeProvider } from '@mui/material/styles';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import createTheme from '@mui/material/styles/createTheme';
+import styled from '@mui/material/styles/styled';
+import ThemeProvider from '@mui/material/styles/ThemeProvider';
 import Tooltip from '@mui/material/Tooltip';
 import { Emoji, Picker } from 'emoji-mart';
 import 'emoji-mart/css/emoji-mart.css';

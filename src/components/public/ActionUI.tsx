@@ -4,10 +4,11 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import IosShareIcon from '@mui/icons-material/IosShare';
-import {
-  Box, CssBaseline,
-  Grid, IconButton, Tooltip
-} from '@mui/material';
+import Box from '@mui/material/Box';
+import CssBaseline from '@mui/material/CssBaseline';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 import React from 'react';
 import { Website } from '../../../types/common/types';
 import PublishWebsite from './PublishWebsite';

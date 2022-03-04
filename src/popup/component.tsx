@@ -1,10 +1,17 @@
 /* eslint-disable max-len */
 import HomeIcon from '@mui/icons-material/Home';
 import PublicIcon from '@mui/icons-material/Public';
-import {
-  AppBar, Avatar, Badge, Box, Grid, PaletteMode, Tab, Tabs, Typography
-} from '@mui/material/';
-import { createTheme, styled, ThemeProvider } from '@mui/material/styles';
+import Tabs from '@mui/material//Tabs';
+import AppBar from '@mui/material/AppBar';
+import Avatar from '@mui/material/Avatar';
+import Badge from '@mui/material/Badge';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import createTheme from '@mui/material/styles/createTheme';
+import styled from '@mui/material/styles/styled';
+import ThemeProvider from '@mui/material/styles/ThemeProvider';
+import Tab from '@mui/material/Tab';
+import Typography from '@mui/material/Typography';
 import Public from '@src/components/public/Public';
 import { sha256 } from 'js-sha256';
 import React, { FunctionComponent, useEffect, useState } from 'react';
@@ -69,11 +76,11 @@ export const Popup: FunctionComponent = () => {
   const [isTabActive, setIsTabActive] = useState<any>(false);
   const [isExtClosed, setIsExtClosed] = useState<any>(true);
   const [isTabUpdated, setIsTabUpdated] = useState(false);
-  const [mode, setMode] = useState<PaletteMode>('light');
+  const [mode, setMode] = useState<any>('light');
   const [themeColors, setThemeColors] = React.useState<any>('');
   const intervalMs = 5000;
 
-  const getDesignTokens = (extMode: PaletteMode) => ({
+  const getDesignTokens = (extMode: any) => ({
     palette: {
       mode: extMode
     },

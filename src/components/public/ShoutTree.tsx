@@ -1,9 +1,13 @@
 /* eslint-disable max-len */
 import ReplyIcon from '@mui/icons-material/Reply';
 import SendIcon from '@mui/icons-material/Send';
-import {
-  Alert, Box, Button, Grid, Snackbar, Tooltip, Typography
-} from '@mui/material';
+import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import Snackbar from '@mui/material/Snackbar';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 import MDEditor from '@uiw/react-md-editor';
 import { AxiosError } from 'axios';
 import { DateTime } from 'luxon';
@@ -290,7 +294,7 @@ const ShoutTree = ({
                 {root.Saved ? 'UNDO' : 'SAVE'}
               </Button>
               {user.UserName === root.Author.UserName
-                && <DeleteShout initShout={root} setRoot={setRoot} setShoutDeleted={setShoutDeleted} />}
+                && <DeleteShout initShout={root} setRoot={setRoot} setShoutDeleted={setShoutDeleted} themeColors={themeColors} />}
               {(user?.IsMod)
                     && (
                       <Button href={`${process.env.REACT_APP_MOD_URL}/item/shout/${root.ID}`} target="_blank">
