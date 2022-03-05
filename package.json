@@ -1,7 +1,7 @@
 {
-  "name": "react-typescript-chrome-extension-starter",
+  "name": "netvyne-ext",
   "version": "1.0.0",
-  "description": "A Chrome Extension starter kit built with React, TypeScript, SCSS, Bootstrap, EsLint, Prettier & Webpack",
+  "description": "A Chrome Extension to leave and read comments on any URL",
   "main": "index.js",
   "scripts": {
     "build": "webpack --config webpack.prod.js",
@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aeksco/react-typescript-chrome-extension-starter.git"
+    "url": "git+https://github.com/netvyne/ext.git"
   },
   "keywords": [
     "react",
@@ -23,12 +23,12 @@
     "extension",
     "boilerplate"
   ],
-  "author": "Alexander Schwartzberg",
+  "author": "Netvyne",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/aeksco/react-typescript-chrome-extension-starter/issues"
+    "url": "https://github.com/netvyne/ext/issues"
   },
-  "homepage": "https://github.com/aeksco/react-typescript-chrome-extension-starter#readme",
+  "homepage": "https://netvyne.com",
   "devDependencies": {
     "@babel/core": "^7.11.6",
     "@babel/preset-env": "^7.11.5",
