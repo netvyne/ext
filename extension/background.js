@@ -121,11 +121,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   return true;
 });
 
-chrome.runtime.onInstalled.addListener(() => {
-  chrome.tabs.create({
-    url: 'https://www.netvyne.com/welcome',
-    active: true
-  });
+chrome.runtime.onInstalled.addListener((details) => {
+  if (details.reason === 'install') {
+    chrome.tabs.create({
+      url: 'https://www.netvyne.com/welcome',
+      active: true
+    });
+  }
   return false;
 });
 chrome.runtime.setUninstallURL('https://forms.gle/gBrENf235DqnTbcj9');

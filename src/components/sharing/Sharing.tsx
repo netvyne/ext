@@ -545,7 +545,6 @@ const Sharing = ({ defUser, url, themeColors } : Props) => {
                   placeholder: 'Lookit!',
                 }}
                 height={100}
-                style={{ backgroundColor: themeColors.divBackground }}
                 value={comment}
                 preview="edit"
                 onChange={(value: string | undefined) => value !== undefined && setComment(value)}
