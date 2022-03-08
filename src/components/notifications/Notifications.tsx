@@ -63,7 +63,6 @@ const Notifications = ({
 
   function changeMode(extMode: string) {
     chrome.storage.local.set({ mode: extMode });
-    // localStorage.setItem('mode', extMode);
     setMode(extMode);
   }
 
@@ -78,7 +77,7 @@ const Notifications = ({
   return (
     <Box m={2}>
       <Box sx={{
-        display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center'
+        display: 'flex', justifyContent: 'center', width: '100%', alignItems: 'center'
       }}
       >
         <Box sx={{
@@ -131,7 +130,7 @@ const Notifications = ({
       <Box sx={{
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'flex-start'
+        alignItems: 'center'
       }}
       >
         <Button onClick={() => moreOptionClick('feedback', 'https://forms.gle/LUzvrWqhtWnKwAxX6')}>Feedback</Button>

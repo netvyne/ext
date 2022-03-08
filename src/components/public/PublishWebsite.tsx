@@ -51,7 +51,6 @@ function PublishWebsite({
   );
   const postSharePublic = async (event: any) => {
     event.preventDefault();
-    console.log('url PublishWebsite ::: ', url);
     const formatedUrl = new URL(url);
     const mutateData = {
       URL: {

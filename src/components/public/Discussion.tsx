@@ -94,7 +94,7 @@ const Discussion = ({
 
   const urlHash = sha256(`${initURL?.host}${initURL?.pathname}${initURL?.search}`);
   const route = `/get_shout_trees?url_hash=${urlHash}&sort=${sort}`;
-  const { data, status, refetch } = useQuery<GetShoutTreesQuery, string>(
+  const { data, status } = useQuery<GetShoutTreesQuery, string>(
     route, {
       enabled: isTabUpdated,
       onSuccess: (shoutData) => {
@@ -110,7 +110,7 @@ const Discussion = ({
         setShowCaptcha(false);
         setCaptchaToken('');
         setChildren((c) => ((c && c.length > 0) ? [mutationData.Shout, ...c] : [mutationData.Shout]));
-        refetch();
+        // refetch();
       },
       onError: (err: AxiosError) => {
         if (err.response?.status === 402) {

@@ -3,7 +3,7 @@ import ReplyIcon from '@mui/icons-material/Reply';
 import SendIcon from '@mui/icons-material/Send';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
+// import TextField from '@mui/material/TextField';
 import MDEditor from '@uiw/react-md-editor';
 import React from 'react';
 import HCaptcha from '../common/hcaptcha';
@@ -28,31 +28,19 @@ const ReplyUI = ({
 }: Props) => {
   const commentForm = (
     <form onSubmit={postComment}>
-      {showFullEditor && (
-        <MDEditor
-          textareaProps={{
-            placeholder: 'Leave a reply...',
-          }}
-          height={100}
-          value={comment}
-          preview="edit"
-          style={{ backgroundColor: themeColors.divBackground }}
-          onChange={(value: string | undefined) => value !== undefined && setComment(value)}
-        />
-      )}
-      {!showFullEditor && (
-        <TextField
-          fullWidth
-          multiline
-          variant="outlined"
-          id="outlined-basic"
-          label="Leave a reply..."
-          placeholder="Leave a reply..."
-          onInput={(e: any) => setComment(e.target.value)}
-          style={{ backgroundColor: themeColors.divBackground, color: themeColors.commentText }}
-          value={comment}
-        />
-      )}
+      <MDEditor
+        textareaProps={{
+          placeholder: 'Leave a reply...',
+          style: {
+            color: themeColors.commentText
+          }
+        }}
+        height={100}
+        value={comment}
+        preview="edit"
+        hideToolbar={!showFullEditor}
+        onChange={(value: string | undefined) => value !== undefined && setComment(value)}
+      />
       <Box my={1}>
         <Button
           type="submit"

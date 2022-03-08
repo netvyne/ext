@@ -6,17 +6,13 @@ function badgeCheckbox() {
 }
 
 function saveOptions() {
-  chrome.storage.sync.set({
-    netvyneBadge: badgeCheckbox().checked,
-  });
+  chrome.storage.local.set({ netvyneBadge: badgeCheckbox().checked });
   localStorage.setItem('netvyneBadge', badgeCheckbox().checked);
 }
 
 function loadOptions() {
-  chrome.storage.sync.get(
-    {
-      netvyneBadge: true,
-    },
+  chrome.storage.local.get(
+    'netvyneBadge',
     (items) => {
       badgeCheckbox().checked = items.netvyneBadge;
     }

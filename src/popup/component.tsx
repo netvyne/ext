@@ -105,12 +105,10 @@ export const Popup: FunctionComponent = () => {
     });
     chrome.runtime.onMessage.addListener((msg) => {
       if (msg === 'toggle') {
-        chrome.storage.sync.get(['isExtClosed'], (result) => {
+        chrome.storage.local.get('isExtClosed', (result) => {
           if (result.isExtClosed === true) {
-            chrome.storage.sync.get(
-              {
-                netvyneBadge: true,
-              },
+            chrome.storage.local.get(
+              'netvyneBadge',
               (items) => {
                 if (items.netvyneBadge === true || items.netvyneBadge === null) {
                   setIsTabUpdated(true);
@@ -132,12 +130,10 @@ export const Popup: FunctionComponent = () => {
     });
     browser.runtime.sendMessage({ popupMounted: true });
 
-    chrome.storage.sync.get(['isExtClosed'], (result) => {
+    chrome.storage.local.get('isExtClosed', (result) => {
       if (result.isExtClosed === true) {
-        chrome.storage.sync.get(
-          {
-            netvyneBadge: true,
-          },
+        chrome.storage.local.get(
+          'netvyneBadge',
           (items) => {
             if (items.netvyneBadge === true || items.netvyneBadge === null) {
               setAutoFetch(true);
@@ -215,9 +211,9 @@ export const Popup: FunctionComponent = () => {
     if (chrome.tabs) {
       chrome.tabs.query(queryInfo, (tabs) => {
         const newUrl : any = isValidURL(tabs[0].url);
-        // setIsTabActive(true);
         let formatedUrl = {
           pathname: newUrl.pathname,
+          origin: newUrl.origin,
           host: newUrl.host,
           search: newUrl.search,
           Title: tabs[0].title,
