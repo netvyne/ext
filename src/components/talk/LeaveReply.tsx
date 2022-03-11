@@ -54,11 +54,12 @@ const LeaveReply = ({
             onClick={() => {
               setShowForm(false);
             }}
+            sx={{ color: themeColors.linkColor }}
           >
             Cancel
           </Button>
         )}
-      <Button type="submit" size="small" color="primary" endIcon={<SendIcon />} disabled={comment.trim().length === 0}>
+      <Button type="submit" size="small" color="primary" endIcon={<SendIcon />} disabled={comment.trim().length === 0} sx={{ color: themeColors.linkColor }}>
         {' '}
         Submit
         {' '}
@@ -71,7 +72,6 @@ const LeaveReply = ({
         textareaProps={{
           placeholder: 'Leave a reply...',
         }}
-        style={{ backgroundColor: themeColors.divBackground }}
         height={100}
         value={comment}
         preview="edit"
@@ -84,7 +84,7 @@ const LeaveReply = ({
   const content = showForm ? (
     commentForm
   ) : (
-    <Button style={{ float: 'left' }} size="small" onClick={() => setShowForm(!showForm)}>
+    <Button style={{ float: 'left', color: themeColors.linkColor, paddingTop: '7px' }} size="small" onClick={() => setShowForm(!showForm)}>
       Reply
     </Button>
   );

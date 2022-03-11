@@ -46,7 +46,7 @@ const DeleteShout = ({
   };
 
   return (
-    <IconButton aria-label="delete" onClick={deleteComment} size="small" sx={{ color: themeColors.commentText }}>
+    <IconButton aria-label="delete" onClick={deleteComment} size="small" sx={{ color: themeColors.linkColor }}>
       <DeleteIcon />
     </IconButton>
   );

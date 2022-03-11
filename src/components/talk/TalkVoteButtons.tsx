@@ -15,6 +15,7 @@ import { Talk, User } from '../../../types/common/types';
 interface Props {
   initTalk: Talk;
   defUser: User;
+  themeColors: any
 }
 const EmojisContainer = styled('div')(() => ({
   display: 'flex',
@@ -75,7 +76,7 @@ const BlackTooltip = styled(Tooltip)(() => ({
     color: 'black',
   },
 }));
-export default function TalkVoteButtons({ initTalk, defUser }: Props) {
+export default function TalkVoteButtons({ initTalk, defUser, themeColors }: Props) {
   const [talk, setTalk] = React.useState(initTalk);
   const [show, setShow] = React.useState(false);
 
@@ -163,7 +164,7 @@ export default function TalkVoteButtons({ initTalk, defUser }: Props) {
             </CancelIcon>
           </div>
         )
-          : <IconButton size="small" onClick={() => setShow(true)}><InsertEmoticonIcon /></IconButton>}
+          : <IconButton size="small" onClick={() => setShow(true)} style={{ color: themeColors.linkColor }}><InsertEmoticonIcon /></IconButton>}
         <div style={{
           display: 'flex', overflowX: 'scroll', overflowY: 'hidden', maxWidth: '272px'
         }}

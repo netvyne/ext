@@ -83,10 +83,9 @@ export default function FeedItem({
     <Grid
       container
       component={Box}
-      bgcolor={themeColors.commentParent}
       direction="column"
       p={1}
-      borderRadius="borderRadius"
+      borderRadius="5px"
       wrap="nowrap"
       color={themeColors.commentText}
     >
@@ -99,10 +98,9 @@ export default function FeedItem({
     <Grid
       container
       component={Box}
-      bgcolor={themeColors.commentParent}
       direction="column"
       p={1}
-      borderRadius="borderRadius"
+      borderRadius="5px"
       wrap="nowrap"
       color={themeColors.commentText}
     >
@@ -114,7 +112,7 @@ export default function FeedItem({
               : <Tooltip title="Unlisted"><LinkIcon fontSize="inherit" /></Tooltip>}
           </Grid>
           <Grid item component={Box}>
-            <Link href={website.URL} target="_blank">
+            <Link href={website.URL} target="_blank" sx={{ color: themeColors.linkColor }}>
               {website.Host}
             </Link>
           </Grid>
@@ -122,7 +120,7 @@ export default function FeedItem({
             <Grid container direction="row" alignItems="center" justifyContent="space-between">
               <Grid item sx={{ display: 'flex' }}>
                 <Grid item>
-                  <AccessTimeIcon style={{ fill: 'grey' }} fontSize="inherit" />
+                  <AccessTimeIcon style={{ fill: themeColors.commentText, color: themeColors.commentText }} fontSize="inherit" />
                 </Grid>
                 <Grid item component={Box} pl={0.5}>
                   <Typography noWrap variant="caption">
@@ -137,7 +135,7 @@ export default function FeedItem({
                   website={website}
                 />
                 <Box>
-                  <FlagIcon onClick={() => { setShowFlag(true); }} style={{ fill: 'grey' }} fontSize="inherit" />
+                  <FlagIcon onClick={() => { setShowFlag(true); }} style={{ fill: themeColors.commentText }} fontSize="inherit" />
                   {/* <Button size="small" onClick={() => { setShowFlag(true); }}>Flag</Button> */}
                 </Box>
               </Grid>
@@ -227,7 +225,7 @@ export default function FeedItem({
           </Grid>
           <Box alignItems="center" mr={1}>
             <Tooltip title="Approval Rate" placement="top">
-              <Button disableRipple size="small" startIcon={<SentimentSatisfiedAlt style={{ fill: 'grey' }} />}>
+              <Button disableRipple size="small" startIcon={<SentimentSatisfiedAlt style={{ fill: themeColors.linkColor }} />} sx={{ color: themeColors.linkColor }}>
                 {website.ApprovalRate}
                 %
               </Button>
@@ -238,9 +236,9 @@ export default function FeedItem({
                 <Grid item component={Box}>
                   {((website.TagLabelNames)?.length > 0)
                     ? (
-                      <Box style={{ display: 'flex', alignItems: 'center' }}>
-                        <LocalOfferIcon style={{ fill: 'grey' }} fontSize="inherit" />
-                        <Button size="small" href={`/v/${website.TagLabelNames[0]}`}>
+                      <Box style={{ display: 'flex', alignItems: 'center', color: themeColors.linkColor }}>
+                        <LocalOfferIcon style={{ fill: themeColors.linkColor }} fontSize="inherit" />
+                        <Button size="small" href={`/v/${website.TagLabelNames[0]}`} sx={{ color: themeColors.linkColor }}>
                           {website.TagLabelNames[0]}
                         </Button>
                         <TagsList
@@ -249,18 +247,18 @@ export default function FeedItem({
                           tags={website.TagLabelNames}
                         />
                         {((website.TagLabelNames)?.length > 1) && (
-                          <Button size="small" onClick={() => { setShowTagsList(true); }}>
+                          <Button size="small" onClick={() => { setShowTagsList(true); }} sx={{ color: themeColors.linkColor }}>
                             +
                             {(website.TagLabelNames)?.length - 1}
                             {' more'}
                           </Button>
                         )}
                       </Box>
-                    ) : <Button size="small">Processing</Button>}
+                    ) : <Button size="small" sx={{ color: themeColors.linkColor }}>Processing</Button>}
                 </Grid>
               )}
           <Grid item component={Box}>
-            <Button size="small" onClick={() => clickComment()}>
+            <Button size="small" onClick={() => clickComment()} sx={{ color: themeColors.linkColor }}>
               {website.ShoutCount}
               {' '}
               comments
@@ -268,7 +266,7 @@ export default function FeedItem({
           </Grid>
           {reg && (
           <Grid item component={Box}>
-            <Button size="small" href="">Share</Button>
+            <Button size="small" href="" sx={{ color: themeColors.linkColor }}>Share</Button>
           </Grid>
           )}
           {!isSaved && reg && (
@@ -280,6 +278,7 @@ export default function FeedItem({
                 onSaveItem(e, true);
                 setClickedSave(true);
               }}
+              sx={{ color: themeColors.linkColor }}
             >
               Save
             </Button>
@@ -294,14 +293,15 @@ export default function FeedItem({
                 onSaveItem(e, false);
                 setClickedSave(true);
               }}
+              sx={{ color: themeColors.linkColor }}
             >
               Undo
             </Button>
           </Grid>
           )}
-          {(user?.Role === 'mod' || user?.Role === 'admin')
+          {(user?.IsMod || user?.IsAdmin)
               && (
-                <Button size="small" onClick={() => clickMod()}>
+                <Button size="small" onClick={() => clickMod()} sx={{ color: themeColors.linkColor }}>
                   Mod
                   {' '}
                 </Button>

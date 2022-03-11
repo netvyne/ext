@@ -105,7 +105,7 @@ const TalkTree = ({
             alignItems="center"
             style={{ display: 'flex', flexDirection: 'row' }}
           >
-            <Grid item style={{ width: '100%' }}>
+            <Grid item style={{ width: '100%' }} className="talk-tree">
               <Grid
                 item
                 style={{
@@ -115,12 +115,14 @@ const TalkTree = ({
                 <TalkVoteButtons
                   initTalk={treeRoot}
                   defUser={defUser}
+                  themeColors={themeColors}
                 />
                 {defUser.Handle === treeRoot.Author.Handle
                 && (
                   <DeleteTalk
                     initTalk={treeRoot}
                     postRefetch={postRefetch}
+                    themeColors={themeColors}
                   />
                 )}
               </Grid>

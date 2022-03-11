@@ -126,9 +126,9 @@ export default function PostShare({
         container
         component={Box}
         boxShadow={3}
-        direction="column"
         p={1}
-        borderRadius="borderRadius"
+        direction="column"
+        borderRadius="5px"
         wrap="nowrap"
       >
         <Grid container direction="row" alignItems="flex-start" spacing={2}>
@@ -159,8 +159,10 @@ export default function PostShare({
           )}
         </Grid>
 
-        <Grid container component={Box} sx={{ backgroundColor: themeColors.commentParent }}>
-          <FeedItem initWebsite={post.Website} initPost={post} defUser={defUser} themeColors={themeColors} />
+        <Grid container component={Box} sx={{ border: `solid 1px ${themeColors.commentParent}`, borderRadius: '5px' }}>
+          {post.WebsiteShare?.Website && (
+            <FeedItem initWebsite={post.WebsiteShare.Website} initPost={post} defUser={defUser} themeColors={themeColors} />
+          )}
         </Grid>
         <Grid item component={Box}>
           <Box component="span">
