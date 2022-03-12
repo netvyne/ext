@@ -161,27 +161,6 @@ const Sharing = ({ defUser, url, themeColors } : Props) => {
   };
 
   const mutation = useMutation({});
-  const uploadImage = async (postId : string) => {
-    const file = dataURLtoFile(dataURL, 'Image');
-    const formData = new FormData();
-    formData.append('Image', file, file.name);
-    formData.append('Type', 'screenshot');
-    formData.append('ID', postId);
-    const res = mutation.mutate(
-      // @ts-ignore
-      {
-        route: '/upload_image',
-        data: formData,
-      },
-      {
-        onSuccess: () => {
-          setDataURL('');
-        },
-      },
-    );
-    return res;
-  };
-
   function createTestDiv() {
     createDiv(); // saves to local storage
   }
@@ -193,26 +172,30 @@ const Sharing = ({ defUser, url, themeColors } : Props) => {
   const shareMutation = useMutation({});
   const postShare = async (event: any) => {
     event.preventDefault();
-    const mutateData = {
-      Host: url.host,
-      Pathname: url.pathname,
-      Search: url.search,
-      Comment: comment,
-      Separate: shareSeparately,
-      ReceiverHandles: friendHandles,
-      CreateConv: createConv,
-      ConversationID: conversationID,
-      MarkSensitive: markSensitive,
-      PostType: 'website',
-    };
+    const formData = new FormData();
+    if (dataURL !== '') {
+      const file = dataURLtoFile(dataURL, 'Image');
+      formData.append('Image', file, file.name);
+    }
+    formData.append('Type', 'screenshot');
+    formData.append('Host', url.host);
+    formData.append('Pathname', url.pathname);
+    formData.append('Search', url.search);
+    formData.append('Comment', comment);
+    formData.append('Separate', shareSeparately.toString());
+    formData.append('ReceiverHandles', JSON.stringify(friendHandles));
+    formData.append('CreateConv', createConv.toString());
+    formData.append('ConversationID', conversationID.toString());
+    formData.append('MarkSensitive', markSensitive.toString());
+    formData.append('PostType', 'website');
     const res = shareMutation.mutate(
       // @ts-ignore
       {
-        route: '/post_user_post',
-        data: mutateData,
+        route: '/post_user_post_alt',
+        data: formData,
       },
       {
-        onSuccess: (response : any) => {
+        onSuccess: () => {
           setComment('Check this out!');
           setDropdownRefetch(Date());
           setConversationID(0);
@@ -221,11 +204,14 @@ const Sharing = ({ defUser, url, themeColors } : Props) => {
           setMarkSensitive(false);
           setCreateConv(false);
           setCreateConv(false);
-          if (dataURL !== '') {
-            uploadImage(response.Post.ID);
-          }
+          // if (dataURL !== '') {
+          //   uploadImage(response.Post.ID);
+          // }
+          setDataURL('');
           setOpen(true);
-          refetch();
+          setTimeout(() => {
+            refetch();
+          }, 10000);
         },
       },
     );
@@ -334,9 +320,9 @@ const Sharing = ({ defUser, url, themeColors } : Props) => {
 
   return (
     <ThemeProvider theme={sharingTheme}>
-      <Box m={1} mt={2}>
+      <Box mt={1}>
         {!showTalkTree && (
-        <Box m={1}>
+        <Box>
           <Snackbar
             open={open}
             autoHideDuration={6000}
@@ -416,7 +402,7 @@ const Sharing = ({ defUser, url, themeColors } : Props) => {
               <Button
                 type="button"
                 onClick={createTestDiv}
-                sx={{ paddingLeft: '0PX' }}
+                sx={{ paddingLeft: '0PX', color: themeColors.linkColor }}
               >
                 Include Screenshot
               </Button>
@@ -593,6 +579,7 @@ const Sharing = ({ defUser, url, themeColors } : Props) => {
           <IconButton
             onClick={() => { setShowTalkTree(false); refetch(); }}
             sx={{
+              paddingLeft: '0px',
               color: themeColors.iconsButtonsColor,
               '&:hover': {
                 color: themeColors.iconsButtonsColorHover,

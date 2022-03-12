@@ -7,11 +7,12 @@ import { Talk } from '../../../types/common/types';
 interface Props {
   initTalk: Talk;
   postRefetch: any;
+  themeColors: any;
 }
 interface GetTalkTreeQuery {
   Roots: Talk[];
 }
-const DeleteTalk = ({ initTalk, postRefetch }: Props) => {
+const DeleteTalk = ({ initTalk, postRefetch, themeColors }: Props) => {
   const mutation = useMutation({});
   const { refetch } = useQuery<GetTalkTreeQuery, string>(
     `/get_talk_trees?post_id=${initTalk?.PostID}`, { enabled: false }
@@ -37,7 +38,7 @@ const DeleteTalk = ({ initTalk, postRefetch }: Props) => {
   };
 
   return (
-    <IconButton aria-label="delete" onClick={deleteComment} size="small">
+    <IconButton aria-label="delete" onClick={deleteComment} size="small" style={{ color: themeColors.linkColor }}>
       <DeleteIcon />
     </IconButton>
   );
