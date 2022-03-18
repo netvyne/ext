@@ -105,10 +105,12 @@ export const Popup: FunctionComponent = () => {
     });
     chrome.runtime.onMessage.addListener((msg) => {
       if (msg === 'toggle') {
-        chrome.storage.local.get('isExtClosed', (result) => {
-          if (result.isExtClosed === true) {
-            chrome.storage.local.get(
-              'netvyneBadge',
+        chrome.storage.sync.get({ isExtClosed: true }, (result) => {
+          if (result.isExtClosed === true || result.isExtClosed === null) {
+            chrome.storage.sync.get(
+              {
+                netvyneBadge: true,
+              },
               (items) => {
                 if (items.netvyneBadge === true || items.netvyneBadge === null) {
                   setIsTabUpdated(true);
@@ -130,10 +132,12 @@ export const Popup: FunctionComponent = () => {
     });
     browser.runtime.sendMessage({ popupMounted: true });
 
-    chrome.storage.local.get('isExtClosed', (result) => {
-      if (result.isExtClosed === true) {
-        chrome.storage.local.get(
-          'netvyneBadge',
+    chrome.storage.sync.get({ isExtClosed: true }, (result) => {
+      if (result.isExtClosed === true || result.isExtClosed === null) {
+        chrome.storage.sync.get(
+          {
+            netvyneBadge: true,
+          },
           (items) => {
             if (items.netvyneBadge === true || items.netvyneBadge === null) {
               setAutoFetch(true);
@@ -153,7 +157,10 @@ export const Popup: FunctionComponent = () => {
 
   const route = `/get_user_notifications?url_hash=${urlHash}`;
 
-  const { data, refetch } = useQuery<any, string>(route, { enabled: (isTabActive && autoFetch && !!user), refetchInterval: intervalMs });
+  const { data, refetch } = useQuery<any, string>(route, {
+    enabled: (isTabActive && autoFetch && !!user),
+    refetchInterval: intervalMs
+  });
 
   const loginRoute = '/login';
 
@@ -255,12 +262,12 @@ export const Popup: FunctionComponent = () => {
                     aria-label="icon label tabs example"
                     TabIndicatorProps={{
                       style: {
-                        backgroundColor: '#9F00CF',
+                        backgroundColor: themeColors.commentText,
                       },
                     }}
                   >
-                    <Tab icon={<PublicIcon sx={{ color: value === 0 ? '#9F00CF' : 'default' }} />} label="Public" {...a11yProps(0)} />
-                    <Tab icon={<HomeIcon sx={{ color: value === 1 ? '#9F00CF' : 'default' }} />} label="Private" {...a11yProps(1)} />
+                    <Tab icon={<PublicIcon sx={{ color: value === 0 ? themeColors.commentText : 'default' }} />} label="Public" {...a11yProps(0)} />
+                    <Tab icon={<HomeIcon sx={{ color: value === 1 ? themeColors.commentText : 'default' }} />} label="Private" {...a11yProps(1)} />
                     <Tab
                       icon={(
                         <Badge

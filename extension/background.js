@@ -1,5 +1,7 @@
 chrome.action.onClicked.addListener((tab) => {
-  chrome.tabs.sendMessage(tab.id, 'toggle');
+  if (tab && tab.id) {
+    chrome.tabs.sendMessage(tab.id, 'toggle');
+  }
 });
 
 chrome.runtime.onMessage.addListener(
@@ -123,10 +125,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 chrome.runtime.onInstalled.addListener((details) => {
   if (details.reason === 'install') {
+    chrome.storage.sync.remove('isExtClosed', () => {});
     chrome.tabs.create({
       url: 'https://www.netvyne.com/welcome',
       active: true
     });
+  }
+  if (details.reason === 'update') {
+    chrome.storage.sync.remove('isExtClosed', () => {});
   }
   return false;
 });

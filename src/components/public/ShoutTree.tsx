@@ -219,6 +219,7 @@ const ShoutTree = ({
                   toggleUserKarmaOpen={toggleUserKarmaOpen}
                   userKarmaOpen={userKarmaOpen}
                   userName={root.Author.UserName}
+                  defUser={defUser}
                 />
               </Grid>
               <Box display="flex">

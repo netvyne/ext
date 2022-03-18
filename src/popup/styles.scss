@@ -12,6 +12,13 @@
 .mode-dark .MuiButtonBase-root.MuiChip-root.MuiChip-filled {
     background-color: #757575;
 }
+.mode-dark .MuiTab-textColorPrimary.Mui-selected{
+    color: #ffffff !important;
+}
+
+.mode-light .MuiTab-textColorPrimary.Mui-selected{
+    color: #000000 !important;
+}
 
 .popup-container .container{
     padding-left: 0px;
@@ -49,10 +56,6 @@
     width: 25px !important;
     height: 25px !important;
     border-radius: 0% !important;
-}
-
-.MuiTab-textColorPrimary.Mui-selected{
-    color: #9F00CF !important;
 }
 
 .tabIcon img{

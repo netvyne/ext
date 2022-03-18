@@ -3,7 +3,6 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import FlagIcon from '@mui/icons-material/Flag';
 import ImageIcon from '@mui/icons-material/Image';
 import LinkIcon from '@mui/icons-material/Link';
-import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import PublicIcon from '@mui/icons-material/Public';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
@@ -18,7 +17,6 @@ import ReactPlayer from 'react-player';
 import { useMutation, useQueryClient } from 'react-query';
 import { Post, User, Website } from '../../../types/common/types';
 import { formatImageURL } from '../../utils';
-import TagsList from '../common/TagsList';
 import FlagWebsite from './FlagWebsite';
 import PublishWebsite from './PublishWebsite';
 import WebVoteButtons from './WebVoteButtons';
@@ -45,7 +43,6 @@ export default function FeedItem({
   const [clickedSensitive, setClickedSensitive] = React.useState(false);
   const [isSaved, setIsSaved] = React.useState(website.Saved);
   const saveItemMutation = useMutation({});
-  const [showTagsList, setShowTagsList] = React.useState(false);
   const onSaveItem = async (event: any, save: boolean) => {
     event.preventDefault();
     const mutateData = {
@@ -231,32 +228,6 @@ export default function FeedItem({
               </Button>
             </Tooltip>
           </Box>
-          {website.Public
-              && (
-                <Grid item component={Box}>
-                  {((website.TagLabelNames)?.length > 0)
-                    ? (
-                      <Box style={{ display: 'flex', alignItems: 'center', color: themeColors.linkColor }}>
-                        <LocalOfferIcon style={{ fill: themeColors.linkColor }} fontSize="inherit" />
-                        <Button size="small" href={`/v/${website.TagLabelNames[0]}`} sx={{ color: themeColors.linkColor }}>
-                          {website.TagLabelNames[0]}
-                        </Button>
-                        <TagsList
-                          open={showTagsList}
-                          handleClose={() => setShowTagsList(false)}
-                          tags={website.TagLabelNames}
-                        />
-                        {((website.TagLabelNames)?.length > 1) && (
-                          <Button size="small" onClick={() => { setShowTagsList(true); }} sx={{ color: themeColors.linkColor }}>
-                            +
-                            {(website.TagLabelNames)?.length - 1}
-                            {' more'}
-                          </Button>
-                        )}
-                      </Box>
-                    ) : <Button size="small" sx={{ color: themeColors.linkColor }}>Processing</Button>}
-                </Grid>
-              )}
           <Grid item component={Box}>
             <Button size="small" onClick={() => clickComment()} sx={{ color: themeColors.linkColor }}>
               {website.ShoutCount}
