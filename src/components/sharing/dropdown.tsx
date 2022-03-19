@@ -26,7 +26,7 @@ export default function Dropdown({
   const friendQuery = useQuery<GetFriendQuery>('/get_user_friends', { enabled: mode === 'friends' });
   const changed = (event: any, value: any) => {
     if (mode === 'conv') {
-      setConversationID(value.ID);
+      setConversationID(value.map((conv: Conversation) => conv.ID));
     } else if (mode === 'friends') {
       setFriendHandles(value.map((user: User) => user.Handle));
     }
@@ -42,6 +42,7 @@ export default function Dropdown({
     return (
       <Autocomplete
         key={dropdownRefetch}
+        multiple
         onChange={changed}
         id="tags-standard"
         style={{ width: 'auto', backgroundColor: themeColors.divBackground, borderRadius: '5px' }}
@@ -53,7 +54,7 @@ export default function Dropdown({
         renderInput={(params) => (
           <TextField
             {...params}
-            label="Select group..."
+            label="Select Recipients..."
             variant="outlined"
             InputProps={{
               ...params.InputProps,

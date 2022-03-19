@@ -11,10 +11,14 @@ iframe.src = chrome.runtime.getURL('popup.html');
 document.body.appendChild(iframe);
 function toggle() {
   if (iframe.style.width === '0px') {
-    chrome.storage.local.set({ isExtClosed: false });
+    chrome.storage.sync.set({
+      isExtClosed: false,
+    });
     iframe.style.width = '450px';
   } else {
-    chrome.storage.local.set({ isExtClosed: true });
+    chrome.storage.sync.set({
+      isExtClosed: true,
+    });
     iframe.style.width = '0px';
   }
 }

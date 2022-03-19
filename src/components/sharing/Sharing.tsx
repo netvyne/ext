@@ -1,24 +1,18 @@
 /* eslint-disable max-len */
 import CloseIcon from '@mui/icons-material/Close';
-import GroupIcon from '@mui/icons-material/Group';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import KeyboardBackspace from '@mui/icons-material/KeyboardBackspace';
-import PersonIcon from '@mui/icons-material/Person';
 import ReplyIcon from '@mui/icons-material/Reply';
-import SettingsIcon from '@mui/icons-material/Settings';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
 import CircularProgress from '@mui/material/CircularProgress';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import Snackbar from '@mui/material/Snackbar';
 import createTheme from '@mui/material/styles/createTheme';
 import ThemeProvider from '@mui/material/styles/ThemeProvider';
-import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import MDEditor from '@uiw/react-md-editor';
+import { AxiosError } from 'axios';
 import { sha256 } from 'js-sha256';
 import React, { useEffect } from 'react';
 import {
@@ -26,6 +20,7 @@ import {
 } from 'react-query';
 import { Post, User } from '../../../types/common/types';
 import { createDiv, screenShot } from '../../utils';
+import HCaptcha from '../common/hcaptcha';
 import PostShare from '../talk/PostShare';
 import Dropdown from './dropdown';
 import './styles.scss';
@@ -77,37 +72,20 @@ interface Props {
   themeColors: any;
 }
 const Sharing = ({ defUser, url, themeColors } : Props) => {
-  const [shareSeparately, setShareSeparately] = React.useState(false);
-  const [markSensitive, setMarkSensitive] = React.useState(false);
   const [comment, setComment] = React.useState('Check this out!');
-  const [conversationID, setConversationID] = React.useState(0);
   const [open, setOpen] = React.useState(false);
 
   const [dataURL, setDataURL] = React.useState('');
-
-  const [friendHandles, setFriendHandles] = React.useState([]);
+  const [markSensitive, setMarkSensitive] = React.useState(false);
   const [createConv, setCreateConv] = React.useState(false);
+  const [receiverIDs, setReceiverIDs] = React.useState([]);
   const [dropdownRefetch, setDropdownRefetch] = React.useState(Date());
-  const [dropdown, setDropdown] = React.useState(false);
-  const [moreOptions, setMoreOptions] = React.useState(false);
   const [showTalkTree, setShowTalkTree] = React.useState(false);
-  const [friendsPosts, setFriendsPosts] = React.useState<Post[]>([]);
   const [post, setPost] = React.useState<any>([]);
   const [conversationsPosts, setConversationsPosts] = React.useState<Post[]>([]);
-
-  const toggleMoreOptions = () => {
-    setMoreOptions(!moreOptions);
-  };
-  const toggleDropdown = () => {
-    setConversationID(0);
-    setFriendHandles([]);
-    setFriendHandles([]);
-    setDropdownRefetch(Date());
-    setDropdown(!dropdown);
-    setShareSeparately(false);
-    setMarkSensitive(false);
-    setCreateConv(false);
-  };
+  const [showCaptcha, setShowCaptcha] = React.useState(false);
+  const [captchaToken, setCaptchaToken] = React.useState('');
+  const captchaRef = React.createRef<HCaptcha>();
 
   function cropcallback() {
     chrome.storage.local.get({ screenshot: null }, (data) => {
@@ -129,7 +107,6 @@ const Sharing = ({ defUser, url, themeColors } : Props) => {
   const { refetch, status } = useQuery<GetWebsitePostsQuery, string>(
     `/get_website_posts?url_hash=${urlHash}`, {
       onSuccess: (postData) => {
-        setFriendsPosts(postData.FriendsPosts);
         setConversationsPosts(postData.ConversationsPosts);
       }
     }
@@ -182,12 +159,11 @@ const Sharing = ({ defUser, url, themeColors } : Props) => {
     formData.append('Pathname', url.pathname);
     formData.append('Search', url.search);
     formData.append('Comment', comment);
-    formData.append('Separate', shareSeparately.toString());
-    formData.append('ReceiverHandles', JSON.stringify(friendHandles));
     formData.append('CreateConv', createConv.toString());
-    formData.append('ConversationID', conversationID.toString());
+    formData.append('ReceiverIDs', JSON.stringify(receiverIDs));
     formData.append('MarkSensitive', markSensitive.toString());
     formData.append('PostType', 'website');
+    formData.append('CaptchaToken', captchaToken);
     const res = shareMutation.mutate(
       // @ts-ignore
       {
@@ -197,22 +173,21 @@ const Sharing = ({ defUser, url, themeColors } : Props) => {
       {
         onSuccess: () => {
           setComment('Check this out!');
-          setDropdownRefetch(Date());
-          setConversationID(0);
-          setFriendHandles([]);
-          setShareSeparately(false);
           setMarkSensitive(false);
           setCreateConv(false);
-          setCreateConv(false);
-          // if (dataURL !== '') {
-          //   uploadImage(response.Post.ID);
-          // }
+          setDropdownRefetch(Date());
+          setShowCaptcha(false);
           setDataURL('');
           setOpen(true);
           setTimeout(() => {
             refetch();
           }, 10000);
         },
+        onError: (err: AxiosError) => {
+          if (err.response?.status === 402) {
+            setShowCaptcha(true);
+          }
+        }
       },
     );
     return res;
@@ -258,7 +233,6 @@ const Sharing = ({ defUser, url, themeColors } : Props) => {
   }
   const bbox = <Box />;
 
-  let friendShares: any = '';
   let conversationShares: any = '';
   const nothingPlaceHolder = (
     <Grid
@@ -272,25 +246,10 @@ const Sharing = ({ defUser, url, themeColors } : Props) => {
     </Grid>
   );
   if (status === 'error') {
-    friendShares = <div>Error</div>;
     conversationShares = <div>Error</div>;
   } else if (status === 'loading') {
-    friendShares = <div>Loading</div>;
     conversationShares = <div>Loading</div>;
   } else {
-    friendShares = friendsPosts.map((friend : any) => (
-      <Grid
-        item
-        xs={12}
-        style={{
-          padding: '10px', backgroundColor: themeColors.divBackground, marginBottom: '10px', cursor: 'pointer', color: themeColors.commentText
-        }}
-        onClick={() => { setShowTalkTree(true); setPost(friend); }}
-      >
-        {friend.Receivers.map((r: any) => ((defUser?.Handle === r.Handle) ? 'You' : r.FirstName)).join(', ').replace(/,([^,]*)$/, ' and $1')}
-      </Grid>
-    ));
-
     conversationShares = conversationsPosts.map((conversation : any) => (
       <Grid
         item
@@ -331,72 +290,11 @@ const Sharing = ({ defUser, url, themeColors } : Props) => {
             action={action}
           />
           <form onSubmit={postShare}>
-            {dropdown && (
             <Grid item container xs={12} direction="row" spacing={1} alignItems="center" wrap="nowrap">
-              <Grid item xs={10}>
-                <Dropdown dropdownRefetch={dropdownRefetch} setConversationID={setConversationID} mode="conv" themeColors={themeColors} />
-              </Grid>
-              <Grid item xs={1}>
-                <IconButton
-                  sx={{
-                    color: themeColors.iconsButtonsColor,
-                    '&:hover': {
-                      color: themeColors.iconsButtonsColorHover,
-                    },
-                  }}
-                  onClick={toggleDropdown}
-                >
-                  <PersonIcon />
-                </IconButton>
-              </Grid>
-              <Grid item xs={1}>
-                <IconButton
-                  sx={{
-                    color: themeColors.iconsButtonsColor,
-                    '&:hover': {
-                      color: themeColors.iconsButtonsColorHover,
-                    },
-                  }}
-                  onClick={toggleMoreOptions}
-                >
-                  <SettingsIcon />
-                </IconButton>
+              <Grid item xs={12}>
+                <Dropdown dropdownRefetch={dropdownRefetch} setConversationID={setReceiverIDs} mode="conv" themeColors={themeColors} />
               </Grid>
             </Grid>
-            )}
-            {!dropdown && (
-            <Grid item container xs={12} direction="row" spacing={1} alignItems="center" wrap="nowrap">
-              <Grid item xs={10}>
-                <Dropdown dropdownRefetch={dropdownRefetch} setFriendHandles={setFriendHandles} mode="friends" themeColors={themeColors} />
-              </Grid>
-              <Grid item xs={1}>
-                <IconButton
-                  sx={{
-                    color: themeColors.iconsButtonsColor,
-                    '&:hover': {
-                      color: themeColors.iconsButtonsColorHover,
-                    },
-                  }}
-                  onClick={toggleDropdown}
-                >
-                  <GroupIcon />
-                </IconButton>
-              </Grid>
-              <Grid item xs={1}>
-                <IconButton
-                  sx={{
-                    color: themeColors.iconsButtonsColor,
-                    '&:hover': {
-                      color: themeColors.iconsButtonsColorHover,
-                    },
-                  }}
-                  onClick={toggleMoreOptions}
-                >
-                  <SettingsIcon />
-                </IconButton>
-              </Grid>
-            </Grid>
-            )}
             {bbox}
             <Box>
               <Button
@@ -419,112 +317,6 @@ const Sharing = ({ defUser, url, themeColors } : Props) => {
                 Clear
               </Button>
             </Box>
-            {!dropdown && moreOptions && (
-            <div>
-              <>
-                <FormControlLabel
-                  style={{
-                    marginBottom: '0px',
-                  }}
-                  control={(
-                    <Checkbox
-                      style={{
-                        color: '#757ce8'
-                      }}
-                      checked={createConv}
-                      onChange={(e: any) => setCreateConv(e.target.checked)}
-                    />
-                      )}
-                  label="Create Group"
-                />
-                <Tooltip title="This creates a group out of the friend(s) you selected for future ease of sharing.">
-                  <span>
-                    <IconButton disabled><HelpOutlineIcon /></IconButton>
-                  </span>
-                </Tooltip>
-                <FormControlLabel
-                  style={{
-                    marginBottom: '0px',
-                  }}
-                  control={(
-                    <Checkbox
-                      style={{
-                        color: '#757ce8',
-                      }}
-                      checked={shareSeparately}
-                      onChange={(e: any) => setShareSeparately(e.target.checked)}
-                    />
-                      )}
-                  label="Share Separately"
-                />
-                <Tooltip title="This creates a separate comment thread for each friend you selected (instead of the default single thread). This will not work when creating a group.">
-                  <span>
-                    <IconButton disabled><HelpOutlineIcon /></IconButton>
-                  </span>
-                </Tooltip>
-                <FormControlLabel
-                  style={{
-                    marginBottom: '0px',
-                  }}
-                  control={(
-                    <Checkbox
-                      style={{
-                        color: '#757ce8',
-                      }}
-                      checked={markSensitive}
-                      onChange={(e: any) => setMarkSensitive(e.target.checked)}
-                    />
-                      )}
-                  label="Mark as Sensitive"
-                />
-                <Tooltip title="This marks your post as sensitive and provides recipients with a warning before they view it.">
-                  <span>
-                    <IconButton disabled><HelpOutlineIcon /></IconButton>
-                  </span>
-                </Tooltip>
-              </>
-            </div>
-            )}
-            {dropdown && moreOptions && (
-            <div>
-              <>
-                <FormControlLabel
-                  control={(
-                    <Checkbox
-                      style={{
-                        color: '#757ce8',
-                      }}
-                      checked={shareSeparately}
-                      onChange={(e: any) => setShareSeparately(e.target.checked)}
-                    />
-                      )}
-                  label="Share Separately"
-                />
-                <Tooltip title="This creates a separate comment thread for each user in the group you selected (instead of the default single thread). You will not be able to filter for this post by group.">
-                  <span>
-                    <IconButton disabled><HelpOutlineIcon /></IconButton>
-                  </span>
-                </Tooltip>
-                <FormControlLabel
-                  control={(
-                    <Checkbox
-                      style={{
-                        color: '#757ce8',
-                      }}
-                      checked={markSensitive}
-                      onChange={(e: any) => setMarkSensitive(e.target.checked)}
-                    />
-                      )}
-                  label="Mark as Sensitive"
-                />
-                <Tooltip title="This marks your post as sensitive and provides recipients with a warning before they view it.">
-                  <span>
-                    <IconButton disabled><HelpOutlineIcon /></IconButton>
-                  </span>
-                </Tooltip>
-              </>
-            </div>
-            )}
             <Box sx={{ marginLeft: '0PX' }}>
               <MDEditor
                 textareaProps={{
@@ -537,7 +329,7 @@ const Sharing = ({ defUser, url, themeColors } : Props) => {
               />
             </Box>
             <ThemeProvider theme={sharButtonTheme}>
-              <Button className="sharePostBtn" type="submit" disabled={(conversationID === 0 && friendHandles.length === 0) || !defUser?.Registered}>
+              <Button className="sharePostBtn" type="submit" disabled={(receiverIDs.length === 0) || !defUser?.Registered}>
                 {' '}
                 Share
                 {' '}
@@ -557,6 +349,14 @@ const Sharing = ({ defUser, url, themeColors } : Props) => {
               </Button>
               )}
             </Box>
+            {showCaptcha
+              && (
+                <HCaptcha
+                  sitekey={process.env.REACT_APP_CAPTCHA_SITE_KEY || ''}
+                  onVerify={(token) => setCaptchaToken(token)}
+                  ref={captchaRef}
+                />
+              )}
           </form>
           <Grid item container xs={12} direction="column" spacing={1} wrap="nowrap">
             <Grid item xs={12}>
@@ -564,12 +364,6 @@ const Sharing = ({ defUser, url, themeColors } : Props) => {
                 Shared with conversations
               </Typography>
               { (conversationShares.length > 0) ? conversationShares : nothingPlaceHolder }
-            </Grid>
-            <Grid item xs={12}>
-              <Typography variant="h6">
-                Shared with friends
-              </Typography>
-              { (friendShares.length > 0) ? friendShares : nothingPlaceHolder }
             </Grid>
           </Grid>
         </Box>

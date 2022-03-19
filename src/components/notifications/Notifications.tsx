@@ -75,7 +75,7 @@ const Notifications = ({
     return false;
   }
   return (
-    <Box m={2}>
+    <Box m={1}>
       <Box sx={{
         display: 'flex', justifyContent: 'center', width: '100%', alignItems: 'center'
       }}

@@ -28,6 +28,7 @@ function PublishWebsite({
 } : Props) {
   const [showCaptcha, setShowCaptcha] = React.useState(false);
   const [url, setUrl] = React.useState<any>((website?.URL) ? website?.URL : (`${initUrl.origin}${initUrl.pathname}${decodeURIComponent(initUrl.search)}`));
+  const [comment, setComment] = React.useState('');
   const [tag, setTag] = React.useState('');
   const [captchaToken, setCaptchaToken] = React.useState('');
   const captchaRef = React.createRef<HCaptcha>();
@@ -35,6 +36,7 @@ function PublishWebsite({
     {
       onSuccess: () => {
         setTag('');
+        setComment('');
         setShowCaptcha(false);
         setCaptchaToken('');
         const updatedWebsite = website!;
@@ -59,7 +61,8 @@ function PublishWebsite({
         Search: formatedUrl.search,
       },
       LabelName: tag,
-      CaptchaToken: captchaToken
+      CaptchaToken: captchaToken,
+      Comment: comment,
     };
     // @ts-ignore
     const res = mutation.mutate({ route: '/post_website_public', data: mutateData });
@@ -82,11 +85,10 @@ function PublishWebsite({
             fullWidth
           />
           <TextField
-            value={tag}
-            onInput={(e: any) => setTag(e.target.value)}
-            autoFocus={!!website}
+            value={comment}
+            onInput={(e: any) => setComment(e.target.value)}
             margin="dense"
-            label="Tag"
+            label="Comment (optional)"
             fullWidth
           />
           <Button

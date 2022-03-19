@@ -6,14 +6,18 @@ function badgeCheckbox() {
 }
 
 function saveOptions() {
-  chrome.storage.local.set({ netvyneBadge: badgeCheckbox().checked });
-  localStorage.setItem('netvyneBadge', badgeCheckbox().checked);
+  chrome.storage.sync.set({
+    netvyneBadge: badgeCheckbox().checked,
+  });
+  // chrome.storage.local.set({ netvyneBadge: badgeCheckbox().checked });
+  // localStorage.setItem('netvyneBadge', badgeCheckbox().checked);
 }
 
 function loadOptions() {
-  chrome.storage.local.get(
-    'netvyneBadge',
-    (items) => {
+  chrome.storage.sync.get(
+    {
+      netvyneBadge: true,
+    }, (items) => {
       badgeCheckbox().checked = items.netvyneBadge;
     }
   );

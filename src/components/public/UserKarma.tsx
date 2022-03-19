@@ -7,6 +7,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { DateTime } from 'luxon';
 import React from 'react';
 import { useMutation, useQuery } from 'react-query';
+import { User } from '../../../types/common/types';
 
 interface GetUserKarmaQuery {
     KarmaMap: Map<string, number>;
@@ -17,9 +18,12 @@ interface Props {
     userKarmaOpen: boolean
     toggleUserKarmaOpen: any
     userName: string
+    defUser: User
 }
 
-export default function UserKarma({ userKarmaOpen, toggleUserKarmaOpen, userName }: Props) {
+export default function UserKarma({
+  userKarmaOpen, toggleUserKarmaOpen, userName, defUser
+}: Props) {
   const { data, status } = useQuery<GetUserKarmaQuery, string>(
     `/get_user_karma?user_name=${userName}`, { enabled: userKarmaOpen }
   );
@@ -81,7 +85,9 @@ export default function UserKarma({ userKarmaOpen, toggleUserKarmaOpen, userName
           {' '}
           {memberSince}
         </Box>
-        <Button onClick={onBlockUser}> Block User </Button>
+        {defUser.UserName !== userName && (
+          <Button onClick={onBlockUser}> Block User </Button>
+        )}
       </DialogContent>
       <DialogActions>
         <Button onClick={() => toggleUserKarmaOpen()} color="primary">
