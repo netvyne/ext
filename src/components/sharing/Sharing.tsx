@@ -1,6 +1,5 @@
 /* eslint-disable max-len */
 import CloseIcon from '@mui/icons-material/Close';
-import KeyboardBackspace from '@mui/icons-material/KeyboardBackspace';
 import ReplyIcon from '@mui/icons-material/Reply';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -21,7 +20,6 @@ import {
 import { Post, User } from '../../../types/common/types';
 import { createDiv, screenShot } from '../../utils';
 import HCaptcha from '../common/hcaptcha';
-import PostShare from '../talk/PostShare';
 import Dropdown from './dropdown';
 import './styles.scss';
 
@@ -80,8 +78,6 @@ const Sharing = ({ defUser, url, themeColors } : Props) => {
   const [createConv, setCreateConv] = React.useState(false);
   const [receiverIDs, setReceiverIDs] = React.useState([]);
   const [dropdownRefetch, setDropdownRefetch] = React.useState(Date());
-  const [showTalkTree, setShowTalkTree] = React.useState(false);
-  const [post, setPost] = React.useState<any>([]);
   const [conversationsPosts, setConversationsPosts] = React.useState<Post[]>([]);
   const [showCaptcha, setShowCaptcha] = React.useState(false);
   const [captchaToken, setCaptchaToken] = React.useState('');
@@ -123,6 +119,11 @@ const Sharing = ({ defUser, url, themeColors } : Props) => {
 
     setOpen(false);
   };
+
+  function clickTag(postID : number) {
+    window.open(`${process.env.PUBLIC_WEB}/p/${postID}`, '_blank', 'noopener,noreferrer');
+    return false;
+  }
 
   const dataURLtoFile = (dataurl : any, filename : any) => {
     const arr = dataurl.split(',');
@@ -179,9 +180,7 @@ const Sharing = ({ defUser, url, themeColors } : Props) => {
           setShowCaptcha(false);
           setDataURL('');
           setOpen(true);
-          setTimeout(() => {
-            refetch();
-          }, 10000);
+          refetch();
         },
         onError: (err: AxiosError) => {
           if (err.response?.status === 402) {
@@ -257,7 +256,7 @@ const Sharing = ({ defUser, url, themeColors } : Props) => {
         style={{
           padding: '10px', backgroundColor: themeColors.divBackground, marginBottom: '10px', cursor: 'pointer', color: themeColors.commentText
         }}
-        onClick={() => { setShowTalkTree(true); setPost(conversation); }}
+        onClick={() => { clickTag(conversation.ID); }}
       >
         {conversation.Receivers.map((cr: any) => ((defUser?.Handle === cr.Handle) ? 'You' : cr.FirstName)).join(', ').replace(/,([^,]*)$/, ' and $1')}
       </Grid>
@@ -280,7 +279,6 @@ const Sharing = ({ defUser, url, themeColors } : Props) => {
   return (
     <ThemeProvider theme={sharingTheme}>
       <Box mt={1}>
-        {!showTalkTree && (
         <Box>
           <Snackbar
             open={open}
@@ -367,24 +365,6 @@ const Sharing = ({ defUser, url, themeColors } : Props) => {
             </Grid>
           </Grid>
         </Box>
-        )}
-        {showTalkTree && (
-        <Box>
-          <IconButton
-            onClick={() => { setShowTalkTree(false); refetch(); }}
-            sx={{
-              paddingLeft: '0px',
-              color: themeColors.iconsButtonsColor,
-              '&:hover': {
-                color: themeColors.iconsButtonsColorHover,
-              },
-            }}
-          >
-            <KeyboardBackspace />
-          </IconButton>
-          <PostShare post={post} key={post.ID} defUser={defUser} setShowTalkTree={setShowTalkTree} postRefetch={refetch} themeColors={themeColors} />
-        </Box>
-        )}
       </Box>
     </ThemeProvider>
   );

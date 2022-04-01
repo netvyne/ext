@@ -45,7 +45,9 @@ export default function Dropdown({
         multiple
         onChange={changed}
         id="tags-standard"
-        style={{ width: 'auto', backgroundColor: themeColors.divBackground, borderRadius: '5px' }}
+        style={{
+          width: 'auto', backgroundColor: themeColors.divBackground, borderRadius: '5px', caretColor: '#5BA2FF'
+        }}
         options={isLoading ? friendsPlaceholder : conversations}
         disablePortal
         loading={isLoading}
@@ -65,7 +67,15 @@ export default function Dropdown({
                   ) : null}
                   {params.InputProps.endAdornment}
                 </>
-              )
+              ),
+              sx: {
+                '& .MuiChip-root': {
+                  color: themeColors.commentText
+                },
+                '& .MuiSvgIcon-root': {
+                  color: `${themeColors.commentText} !important`
+                }
+              }
             }}
             InputLabelProps={{
               style: { color: themeColors.commentText }
@@ -118,7 +128,15 @@ export default function Dropdown({
                 ) : null}
                 {params.InputProps.endAdornment}
               </>
-            )
+            ),
+            sx: {
+              '& .MuiChip-root': {
+                color: themeColors.commentText
+              },
+              '& .MuiSvgIcon-root': {
+                color: `${themeColors.commentText} !important`
+              }
+            }
           }}
           InputLabelProps={{
             style: { color: themeColors.commentText }

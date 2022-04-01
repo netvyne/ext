@@ -8,8 +8,8 @@ interface Props {
 
 export default function Error({ message }: Props) {
   return (
-    <Box m={1} py={7}>
-      <Typography variant="h2" color="primary">
+    <Box m={1} py={7} display="flex" flexDirection="column" justifyContent="center" alignItems="center">
+      <Typography variant="h2" color="primary" sx={{ fontSize: '1.75rem' }}>
         Sorry, something went wrong!
       </Typography>
       <Typography>
@@ -17,6 +17,16 @@ export default function Error({ message }: Props) {
         {' '}
         {message}
       </Typography>
+      <Box sx={{
+        width: '400px',
+        marginTop: '50px',
+        '@media (max-width: 1024px)': {
+          width: '300px'
+        }
+      }}
+      >
+        <img src="../../images/error.svg" alt="error" style={{ width: '100%' }} />
+      </Box>
     </Box>
   );
 }

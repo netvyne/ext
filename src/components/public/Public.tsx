@@ -10,7 +10,6 @@ import {
   Shout, User, Website
 } from '../../../types/common/types';
 import ActionContainer from './ActionContainer';
-import Chat from './Chat';
 import Discussion from './Discussion';
 import WebsitePlaceholder from './WebsitePlaceholder';
 import WebsiteUI from './WebsiteUI';
@@ -115,27 +114,17 @@ const Public = ({
               {data?.Website.ShoutCount}
               )
             </ToggleButton>
-            <ToggleButton value="chat" aria-label="chat" sx={{ '&:hover': { backgroundColor: themeColors.toggleButtonHover } }}>
-              Live Chat
-              (
-              {data?.Website.LiveCount}
-              )
-            </ToggleButton>
           </ToggleButtonGroup>
         </Box>
         <Box>
-          {mode === 'discussion'
-            ? (
-              <Discussion
-                initCurrentUser={initCurrentUser}
-                initURL={url}
-                sort={sort}
-                setSort={setSort}
-                isTabUpdated={isTabUpdated}
-                themeColors={themeColors}
-              />
-            )
-            : <Chat initURL={url} />}
+          <Discussion
+            initCurrentUser={initCurrentUser}
+            initURL={url}
+            sort={sort}
+            setSort={setSort}
+            isTabUpdated={isTabUpdated}
+            themeColors={themeColors}
+          />
         </Box>
       </ThemeProvider>
     </Root>
