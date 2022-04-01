@@ -131,3 +131,27 @@ display:block;
 .text-area{
     word-break: break-word !important;
 }
+
+/************ Themes ***********/
+.mode-dark .MuiAutocomplete-popper .MuiPaper-root ul {
+    background-color: #313133 !important;
+    color: #ffffff;
+}
+.mode-dark .w-md-editor.w-md-editor-show-edit {
+    background-color: #424242 !important;
+    caret-color: #5BA2FF;
+}
+.mode-dark .wmde-markdown-color code[class*="language-"] {
+    color: #ffffff;
+}
+.mode-dark .w-md-editor-toolbar li > button {
+    color: #ffffff;
+}
+.mode-dark .w-md-editor-toolbar{
+    background-color: #424242;
+    border-bottom: 1px solid black;
+}
+.mode-dark ::placeholder{
+    color: white;
+}
+/************ Themes ***********/

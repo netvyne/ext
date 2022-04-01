@@ -78,7 +78,7 @@ export const Popup: FunctionComponent = () => {
   const [isTabUpdated, setIsTabUpdated] = useState(false);
   const [mode, setMode] = useState<any>('light');
   const [themeColors, setThemeColors] = React.useState<any>('');
-  const intervalMs = 5000;
+  const intervalMs = 60000;
 
   const getDesignTokens = (extMode: any) => ({
     palette: {
