@@ -1,10 +1,7 @@
-import ArrowDownward from '@mui/icons-material/ArrowDownward';
-import ArrowUpward from '@mui/icons-material/ArrowUpward';
-import Bookmark from '@mui/icons-material/Bookmark';
-import IosShare from '@mui/icons-material/IosShare';
-import PublicIcon from '@mui/icons-material/Public';
-import ReplyIcon from '@mui/icons-material/Reply';
-import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
+// import ArrowDownward from '@mui/icons-material/ArrowDownward';
+// import ArrowUpward from '@mui/icons-material/ArrowUpward';
+import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Skeleton from '@mui/material/Skeleton';
@@ -27,10 +24,10 @@ export default function WebsitePlaceholder() {
                 </Grid>
               </Skeleton>
             </Grid>
-            <Grid item component={Box} mx={10} borderTop={1} borderBottom={1}>
+            {/* <Grid item component={Box} mx={10} borderTop={1} borderBottom={1}>
               <Grid container spacing={2} justifyContent="space-around">
                 <Grid item sx={{ display: 'flex', flexDirection: 'row' }}>
-                  <ArrowUpward />
+                  <ThumbUpIcon />
                   <Skeleton width={30} height={20} />
                 </Grid>
                 <Grid item sx={{ display: 'flex', flexDirection: 'row' }}>
@@ -46,28 +43,28 @@ export default function WebsitePlaceholder() {
                   <PublicIcon fontSize="inherit" />
                 </Grid>
               </Grid>
-            </Grid>
+            </Grid> */}
           </Grid>
         </Grid>
       </Box>
       <Box mt={1} height="40px">
-        <Grid container wrap="nowrap" justifyContent="space-around" style={{ alignItems: 'center' }}>
+        <Grid container wrap="nowrap" justifyContent="center" style={{ alignItems: 'center' }}>
           <Grid item>
-            <ArrowUpward
+            <ThumbUpIcon
               style={{ color: 'grey' }}
             />
           </Grid>
           <Grid item>
-            <ArrowDownward
+            <ThumbDownIcon
               style={{ color: 'grey' }}
             />
           </Grid>
-          <Grid item>
+          {/* <Grid item>
             <IosShare sx={{ color: 'black' }} />
           </Grid>
           <Grid item component={Box} mr={1}>
             <Bookmark />
-          </Grid>
+          </Grid> */}
         </Grid>
       </Box>
     </>
