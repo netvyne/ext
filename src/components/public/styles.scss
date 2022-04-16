@@ -138,7 +138,8 @@ display:block;
     color: #ffffff;
 }
 .mode-dark .w-md-editor.w-md-editor-show-edit {
-    background-color: #424242 !important;
+    background-color: #616161 !important;
+    border-color: #616161 !important;
     caret-color: #5BA2FF;
 }
 .mode-dark .wmde-markdown-color code[class*="language-"] {
@@ -148,7 +149,7 @@ display:block;
     color: #ffffff;
 }
 .mode-dark .w-md-editor-toolbar{
-    background-color: #424242;
+    background-color: #000000;
     border-bottom: 1px solid black;
 }
 .mode-dark ::placeholder{

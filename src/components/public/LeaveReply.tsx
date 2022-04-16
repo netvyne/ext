@@ -65,6 +65,7 @@ const LeaveReply = ({
         height={100}
         value={comment}
         preview="edit"
+        hideToolbar
         style={{ backgroundColor: themeColors.divBackground }}
         onChange={(value: string | undefined) => value !== undefined && setComment(value)}
       />
@@ -73,12 +74,23 @@ const LeaveReply = ({
         onClick={() => {
           setShowForm(false);
         }}
+        sx={{
+          color: themeColors.linkColor
+        }}
       >
         Cancel
       </Button>
-      <Button type="submit" size="small" color="primary" disabled={comment.trim().length === 0} endIcon={<SendIcon />}>
+      <Button
+        type="submit"
+        size="small"
+        disabled={comment.trim().length === 0}
+        endIcon={<SendIcon />}
+        sx={{
+          color: themeColors.linkColor
+        }}
+      >
         {' '}
-        Submit
+        Submitt
         {' '}
       </Button>
       {showCaptcha

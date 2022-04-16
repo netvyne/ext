@@ -44,7 +44,7 @@ const ShoutTree = ({
   const [root, setRoot] = React.useState<Shout>(treeRoot);
   const [children, setChildren] = React.useState<Shout[]>(root.Children || []);
   const [hide, setHide] = React.useState(root.Warn);
-  const [clicked, setClicked] = React.useState(false);
+  // const [clicked, setClicked] = React.useState(false);
   const [userKarmaOpen, setUserKarmaOpen] = React.useState(false);
 
   const [comment, setComment] = React.useState('');
@@ -62,28 +62,28 @@ const ShoutTree = ({
     const urlParams = new URLSearchParams(window.location.search);
     focus = parseInt(urlParams.get('focus') as string, 10);
   }
-  const saveItemMutation = useMutation({});
-  const onSaveItem = async (event: any, save: boolean) => {
-    event.preventDefault();
-    const mutateData = {
-      ShoutID: root.ID,
-      Save: save,
-    };
-    const res = saveItemMutation.mutate(
-      // @ts-ignore
-      {
-        route: '/save_shout',
-        data: mutateData,
-      },
-      {
-        onSuccess: (data: any) => {
-          root.Saved = data.Shout.Saved;
-          setRoot(root);
-        },
-      },
-    );
-    return res;
-  };
+  // const saveItemMutation = useMutation({});
+  // const onSaveItem = async (event: any, save: boolean) => {
+  //   event.preventDefault();
+  //   const mutateData = {
+  //     ShoutID: root.ID,
+  //     Save: save,
+  //   };
+  //   const res = saveItemMutation.mutate(
+  //     // @ts-ignore
+  //     {
+  //       route: '/save_shout',
+  //       data: mutateData,
+  //     },
+  //     {
+  //       onSuccess: (data: any) => {
+  //         root.Saved = data.Shout.Saved;
+  //         setRoot(root);
+  //       },
+  //     },
+  //   );
+  //   return res;
+  // };
 
   const mutation = useMutation<SuccessResponse, AxiosError>(
     {
@@ -115,12 +115,19 @@ const ShoutTree = ({
     return res;
   };
   const commentForm = (
-    <form onSubmit={postComment}>
+    <form onSubmit={postComment} style={{ width: '100%' }}>
       <Grid alignItems="stretch">
         <MDEditor
+          textareaProps={{
+            placeholder: 'Leave a comment...',
+            style: {
+              color: themeColors.commentText
+            }
+          }}
           height={100}
-          preview="edit"
           value={comment}
+          preview="edit"
+          hideToolbar
           onChange={(value: string | undefined) => value !== undefined && setComment(value)}
         />
         <Button
@@ -128,10 +135,20 @@ const ShoutTree = ({
           onClick={() => {
             setShowForm(false);
           }}
+          sx={{
+            color: themeColors.linkColor
+          }}
         >
           Cancel
         </Button>
-        <Button type="submit" size="small" color="primary" endIcon={<SendIcon />}>
+        <Button
+          type="submit"
+          size="small"
+          endIcon={<SendIcon />}
+          sx={{
+            color: themeColors.linkColor
+          }}
+        >
           {' '}
           Submit
           {' '}
@@ -210,9 +227,15 @@ const ShoutTree = ({
           {/* @ts-ignore */}
 
           <Grid item container component={Box} m={1}>
-            <Grid item container component={Box} wrap="nowrap" spacing={1} justifyContent="space-between">
-              <Grid item component={Box} onClick={toggleUserKarmaOpen} sx={{ display: 'flex', alignItems: 'center' }}>
-                <Typography variant="body2" color={themeColors.commentText}>
+            <Grid item container component={Box} wrap="nowrap" spacing={1} justifyContent="space-between" pt={1}>
+              <Grid
+                component={Box}
+                onClick={toggleUserKarmaOpen}
+                sx={{
+                  display: 'flex', alignItems: 'center', paddingTop: '0px', paddingLeft: '8px'
+                }}
+              >
+                <Typography variant="body2" color="gray">
                   {root.Author.UserName}
                 </Typography>
                 <UserKarma
@@ -222,7 +245,7 @@ const ShoutTree = ({
                   defUser={defUser}
                 />
               </Grid>
-              <Box display="flex">
+              <Box display="flex" sx={{ color: 'gray' }}>
                 <Grid item component={Box} sx={{ display: 'flex', alignItems: 'center' }}>
                   {DateTime.fromISO(root.CreatedAt?.toString(), {
                     zone: 'utc',
@@ -286,7 +309,7 @@ const ShoutTree = ({
                 Reply
               </Button>
               )}
-              <Button
+              {/* <Button
                 disabled={clicked}
                 size="small"
                 sx={{ color: themeColors.linkColor }}
@@ -296,16 +319,16 @@ const ShoutTree = ({
                 }}
               >
                 {root.Saved ? 'UNDO' : 'SAVE'}
-              </Button>
+              </Button> */}
               {user.UserName === root.Author.UserName
                 && <DeleteShout initShout={root} setRoot={setRoot} setShoutDeleted={setShoutDeleted} themeColors={themeColors} />}
-              {(user?.IsMod)
+              {/* {(user?.IsMod)
                     && (
                       <Button href={`${process.env.REACT_APP_MOD_URL}/item/shout/${root.ID}`} target="_blank" sx={{ color: themeColors.linkColor }}>
                         MOD
                         {' '}
                       </Button>
-                    )}
+                    )} */}
             </Grid>
             {showForm && (
               commentForm

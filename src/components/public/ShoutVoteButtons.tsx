@@ -1,5 +1,7 @@
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+// import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+// import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
@@ -41,8 +43,8 @@ export default function ShoutVoteButtons({ initShout, defUser }: Props) {
   return (
     // @ts-ignore
     <Grid component={Box} container alignItems="center" direction="row">
-      <Button value="1" onClick={onPostVote} className="vote-buttons">
-        <ArrowUpwardIcon
+      <Button value="1" onClick={onPostVote} className="vote-buttons" sx={{ paddingLeft: '0px' }}>
+        <ThumbUpIcon
           key={shout.VoteStatus}
           style={{ color: shout.VoteStatus === 1 ? 'green' : 'grey' }}
         />
@@ -52,7 +54,7 @@ export default function ShoutVoteButtons({ initShout, defUser }: Props) {
         hidden={shout.Author.UserName !== defUser.UserName}
       />
       <Button value="-1" onClick={onPostVote} className="vote-buttons">
-        <ArrowDownwardIcon
+        <ThumbDownIcon
           key={shout.VoteStatus}
           style={{ color: shout.VoteStatus === -1 ? 'red' : 'grey' }}
         />
