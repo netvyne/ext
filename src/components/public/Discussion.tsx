@@ -6,6 +6,7 @@ import Select from '@mui/material/Select';
 import createTheme from '@mui/material/styles/createTheme';
 import styled from '@mui/material/styles/styled';
 import ThemeProvider from '@mui/material/styles/ThemeProvider';
+import Typography from '@mui/material/Typography';
 import { AxiosError } from 'axios';
 import { sha256 } from 'js-sha256';
 import React from 'react';
@@ -89,6 +90,7 @@ const Discussion = ({
   const [children, setChildren] = React.useState<Shout[]>([]);
   const captchaRef = React.createRef<HCaptcha>();
   const [comment, setComment] = React.useState('');
+  const [noShout, setNoShout] = React.useState('');
   const treeHeight = window.innerHeight - 392;
   const [showFullEditor, setShowFullEditor] = React.useState(false);
 
@@ -98,7 +100,12 @@ const Discussion = ({
     route, {
       enabled: isTabUpdated,
       onSuccess: (shoutData) => {
-        setChildren(shoutData.Roots);
+        if (shoutData.Roots.length > 0) {
+          setNoShout('');
+          setChildren(shoutData.Roots);
+        } else {
+          setNoShout('Be the first to leave a shout');
+        }
       }
     }
   );
@@ -208,6 +215,9 @@ const Discussion = ({
           marginLeft: '-8px'
         }}
         >
+          {noShout !== '' && (
+            <Typography sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>{noShout}</Typography>
+          )}
           {trees}
         </Box>
       </ThemeProvider>
