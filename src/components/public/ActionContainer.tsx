@@ -7,40 +7,41 @@ interface Props {
   initWebsite: Website;
   url : any;
   refetch: any;
+  themeColors: any;
 }
 
 const ActionContainer = ({
-  initWebsite, url, refetch
+  initWebsite, url, refetch, themeColors
 } : Props) => {
   const [website, setWebsite] = React.useState(initWebsite);
-  const [saved, setSaved] = React.useState(website.Saved);
-  const [showShare, setShowShare] = React.useState(false);
+  // const [saved, setSaved] = React.useState(website.Saved);
+  // const [showShare, setShowShare] = React.useState(false);
   const mutation = useMutation({});
-  const onSaveItem = async (event : any, save: boolean) => {
-    event.preventDefault();
-    const data = {
-      Save: save,
-      URL: {
-        Host: url.host,
-        Pathname: url.pathname,
-        Search: url.search,
-      },
-    };
-    const res = mutation.mutate(
-      // @ts-ignore
-      {
-        route: '/save_website',
-        data,
-      },
-      {
-        onSuccess: (response : any) => {
-          setSaved(response.Website.Saved);
-          refetch();
-        },
-      },
-    );
-    return res;
-  };
+  // const onSaveItem = async (event : any, save: boolean) => {
+  //   event.preventDefault();
+  //   const data = {
+  //     Save: save,
+  //     URL: {
+  //       Host: url.host,
+  //       Pathname: url.pathname,
+  //       Search: url.search,
+  //     },
+  //   };
+  //   const res = mutation.mutate(
+  //     // @ts-ignore
+  //     {
+  //       route: '/save_website',
+  //       data,
+  //     },
+  //     {
+  //       onSuccess: (response : any) => {
+  //         setSaved(response.Website.Saved);
+  //         refetch();
+  //       },
+  //     },
+  //   );
+  //   return res;
+  // };
 
   useEffect(() => {
     setWebsite(initWebsite);
@@ -73,13 +74,14 @@ const ActionContainer = ({
   return (
     <ActionUI
       website={website}
-      setWebsite={setWebsite}
+      // setWebsite={setWebsite}
       postVote={postVote}
-      saved={saved}
-      onSaveItem={onSaveItem}
-      showShare={showShare}
-      setShowShare={setShowShare}
-      url={url}
+      // saved={saved}
+      // onSaveItem={onSaveItem}
+      // showShare={showShare}
+      // setShowShare={setShowShare}
+      // url={url}
+      themeColors={themeColors}
     />
   );
 };

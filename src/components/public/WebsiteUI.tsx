@@ -1,12 +1,12 @@
-import ArrowUpward from '@mui/icons-material/ArrowUpward';
-import LinkIcon from '@mui/icons-material/Link';
-import PublicIcon from '@mui/icons-material/Public';
-import ReplyIcon from '@mui/icons-material/Reply';
-import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
+// import ArrowUpward from '@mui/icons-material/ArrowUpward';
+// import LinkIcon from '@mui/icons-material/Link';
+// import PublicIcon from '@mui/icons-material/Public';
+// import ReplyIcon from '@mui/icons-material/Reply';
+// import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
-import Tooltip from '@mui/material/Tooltip';
+// import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import React from 'react';
 import { Url, Website } from '../../../types/common/types';
@@ -29,7 +29,7 @@ const WebsiteUI = ({
   let websiteTitle : string = '';
   websiteTitle = (initWebsite?.Title && initWebsite?.Title !== '') ? initWebsite.Title : url?.Title;
   const website = (
-    <Box mx={3} borderRadius="borderRadius" height="70px">
+    <Box mx={3} borderRadius="borderRadius" height="35px">
       <Grid container wrap="nowrap">
         <Grid
           container
@@ -50,7 +50,7 @@ const WebsiteUI = ({
                 : (websiteTitle)}
             </Typography>
           </Grid>
-          <Grid item component={Box} mx={10} borderTop={1} borderBottom={1}>
+          {/* <Grid item component={Box} mx={10} borderTop={1} borderBottom={1}>
             <Grid container spacing={2} justifyContent="space-around">
               <Grid item>
                 <ArrowUpward />
@@ -74,7 +74,7 @@ const WebsiteUI = ({
                   : <Tooltip title="Unlisted"><LinkIcon fontSize="inherit" /></Tooltip>}
               </Grid>
             </Grid>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Grid>
     </Box>

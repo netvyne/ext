@@ -1,6 +1,5 @@
 /* eslint-disable max-len */
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import createTheme from '@mui/material/styles/createTheme';
@@ -91,8 +90,8 @@ const Discussion = ({
   const captchaRef = React.createRef<HCaptcha>();
   const [comment, setComment] = React.useState('');
   const [noShout, setNoShout] = React.useState('');
-  const treeHeight = window.innerHeight - 392;
-  const [showFullEditor, setShowFullEditor] = React.useState(false);
+  const treeHeight = window.innerHeight - 332;
+  // const [showFullEditor, setShowFullEditor] = React.useState(false);
 
   const urlHash = sha256(`${initURL?.host}${initURL?.pathname}${initURL?.search}`);
   const route = `/get_shout_trees?url_hash=${urlHash}&sort=${sort}`;
@@ -104,7 +103,7 @@ const Discussion = ({
           setNoShout('');
           setChildren(shoutData.Roots);
         } else {
-          setNoShout('Be the first to leave a shout');
+          setNoShout('Be the first to leave a comment');
         }
       }
     }
@@ -170,20 +169,18 @@ const Discussion = ({
         captchaRef={captchaRef}
         setCaptchaToken={setCaptchaToken}
         themeColors={themeColors}
-        showFullEditor={showFullEditor}
+        // showFullEditor={showFullEditor}
       />
     );
   }
   const sorter = (
     <Box
-      p={1}
+      py={1}
       height="40px"
       display="flex"
       justifyContent="space-between"
     >
       <Box>
-        Sort:
-        {' '}
         <Select
           size="small"
           value={sort}
@@ -197,18 +194,18 @@ const Discussion = ({
           <MenuItem value="new">New</MenuItem>
         </Select>
       </Box>
-      <Button onClick={() => setShowFullEditor(!showFullEditor)}>
+      {/* <Button onClick={() => setShowFullEditor(!showFullEditor)}>
         {showFullEditor ? 'Basic Editor' : 'Full Editor'}
-      </Button>
+      </Button> */}
     </Box>
   );
   return (
     <Root>
       <ThemeProvider theme={discussionTheme}>
-        {sorter}
-        <Box height="150px">
+        <Box height="130px">
           {reply}
         </Box>
+        {sorter}
         <Box style={{
           height: `${treeHeight}px`,
           overflow: 'auto',

@@ -19,26 +19,26 @@ interface Props {
     captchaRef: any;
     setCaptchaToken: any;
     themeColors: any;
-    showFullEditor: boolean;
+    // showFullEditor: boolean;
   }
 
 const ReplyUI = ({
   postComment, setComment, comment, showForm, setShowForm, showCaptcha,
-  captchaRef, setCaptchaToken, themeColors, showFullEditor
+  captchaRef, setCaptchaToken, themeColors
 }: Props) => {
   const commentForm = (
     <form onSubmit={postComment}>
       <MDEditor
         textareaProps={{
-          placeholder: 'Leave a reply...',
+          placeholder: 'Leave a comment...',
           style: {
             color: themeColors.commentText
           }
         }}
-        height={100}
+        height={120}
         value={comment}
         preview="edit"
-        hideToolbar={!showFullEditor}
+        hideToolbar
         onChange={(value: string | undefined) => value !== undefined && setComment(value)}
       />
       <Box my={1}>

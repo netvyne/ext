@@ -323,6 +323,7 @@ const Sharing = ({ defUser, url, themeColors } : Props) => {
                 height={100}
                 value={comment}
                 preview="edit"
+                hideToolbar
                 onChange={(value: string | undefined) => value !== undefined && setComment(value)}
               />
             </Box>
