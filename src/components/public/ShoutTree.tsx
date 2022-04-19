@@ -53,6 +53,7 @@ const ShoutTree = ({
   const [captchaToken, setCaptchaToken] = React.useState('');
   const captchaRef = React.createRef<HCaptcha>();
   const [shoutDeleted, setShoutDeleted] = React.useState(false);
+  const [deleted, setDeleted] = React.useState(false);
 
   function toggleUserKarmaOpen() {
     setUserKarmaOpen(!userKarmaOpen);
@@ -148,6 +149,7 @@ const ShoutTree = ({
           sx={{
             color: themeColors.linkColor
           }}
+          disabled={comment.trim().length === 0}
         >
           {' '}
           Submit
@@ -156,11 +158,13 @@ const ShoutTree = ({
       </Grid>
       {showCaptcha
         && (
-          <HCaptcha
-            sitekey={process.env.REACT_APP_CAPTCHA_SITE_KEY || ''}
-            onVerify={(token) => setCaptchaToken(token)}
-            ref={captchaRef}
-          />
+          <Box sx={{ zIndex: 99 }}>
+            <HCaptcha
+              sitekey={process.env.REACT_APP_CAPTCHA_SITE_KEY || ''}
+              onVerify={(token) => setCaptchaToken(token)}
+              ref={captchaRef}
+            />
+          </Box>
         )}
     </form>
   );
@@ -206,7 +210,7 @@ const ShoutTree = ({
   if (root.ID === 0) {
     // Content is just children directly without a parent comment
     content = innerContent;
-  } else {
+  } else if (!deleted) {
     const color = root.Level % 2 === 0 ? themeColors.commentParent : themeColors.commentChild;
     content = (
       <Grid
@@ -309,26 +313,8 @@ const ShoutTree = ({
                 Reply
               </Button>
               )}
-              {/* <Button
-                disabled={clicked}
-                size="small"
-                sx={{ color: themeColors.linkColor }}
-                onClick={(e) => {
-                  onSaveItem(e, !root.Saved);
-                  setClicked(true);
-                }}
-              >
-                {root.Saved ? 'UNDO' : 'SAVE'}
-              </Button> */}
               {user.UserName === root.Author.UserName
-                && <DeleteShout initShout={root} setRoot={setRoot} setShoutDeleted={setShoutDeleted} themeColors={themeColors} />}
-              {/* {(user?.IsMod)
-                    && (
-                      <Button href={`${process.env.REACT_APP_MOD_URL}/item/shout/${root.ID}`} target="_blank" sx={{ color: themeColors.linkColor }}>
-                        MOD
-                        {' '}
-                      </Button>
-                    )} */}
+                && <DeleteShout initShout={root} setRoot={setRoot} setShoutDeleted={setShoutDeleted} themeColors={themeColors} setDeleted={setDeleted} />}
             </Grid>
             {showForm && (
               commentForm

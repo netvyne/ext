@@ -56,7 +56,7 @@ const ReplyUI = ({
         </Button>
         {showCaptcha
         && (
-          <div style={{ position: 'absolute' }}>
+          <div style={{ position: 'absolute', zIndex: 999 }}>
             <HCaptcha
               sitekey={process.env.REACT_APP_CAPTCHA_SITE_KEY || ''}
               onVerify={(token) => setCaptchaToken(token)}
