@@ -46,7 +46,7 @@ export default function ShoutVoteButtons({ initShout, defUser }: Props) {
       <Button value="1" onClick={onPostVote} className="vote-buttons" sx={{ paddingLeft: '0px' }}>
         <ThumbUpIcon
           key={shout.VoteStatus}
-          style={{ color: shout.VoteStatus === 1 ? 'green' : 'grey' }}
+          style={{ color: shout.VoteStatus === 1 ? 'green' : 'grey', width: '1.3rem' }}
         />
       </Button>
       <VoteTotal
@@ -56,7 +56,7 @@ export default function ShoutVoteButtons({ initShout, defUser }: Props) {
       <Button value="-1" onClick={onPostVote} className="vote-buttons">
         <ThumbDownIcon
           key={shout.VoteStatus}
-          style={{ color: shout.VoteStatus === -1 ? 'red' : 'grey' }}
+          style={{ color: shout.VoteStatus === -1 ? 'red' : 'grey', width: '1.3rem' }}
         />
       </Button>
     </Grid>

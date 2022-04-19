@@ -138,7 +138,11 @@ const Discussion = ({
       CaptchaToken: captchaToken
     };
     // @ts-ignore
-    const res = replyMutation.mutate({ route: '/post_shout', data: postShoutData });
+    const res = replyMutation.mutate({ route: '/post_shout', data: postShoutData }, {
+      onSuccess: () => {
+        setNoShout('');
+      }
+    });
     return res;
   };
   let trees : any = '';

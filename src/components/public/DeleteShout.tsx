@@ -10,12 +10,14 @@ interface Props {
   setRoot: any;
   setShoutDeleted: any;
   themeColors: any;
+  setDeleted: any;
 }
 interface GetShoutTreeQuery {
   Roots: Shout[];
 }
 const DeleteShout = ({
-  initShout, setRoot, setShoutDeleted, themeColors
+  initShout, setRoot, setShoutDeleted, themeColors,
+  setDeleted
 }: Props) => {
   const mutation = useMutation({});
   const { refetch } = useQuery<GetShoutTreeQuery, string>(
@@ -36,6 +38,7 @@ const DeleteShout = ({
       },
       {
         onSuccess: (response : any) => {
+          setDeleted(true);
           setRoot(response.Shout);
           setShoutDeleted(true);
           refetch();

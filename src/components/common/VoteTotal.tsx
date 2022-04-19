@@ -30,6 +30,9 @@ export default function VoteTotal({ total, hidden }: Props) {
     <Box
       width={42}
       textAlign="center"
+      sx={{
+        fontSize: '0.8125rem'
+      }}
     >
       {value}
     </Box>

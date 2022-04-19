@@ -90,7 +90,7 @@ const LeaveReply = ({
         }}
       >
         {' '}
-        Submitt
+        Submit
         {' '}
       </Button>
       {showCaptcha

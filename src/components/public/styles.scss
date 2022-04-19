@@ -133,6 +133,9 @@ display:block;
 }
 
 /************ Themes ***********/
+.w-md-editor-bar{
+    display: none;
+}
 .mode-dark .MuiAutocomplete-popper .MuiPaper-root ul {
     background-color: #313133 !important;
     color: #ffffff;
@@ -154,5 +157,11 @@ display:block;
 }
 .mode-dark ::placeholder{
     color: white;
+}
+
+/************ Light Mode *******************/
+.mode-light .w-md-editor.w-md-editor-show-edit {
+    resize: none;
+    box-shadow: 0px 0px 0px 1px rgba(0,0,0,0.88) !important;
 }
 /************ Themes ***********/
