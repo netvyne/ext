@@ -45,18 +45,18 @@ export default function ShoutVoteButtons({ initShout, defUser }: Props) {
     <Grid component={Box} container alignItems="center" direction="row">
       <Button value="1" onClick={onPostVote} className="vote-buttons" sx={{ paddingLeft: '0px' }}>
         <ThumbUpIcon
-          key={shout.VoteStatus}
-          style={{ color: shout.VoteStatus === 1 ? 'green' : 'grey', width: '1.3rem' }}
+          key={shout.Vote.Status}
+          style={{ color: shout.Vote.Status === 1 ? 'green' : 'grey', width: '1.3rem' }}
         />
       </Button>
       <VoteTotal
-        total={shout.Karma + shout.VoteStatus}
+        total={shout.Karma}
         hidden={shout.Author.UserName !== defUser.UserName}
       />
       <Button value="-1" onClick={onPostVote} className="vote-buttons">
         <ThumbDownIcon
-          key={shout.VoteStatus}
-          style={{ color: shout.VoteStatus === -1 ? 'red' : 'grey', width: '1.3rem' }}
+          key={shout.Vote.Status}
+          style={{ color: shout.Vote.Status === -1 ? 'red' : 'grey', width: '1.3rem' }}
         />
       </Button>
     </Grid>

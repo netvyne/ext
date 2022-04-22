@@ -9,7 +9,7 @@ interface Props {
 export default function VoteTotal({ total, hidden }: Props) {
   let value = '';
   if (total === 0 || hidden) {
-    value = 'VOTE';
+    value = '0';
   } else {
     const digits = 1;
     const num = total;

@@ -54,10 +54,8 @@ interface Website {
   Karma: number;
   Upvotes: number;
   Downvotes: number;
-  VoteStatus: number;
   Saved: boolean;
   ShoutCount: number;
-  LiveCount: number;
   TagLabelNames: string[];
   Public: boolean;
   URL: string;
@@ -66,10 +64,20 @@ interface Website {
   Warn?: boolean;
   Remove?: boolean;
   FeaturedComment: string;
+  Source: number;
+  LastSourcedAt: string;
+  VotesTotaledAt: string;
+  Vote: WebsiteVote;
 
   LatestModerationAt: string;
   LatestModerationReasons: string;
-  ShareCount?: number;
+}
+
+interface WebsiteVote {
+  CreatedAt: string
+  UpdatedAt: string
+  Status: number
+  TotaledStatus: number
 }
 
 interface WebsiteSave {
@@ -130,6 +138,9 @@ interface Shout {
   ParentShoutID: number;
   ParentShout: Shout;
   Author: User;
+  SourceID: string;
+  AvatarURL: string;
+  UserName: string;
   WebsiteID: number;
   Website: Website;
   Comment: string;
@@ -137,15 +148,23 @@ interface Shout {
   Karma: number;
   Upvotes: number;
   Downvotes: number;
-  VoteStatus: number;
   Saved: boolean;
   Children: Shout[];
   MoreReplies: number[];
   Warn?: boolean;
   Remove?: boolean;
+  VotesTotaledAt: string;
+  Vote: ShoutVote;
 
   LatestModerationAt: DateTime;
   LatestModerationReasons: string;
+}
+
+interface ShoutVote {
+  CreatedAt: string
+  UpdatedAt: string
+  Status: number
+  TotaledStatus: number
 }
 
 interface ShoutSave {
