@@ -89,7 +89,6 @@ const Discussion = ({
   const [children, setChildren] = React.useState<Shout[]>([]);
   const captchaRef = React.createRef<HCaptcha>();
   const [comment, setComment] = React.useState('');
-  const [noShout, setNoShout] = React.useState('');
   const treeHeight = window.innerHeight - 332;
   // const [showFullEditor, setShowFullEditor] = React.useState(false);
 
@@ -99,12 +98,7 @@ const Discussion = ({
     route, {
       enabled: isTabUpdated,
       onSuccess: (shoutData) => {
-        if (shoutData.Roots.length > 0) {
-          setNoShout('');
-          setChildren(shoutData.Roots);
-        } else {
-          setNoShout('Be the first to leave a comment');
-        }
+        setChildren(shoutData.Roots);
       }
     }
   );
@@ -138,11 +132,7 @@ const Discussion = ({
       CaptchaToken: captchaToken
     };
     // @ts-ignore
-    const res = replyMutation.mutate({ route: '/post_shout', data: postShoutData }, {
-      onSuccess: () => {
-        setNoShout('');
-      }
-    });
+    const res = replyMutation.mutate({ route: '/post_shout', data: postShoutData });
     return res;
   };
   let trees : any = '';
@@ -198,9 +188,6 @@ const Discussion = ({
           <MenuItem value="new">New</MenuItem>
         </Select>
       </Box>
-      {/* <Button onClick={() => setShowFullEditor(!showFullEditor)}>
-        {showFullEditor ? 'Basic Editor' : 'Full Editor'}
-      </Button> */}
     </Box>
   );
   return (
@@ -216,8 +203,8 @@ const Discussion = ({
           marginLeft: '-8px'
         }}
         >
-          {noShout !== '' && (
-            <Typography sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>{noShout}</Typography>
+          {children.length === 0 && (
+            <Typography sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>Be the first to leave a comment</Typography>
           )}
           {trees}
         </Box>

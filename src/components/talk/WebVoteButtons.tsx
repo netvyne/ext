@@ -13,7 +13,7 @@ interface Props {
 }
 
 export default function WebVoteButtons({ website }: Props) {
-  const [voteStatus, setVoteStatus] = React.useState(website.VoteStatus);
+  const [voteStatus, setVoteStatus] = React.useState(website.Vote.Status);
   const voteMutation = useMutation({});
   const onPostVote = async (e: any) => {
     e.preventDefault();
@@ -34,7 +34,7 @@ export default function WebVoteButtons({ website }: Props) {
       },
       {
         onSuccess: (data: any) => {
-          setVoteStatus(data.Website.VoteStatus);
+          setVoteStatus(data.Website.Vote.Status);
         },
       },
     );

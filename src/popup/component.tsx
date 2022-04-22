@@ -159,7 +159,14 @@ export const Popup: FunctionComponent = () => {
 
   const { data, refetch } = useQuery<any, string>(route, {
     enabled: (isTabActive && autoFetch && !!user),
-    refetchInterval: intervalMs
+    refetchInterval: intervalMs,
+    onSuccess: (notificationResponse: any) => {
+      if (notificationResponse.WebsiteShoutCount > 0) {
+        setBadge(notificationResponse.WebsiteShoutCount);
+      } else {
+        setBadge('');
+      }
+    }
   });
 
   const loginRoute = '/login';
@@ -229,14 +236,13 @@ export const Popup: FunctionComponent = () => {
         setUrl(formatedUrl);
       });
     }
-    if (data) {
-      if (data.WebsiteShoutCount > 0) {
-        setBadge(data.WebsiteShoutCount);
-      } else {
-        setBadge('');
-      }
+  }, []);
+
+  useEffect(() => {
+    if (!autoFetch) {
+      setBadge('');
     }
-  }, [data]);
+  }, [autoFetch]);
 
   const [value, setValue] = React.useState(0);
   const handleChange = (event : any, newValue : any) => {
@@ -279,11 +285,11 @@ export const Popup: FunctionComponent = () => {
                           variant="dot"
                           invisible={!data?.ContainsUnread}
                         >
-                          {user?.AvatarPath ? (
+                          {user?.AvatarPath && !isExtClosed ? (
                             <Avatar
                               style={{ width: 24, height: 24 }}
                               alt="Avatar"
-                              src={!isExtClosed ? formatImageURL(user.AvatarPath) : ''}
+                              src={formatImageURL(user.AvatarPath)}
                             />
                           )
                             : (

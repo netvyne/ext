@@ -8,6 +8,9 @@ iframe.style.right = '0px';
 iframe.style.zIndex = '9000000000000000000';
 iframe.frameBorder = 'none';
 iframe.src = chrome.runtime.getURL('popup.html');
+chrome.storage.sync.set({
+  isExtClosed: true,
+});
 
 document.body.appendChild(iframe);
 function toggle() {
