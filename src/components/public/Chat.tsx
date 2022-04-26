@@ -20,9 +20,6 @@ import React, {
 } from 'react';
 import { useMutation } from 'react-query';
 import { ChatMessage } from '../../../types/common/types';
-// import urlDomainMap from '../../url_domain_map.json';
-// import urlQueryParamFilter from '../../url_query_param_filter.json';
-// import { cleanUrl, isValidURL } from '../../utils';
 import './styles.scss';
 
 const chatFormTheme = createTheme({

@@ -1,7 +1,8 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable import/no-extraneous-dependencies */
-import _interopRequireDefault from '@babel/runtime/helpers/interopRequireDefault';
+
+const _interopRequireDefault = require('@babel/runtime/helpers/interopRequireDefault');
 
 const _slicedToArray2 = _interopRequireDefault(require('@babel/runtime/helpers/slicedToArray'));
 
@@ -21,6 +22,6 @@ function generateQuery(params) {
   }).join('&');
 }
 
-export default {
+module.exports = {
   generateQuery
 };

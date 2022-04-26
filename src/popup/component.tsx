@@ -74,7 +74,6 @@ export const Popup: FunctionComponent = () => {
   const [url, setUrl] = useState<any>({});
   // eslint-disable-next-line no-unused-vars
   const [isTabActive, setIsTabActive] = useState<any>(false);
-  const [isExtClosed, setIsExtClosed] = useState<any>(true);
   const [isTabUpdated, setIsTabUpdated] = useState(false);
   const [mode, setMode] = useState<any>('light');
   const [themeColors, setThemeColors] = React.useState<any>('');
@@ -122,7 +121,6 @@ export const Popup: FunctionComponent = () => {
               }
             );
           } else {
-            setIsExtClosed(false);
             setIsTabUpdated(true);
             setAutoFetch(true);
             setIsTabActive(true);
@@ -285,7 +283,7 @@ export const Popup: FunctionComponent = () => {
                           variant="dot"
                           invisible={!data?.ContainsUnread}
                         >
-                          {user?.AvatarPath && !isExtClosed ? (
+                          {user?.AvatarPath && autoFetch ? (
                             <Avatar
                               style={{ width: 24, height: 24 }}
                               alt="Avatar"
