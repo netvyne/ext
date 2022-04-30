@@ -64,7 +64,8 @@ const classes = {
 const Root = styled('div')(() => ({
   [`&.${classes.root}`]: {
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
+    borderLeft: 'solid 1px black'
   },
 }));
 
@@ -254,7 +255,7 @@ export const Popup: FunctionComponent = () => {
         <Root className={classes.root}>
           <div className={`popup-container mode-${mode}`} style={{ height: `${window.innerHeight}px` }}>
             <div className="container mx-1 my-1">
-              <AppBar position="fixed" sx={{ top: '0px', backgroundColor: themeColors.divBackground }} elevation={1}>
+              <AppBar position="fixed" sx={{ top: '0px', backgroundColor: themeColors.divBackground, borderLeft: 'solid 1px black' }} elevation={1}>
                 <Grid className="topbar">
                   <Tabs
                     className="tabs"
