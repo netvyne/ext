@@ -2,7 +2,6 @@ const iframe = document.createElement('iframe');
 iframe.style.height = '100%';
 iframe.style.width = '0px';
 iframe.style.position = 'fixed';
-iframe.style.borderLeft = 'solid 1px';
 iframe.style.top = '0px';
 iframe.style.right = '0px';
 iframe.style.zIndex = '9000000000000000000';
