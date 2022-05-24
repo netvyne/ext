@@ -35,31 +35,7 @@ chrome.action.onClicked.addListener(() => {
 });
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.screenshot === 'take') {
-    // use background script to take screenshot, move sidebar out of the way
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      const activeTab = tabs[0];
-      chrome.tabs.sendMessage(activeTab.id, 'toggle');
-      chrome.tabs.sendMessage(
-        activeTab.id,
-        { message: 'clicked_browser_action' },
-        () => {
-          chrome.tabs.captureVisibleTab({ format: 'png' }, (src) => {
-            chrome.storage.local.set({ screenshot: src }, () => {
-              chrome.tabs.sendMessage(activeTab.id, 'toggle');
-              chrome.tabs.sendMessage(
-                activeTab.id,
-                { message: 'clicked_browser_action' },
-                () => {
-                  sendResponse([]);
-                },
-              );
-            });
-          });
-        },
-      );
-    });
-  } else if (request.screenshot === 'clear') {
+  if (request.screenshot === 'clear') {
     // clear screenshot from storage
     chrome.storage.local.remove('screenshot', () => {
       sendResponse([]);
@@ -87,13 +63,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                   }
                 }
               );
-              sendResponse({ confirmation: 'Successfully created div' });
+              sendResponse();
             });
           });
         },
       );
     });
-    // sendResponse({ confirmation: 'Successfully created div' });
   } else if (request.clear_notifications) {
     chrome.action.setBadgeBackgroundColor({ color: [0, 0, 0, 0] });
     chrome.action.setBadgeText({ text: '' });
