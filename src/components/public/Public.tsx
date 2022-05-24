@@ -13,7 +13,7 @@ import WebsitePlaceholder from './WebsitePlaceholder';
 import WebsiteUI from './WebsiteUI';
 
 interface Props {
-  initCurrentUser: User[];
+  initCurrentUser: User;
   isTabActive: boolean;
   url: any;
   isTabUpdated: boolean;
@@ -58,7 +58,7 @@ const discussionTheme = createTheme({
 const Public = ({
   initCurrentUser, isTabActive, url, isTabUpdated, themeColors
 } : Props) => {
-  const user : any = initCurrentUser;
+  // const user : any = initCurrentUser;
   // const [mode, setMode] = React.useState('discussion');
   const [sort, setSort] = React.useState('best');
   // const handleMode = (event : any, newMode : string) => {
@@ -76,7 +76,7 @@ const Public = ({
   let website : any = '';
   let actionBox;
 
-  if (status === 'success' && user) {
+  if (status === 'success' && initCurrentUser) {
     website = (
       <>
         <WebsiteUI initWebsite={data!.Website} url={url} />
