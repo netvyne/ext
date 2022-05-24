@@ -40,7 +40,7 @@ interface SuccessResponse {
 const ShoutTree = ({
   treeRoot, website, defUser, themeColors
 }: Props) => {
-  const [user] = React.useState<User>(defUser);
+  // const [user] = React.useState<User>(defUser);
   const [root, setRoot] = React.useState<Shout>(treeRoot);
   const [children, setChildren] = React.useState<Shout[]>(root.Children || []);
   const [hide, setHide] = React.useState(root.Warn);
@@ -192,7 +192,7 @@ const ShoutTree = ({
           key={shout.ID}
           website={website}
           treeRoot={shout}
-          defUser={user}
+          defUser={defUser}
           themeColors={themeColors}
         />
       ))}
@@ -313,7 +313,7 @@ const ShoutTree = ({
                 Reply
               </Button>
               )}
-              {user.UserName === root.Author.UserName
+              {defUser.UserName === root.Author.UserName
                 && <DeleteShout initShout={root} setRoot={setRoot} setShoutDeleted={setShoutDeleted} themeColors={themeColors} setDeleted={setDeleted} />}
             </Grid>
             {showForm && (
