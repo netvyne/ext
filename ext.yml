@@ -7,6 +7,7 @@ services:
     image: ext
     environment:
       REACT_APP_PUBLIC_API: http://localhost:5000/api
+      REACT_APP_IMG_URL: http://localhost:5000/imgproxy
       NODE_ENV: "development"
       VERSION: 0.0
       REACT_APP_MOD_URL: http://localhost:3001
