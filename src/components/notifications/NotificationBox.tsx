@@ -56,9 +56,6 @@ const NotificationBox = ({ notification, refetch, themeColors } : Props) => {
       className="notificationBox"
       bgcolor={themeColors.divBackground}
       width="100%"
-      onClick={() => {
-        notificationLink(notification.Link);
-      }}
     >
       <Box>
         <Grid item container xs={12} direction="row" spacing={1} alignItems="center" wrap="nowrap">
@@ -68,17 +65,24 @@ const NotificationBox = ({ notification, refetch, themeColors } : Props) => {
               zone: 'utc',
             }).toRelative()}
             {notification.Viewed ? <CheckCircleIcon /> : (
-              <ErrorIcon onClick={(e) => {
-                if (!notification.Viewed) {
-                  handleClickedNotif(e, notification.ID, false);
-                }
-              }}
+              <ErrorIcon
+                style={{ cursor: 'pointer' }}
+                onClick={(e) => {
+                  if (!notification.Viewed) {
+                    handleClickedNotif(e, notification.ID, false);
+                  }
+                }}
               />
             )}
           </Grid>
         </Grid>
       </Box>
-      <Box>
+      <Box
+        sx={{ cursor: 'pointer' }}
+        onClick={() => {
+          notificationLink(notification.Link);
+        }}
+      >
         {`${notification.Text}`}
       </Box>
     </Box>

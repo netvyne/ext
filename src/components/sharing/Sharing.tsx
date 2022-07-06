@@ -18,7 +18,7 @@ import {
   useMutation, useQuery
 } from 'react-query';
 import { Post, User } from '../../../types/common/types';
-import { createDiv, screenShot } from '../../utils';
+import { createDiv } from '../../utils';
 import HCaptcha from '../common/hcaptcha';
 import Dropdown from './dropdown';
 import './styles.scss';
@@ -83,11 +83,11 @@ const Sharing = ({ defUser, url, themeColors } : Props) => {
   const [captchaToken, setCaptchaToken] = React.useState('');
   const captchaRef = React.createRef<HCaptcha>();
 
-  function cropcallback() {
-    chrome.storage.local.get({ screenshot: null }, (data) => {
-      setDataURL(data.screenshot);
-    });
-  }
+  // function cropcallback() {
+  //   chrome.storage.local.get({ screenshot: null }, (data) => {
+  //     setDataURL(data.screenshot);
+  //   });
+  // }
 
   const handleMessage = (msg : any) => {
     if (msg.target === 'app') {
@@ -144,7 +144,10 @@ const Sharing = ({ defUser, url, themeColors } : Props) => {
   }
 
   function clearScreenShot() {
-    screenShot('clear', cropcallback);
+    // screenShot('clear', cropcallback);
+    chrome.storage.local.get({ screenshot: null }, () => {
+      setDataURL('');
+    });
   }
 
   const shareMutation = useMutation({});
